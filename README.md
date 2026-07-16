@@ -1,2 +1,2 @@
 # PerfectCleaningMakoverASMR
-A satisfaction for kids
+A satisfaction game for kids
