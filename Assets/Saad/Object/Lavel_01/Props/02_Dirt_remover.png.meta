@@ -1,0 +1,1066 @@
+fileFormatVersion: 2
+guid: eba627467a769904b9f22ffe2ec6da9c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 938133562103083597
+    second: 02_Dirt_remover_0
+  - first:
+      213: -6556612649838034756
+    second: 02_Dirt_remover_1
+  - first:
+      213: -778895066513093535
+    second: 02_Dirt_remover_2
+  - first:
+      213: 3531646597520169665
+    second: 02_Dirt_remover_3
+  - first:
+      213: -2666167291719061735
+    second: 02_Dirt_remover_4
+  - first:
+      213: 6231724511946827740
+    second: 02_Dirt_remover_5
+  - first:
+      213: -7856448729967147144
+    second: 02_Dirt_remover_6
+  - first:
+      213: -8487579202842021523
+    second: 02_Dirt_remover_7
+  - first:
+      213: -1142744785220146434
+    second: 02_Dirt_remover_8
+  - first:
+      213: -301947439536835687
+    second: 02_Dirt_remover_9
+  - first:
+      213: 7659690433989929322
+    second: 02_Dirt_remover_10
+  - first:
+      213: 8688901460710942269
+    second: 02_Dirt_remover_11
+  - first:
+      213: -6179376143649603635
+    second: 02_Dirt_remover_12
+  - first:
+      213: 1589286574380512818
+    second: 02_Dirt_remover_13
+  - first:
+      213: -2167537213452452817
+    second: 02_Dirt_remover_14
+  - first:
+      213: -1535371639136655446
+    second: 02_Dirt_remover_15
+  - first:
+      213: 361183714228848536
+    second: 02_Dirt_remover_16
+  - first:
+      213: 3078359481480664384
+    second: 02_Dirt_remover_17
+  - first:
+      213: 2310760363236646867
+    second: 02_Dirt_remover_18
+  - first:
+      213: -8975249510931284696
+    second: 02_Dirt_remover_19
+  - first:
+      213: -5620206574633329207
+    second: 02_Dirt_remover_20
+  - first:
+      213: -8047041333447663360
+    second: 02_Dirt_remover_21
+  - first:
+      213: 2573543276598682716
+    second: 02_Dirt_remover_22
+  - first:
+      213: 6717765045302106380
+    second: 02_Dirt_remover_23
+  - first:
+      213: -317300353130648316
+    second: 02_Dirt_remover_24
+  - first:
+      213: -6676461263413734553
+    second: 02_Dirt_remover_25
+  - first:
+      213: 7027418982996482608
+    second: 02_Dirt_remover_26
+  - first:
+      213: 3730456082236379977
+    second: 02_Dirt_remover_27
+  - first:
+      213: -9214325701199329825
+    second: 02_Dirt_remover_28
+  - first:
+      213: -157559026540045991
+    second: 02_Dirt_remover_29
+  - first:
+      213: 4659263909616236866
+    second: 02_Dirt_remover_30
+  - first:
+      213: 3233015857642959136
+    second: 02_Dirt_remover_31
+  - first:
+      213: -6609912623308124381
+    second: 02_Dirt_remover_32
+  - first:
+      213: 564864889840317313
+    second: 02_Dirt_remover_33
+  - first:
+      213: 1564926627542902695
+    second: 02_Dirt_remover_34
+  - first:
+      213: 709413007781238557
+    second: 02_Dirt_remover_35
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 900
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: 02_Dirt_remover_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 246
+        height: 1024
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d42b609118be40d00800000000000000
+      internalID: 938133562103083597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_1
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 990
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb0429c888b3205a0800000000000000
+      internalID: -6556612649838034756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_2
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 982
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16cce23501fc035f0800000000000000
+      internalID: -778895066513093535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_3
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 972
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ca18657edde20130800000000000000
+      internalID: 3531646597520169665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_4
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 803
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91fe15169fedffad0800000000000000
+      internalID: -2666167291719061735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_5
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 651
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd76fa03d688b7650800000000000000
+      internalID: 6231724511946827740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_6
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 350
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8774d3e518948f290800000000000000
+      internalID: -7856448729967147144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_7
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 334
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d61bb932faf063a80800000000000000
+      internalID: -8487579202842021523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_8
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 302
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efae5002ca72420f0800000000000000
+      internalID: -1142744785220146434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_9
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 286
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 993719d47644fcbf0800000000000000
+      internalID: -301947439536835687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_10
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 126
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a696d6feddfac4a60800000000000000
+      internalID: 7659690433989929322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_11
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 94
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d366c0eb7dd259870800000000000000
+      internalID: 8688901460710942269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_12
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 86
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcffd3813227e3aa0800000000000000
+      internalID: -6179376143649603635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_13
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 22
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2367f3018b74e0610800000000000000
+      internalID: 1589286574380512818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_14
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 8
+        width: 8
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2cf9b2736c5be1e0800000000000000
+      internalID: -2167537213452452817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_15
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 710
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa7ec0301a341bae0800000000000000
+      internalID: -1535371639136655446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_16
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 622
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8974449acae230500800000000000000
+      internalID: 361183714228848536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_17
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 326
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0455c9873a788ba20800000000000000
+      internalID: 3078359481480664384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_18
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 238
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dfd5c3be48711020800000000000000
+      internalID: 2310760363236646867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_19
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 230
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82d317a6f12817380800000000000000
+      internalID: -8975249510931284696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_20
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 222
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cd5aa2c5e30102b0800000000000000
+      internalID: -5620206574633329207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_21
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 142
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00167f2da8a235090800000000000000
+      internalID: -8047041333447663360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_22
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 70
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5462cf89ff07b320800000000000000
+      internalID: 2573543276598682716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_23
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 62
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0994c967bb4a3d50800000000000000
+      internalID: 6717765045302106380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_24
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 38
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40daa8c8209b89bf0800000000000000
+      internalID: -317300353130648316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_25
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 30
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7639195bad17853a0800000000000000
+      internalID: -6676461263413734553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_26
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 0
+        width: 1273
+        height: 1024
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03a97590558668160800000000000000
+      internalID: 7027418982996482608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_27
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 805
+        width: 36
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94315efba0e35c330800000000000000
+      internalID: 3730456082236379977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_28
+      rect:
+        serializedVersion: 2
+        x: 826
+        y: 856
+        width: 32
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd503472893202080800000000000000
+      internalID: -9214325701199329825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_29
+      rect:
+        serializedVersion: 2
+        x: 829
+        y: 880
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9599cef66ec30ddf0800000000000000
+      internalID: -157559026540045991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_30
+      rect:
+        serializedVersion: 2
+        x: 844
+        y: 876
+        width: 58
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 249397707d709a040800000000000000
+      internalID: 4659263909616236866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_31
+      rect:
+        serializedVersion: 2
+        x: 891
+        y: 938
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02173041bcafddc20800000000000000
+      internalID: 3233015857642959136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_32
+      rect:
+        serializedVersion: 2
+        x: 891
+        y: 924
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32f495b6d7fd444a0800000000000000
+      internalID: -6609912623308124381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_33
+      rect:
+        serializedVersion: 2
+        x: 899
+        y: 928
+        width: 38
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 183b501ef9dc6d700800000000000000
+      internalID: 564864889840317313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_34
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 895
+        width: 27
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a7ae36f97cb7b510800000000000000
+      internalID: 1564926627542902695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 02_Dirt_remover_35
+      rect:
+        serializedVersion: 2
+        x: 995
+        y: 187
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1797d73f5758d900800000000000000
+      internalID: 709413007781238557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      02_Dirt_remover_0: 938133562103083597
+      02_Dirt_remover_1: -6556612649838034756
+      02_Dirt_remover_10: 7659690433989929322
+      02_Dirt_remover_11: 8688901460710942269
+      02_Dirt_remover_12: -6179376143649603635
+      02_Dirt_remover_13: 1589286574380512818
+      02_Dirt_remover_14: -2167537213452452817
+      02_Dirt_remover_15: -1535371639136655446
+      02_Dirt_remover_16: 361183714228848536
+      02_Dirt_remover_17: 3078359481480664384
+      02_Dirt_remover_18: 2310760363236646867
+      02_Dirt_remover_19: -8975249510931284696
+      02_Dirt_remover_2: -778895066513093535
+      02_Dirt_remover_20: -5620206574633329207
+      02_Dirt_remover_21: -8047041333447663360
+      02_Dirt_remover_22: 2573543276598682716
+      02_Dirt_remover_23: 6717765045302106380
+      02_Dirt_remover_24: -317300353130648316
+      02_Dirt_remover_25: -6676461263413734553
+      02_Dirt_remover_26: 7027418982996482608
+      02_Dirt_remover_27: 3730456082236379977
+      02_Dirt_remover_28: -9214325701199329825
+      02_Dirt_remover_29: -157559026540045991
+      02_Dirt_remover_3: 3531646597520169665
+      02_Dirt_remover_30: 4659263909616236866
+      02_Dirt_remover_31: 3233015857642959136
+      02_Dirt_remover_32: -6609912623308124381
+      02_Dirt_remover_33: 564864889840317313
+      02_Dirt_remover_34: 1564926627542902695
+      02_Dirt_remover_35: 709413007781238557
+      02_Dirt_remover_4: -2666167291719061735
+      02_Dirt_remover_5: 6231724511946827740
+      02_Dirt_remover_6: -7856448729967147144
+      02_Dirt_remover_7: -8487579202842021523
+      02_Dirt_remover_8: -1142744785220146434
+      02_Dirt_remover_9: -301947439536835687
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

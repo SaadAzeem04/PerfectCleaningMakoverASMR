@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b3b812e2aacbd478ca7e4faba98cae, type: 3}
+  m_Name: Football_Data
+  m_EditorClassIdentifier: 
+  objectName: 'Football '
+  backgroundSprite: {fileID: -6695950386315148514, guid: 2b5334e76890cbd498f6981f2f30f4d2, type: 3}
+  cleanSprite: {fileID: 7336298474659753992, guid: 2e114a465762b714d972e882d4027e66, type: 3}
+  dirtyLayers:
+  - {fileID: -3164809056393425246, guid: dc3a2c3a77c812f44b7287a4f9330c0e, type: 3}
+  - {fileID: -5225540622116197949, guid: 56d838a16cfca454a9ca1d0d6e0a79de, type: 3}
+  - {fileID: 8793915729297761979, guid: 6acc8524345abee41b41ab6c060c463b, type: 3}
+  - {fileID: 2750298860172458669, guid: 9fde41cfd1bcc664b8851fe2b424142a, type: 3}
+  - {fileID: -2276259661975475453, guid: 58b1551881eae2047b235eb992afd6a8, type: 3}
+  - {fileID: 141893073332109768, guid: 2838d853109587a40a468307384ea526, type: 3}
+  requiredTools:
+  - {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
+  - {fileID: 11400000, guid: bdab883a2eb5d4a42952bc8c56c2acdb, type: 2}
+  - {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
+  - {fileID: 11400000, guid: bbc0dc95d91ed5b4d9fe24396025dfff, type: 2}
+  - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+  - {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
+  cleanObjectScale: {x: 1, y: 1, z: 1}
+  layerScales:
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  layerOffsets:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}

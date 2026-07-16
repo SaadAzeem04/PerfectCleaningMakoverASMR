@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
+  m_Name: WaterSprayNew
+  m_EditorClassIdentifier: 
+  hasVariants: 1
+  toolVariants:
+  - variantName: waterspray02
+    toolSprite: {fileID: 2658037071850787674, guid: 08b6498c92215844e8ec18c9dde6a0ce, type: 3}
+    iconSprite: {fileID: 8452017568035861585, guid: ccbfef4a74625064c9c3eb86d8087b31, type: 3}
+    coinPrice: 10
+  - variantName: waterspray03
+    toolSprite: {fileID: 21300000, guid: 88f05ba643ce7bf49a7a13a51a8e37dd, type: 3}
+    iconSprite: {fileID: -3749877127376000549, guid: 79ec6ef540c2933449d37af08f680e8f, type: 3}
+    coinPrice: 10
+  - variantName: waterspray04
+    toolSprite: {fileID: 1755050588376245985, guid: 7375f16d19076f74ea0af73eb178c3a1, type: 3}
+    iconSprite: {fileID: -3749877127376000549, guid: 79ec6ef540c2933449d37af08f680e8f, type: 3}
+    coinPrice: 50
+  toolName: Water Spray
+  cameraZoomSize: 6
+  toolType: 4
+  toolSprite: {fileID: 2658037071850787674, guid: 08b6498c92215844e8ec18c9dde6a0ce, type: 3}
+  soundOnlyOnHit: 0
+  cleaningSpeed: 1
+  brushSize: 73
+  movementType: 0
+  scrubSpeed: 15
+  scrubAmount: 0.4
+  rotationSpeed: 10
+  rotationAmount: 15
+  useParticles: 1
+  particlePrefab: {fileID: 8123549400438394861, guid: f2d19221327961c43a1d0c947f558436, type: 3}
+  particleOffset: {x: 0, y: -0.1, z: 0}
+  useSecondParticles: 0
+  secondParticlePrefab: {fileID: 0}
+  secondParticleOffset: {x: 0, y: 0, z: 0}
+  eraseOffset: {x: 0, y: 2.1, z: 0}
+  toolSound: {fileID: 8300000, guid: e993c567098bfc04a94bc58d009efab3, type: 3}
+  toolOffset: {x: 0, y: -1, z: 0}
+  panelIcon: {fileID: 1755050588376245985, guid: 7375f16d19076f74ea0af73eb178c3a1, type: 3}

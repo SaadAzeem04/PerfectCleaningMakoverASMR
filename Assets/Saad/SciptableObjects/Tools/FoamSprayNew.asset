@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
+  m_Name: FoamSprayNew
+  m_EditorClassIdentifier: 
+  hasVariants: 0
+  toolVariants: []
+  toolName: Foam Spray
+  cameraZoomSize: 6
+  toolType: 2
+  toolSprite: {fileID: 7501495690245410524, guid: c695af7728d69654496d8ba79846c3f0, type: 3}
+  soundOnlyOnHit: 0
+  cleaningSpeed: 1
+  brushSize: 73
+  movementType: 0
+  scrubSpeed: 15
+  scrubAmount: 0.4
+  rotationSpeed: 10
+  rotationAmount: 15
+  useParticles: 1
+  particlePrefab: {fileID: 8123549400438394861, guid: 16e9366f5442a454cb8107b8544809d8, type: 3}
+  particleOffset: {x: 0, y: 0, z: 0}
+  useSecondParticles: 1
+  secondParticlePrefab: {fileID: 5068137153825672969, guid: be6792749d04e8f4e9bcbae5cb83efb9, type: 3}
+  secondParticleOffset: {x: 0, y: 1.8, z: 0}
+  eraseOffset: {x: 0, y: 1.8, z: 0}
+  toolSound: {fileID: 8300000, guid: e993c567098bfc04a94bc58d009efab3, type: 3}
+  toolOffset: {x: 0, y: -1, z: 0}
+  panelIcon: {fileID: -2407437494450665231, guid: 1276ef5b6839b3143bb8328cb77b6c21, type: 3}

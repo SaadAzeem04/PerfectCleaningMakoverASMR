@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
+  m_Name: Brush_Data
+  m_EditorClassIdentifier: 
+  hasVariants: 0
+  toolVariants: []
+  toolName: Brush
+  cameraZoomSize: 5
+  toolType: 1
+  toolSprite: {fileID: 7027418982996482608, guid: eba627467a769904b9f22ffe2ec6da9c, type: 3}
+  soundOnlyOnHit: 1
+  cleaningSpeed: 1
+  brushSize: 73
+  movementType: 0
+  scrubSpeed: 0
+  scrubAmount: 0
+  rotationSpeed: 10
+  rotationAmount: 15
+  useParticles: 1
+  particlePrefab: {fileID: 8761929157680561608, guid: 6f5ed51ba5c7b304ea73c9b3a635b91b, type: 3}
+  particleOffset: {x: 0, y: 0, z: 0}
+  useSecondParticles: 0
+  secondParticlePrefab: {fileID: 0}
+  secondParticleOffset: {x: 0, y: 0, z: 0}
+  eraseOffset: {x: 0, y: 0.3, z: 0}
+  toolSound: {fileID: 8300000, guid: 545649752d804564092f70c58472e47c, type: 3}
+  toolOffset: {x: 0, y: 0, z: 0}
+  panelIcon: {fileID: -7469049263692879614, guid: 9de01350ef0269346b5f75d5acf41f2a, type: 3}

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
+  m_Name: Towel_Data
+  m_EditorClassIdentifier: 
+  hasVariants: 0
+  toolVariants: []
+  toolName: Towel
+  cameraZoomSize: 5
+  toolType: 5
+  toolSprite: {fileID: -5849621657009932580, guid: 2eb08fd6d26594a4fbc7a22c986537e2, type: 3}
+  soundOnlyOnHit: 1
+  cleaningSpeed: 1
+  brushSize: 73
+  movementType: 0
+  scrubSpeed: 20
+  scrubAmount: 0.4
+  rotationSpeed: 10
+  rotationAmount: 15
+  useParticles: 1
+  particlePrefab: {fileID: 1680514027832752688, guid: c67396d920d77254a8b9338172672bdb, type: 3}
+  particleOffset: {x: 0, y: 0, z: 0}
+  useSecondParticles: 0
+  secondParticlePrefab: {fileID: 0}
+  secondParticleOffset: {x: 0, y: 0, z: 0}
+  eraseOffset: {x: 0, y: 0, z: 0}
+  toolSound: {fileID: 8300000, guid: 18fa65ae349e0c043bb99029f9ac6ecd, type: 3}
+  toolOffset: {x: 0, y: 0, z: 0}
+  panelIcon: {fileID: 1011511256227955051, guid: 3d624488c494c6d42b7769377af3f55b, type: 3}

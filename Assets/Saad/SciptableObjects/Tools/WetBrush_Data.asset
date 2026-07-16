@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
+  m_Name: WetBrush_Data
+  m_EditorClassIdentifier: 
+  hasVariants: 0
+  toolVariants: []
+  toolName: WetBrush
+  cameraZoomSize: 5
+  toolType: 3
+  toolSprite: {fileID: 3492953786835675030, guid: 246ec4f6d1418d146a4216737a92ba92, type: 3}
+  soundOnlyOnHit: 1
+  cleaningSpeed: 1
+  brushSize: 73
+  movementType: 3
+  scrubSpeed: 20
+  scrubAmount: 10
+  rotationSpeed: 12
+  rotationAmount: 20
+  useParticles: 1
+  particlePrefab: {fileID: 1680514027832752688, guid: a3d1da3b759626d44bd58e988e470880, type: 3}
+  particleOffset: {x: 0, y: 0, z: 0}
+  useSecondParticles: 0
+  secondParticlePrefab: {fileID: 0}
+  secondParticleOffset: {x: 0, y: 0, z: 0}
+  eraseOffset: {x: 0, y: 0, z: 0}
+  toolSound: {fileID: 8300000, guid: 873801e3ead0a434aaa9186940f09aa4, type: 3}
+  toolOffset: {x: 0, y: 0, z: 0}
+  panelIcon: {fileID: -5986452673002578869, guid: 49b17bbc107bee34da09cb94054d6c06, type: 3}
