@@ -1145,6 +1145,8 @@ MonoBehaviour:
   celebrationSound: {fileID: 8300000, guid: 2e1cabf2167c80c4a9aa23084ead8f38, type: 3}
   levelCompletePanel: {fileID: 1300243365}
   backgroundImage: {fileID: 0}
+  gameplayCoinPanel: {fileID: 1227842178}
+  gameplayCoinText: {fileID: 1908325720}
   variantMainPanel: {fileID: 2109210720}
   variantButtonsContainer: {fileID: 611353793}
   variantButtonPrefab: {fileID: 274026501837738321, guid: 5ac88220433a78d4f81b77d01f4efbd1, type: 3}
@@ -3450,11 +3452,11 @@ RectTransform:
   m_Children:
   - {fileID: 1908325719}
   - {fileID: 178502498}
-  m_Father: {fileID: 1300243366}
+  m_Father: {fileID: 1653161079}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 95, y: -118}
+  m_AnchoredPosition: {x: 89.15417, y: -99}
   m_SizeDelta: {x: 140, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1227842180
@@ -3885,7 +3887,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1227842179}
   - {fileID: 1270800497}
   m_Father: {fileID: 1653161079}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5005,6 +5006,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1227842179}
   - {fileID: 1300243366}
   - {fileID: 1925767974}
   - {fileID: 235937589}
