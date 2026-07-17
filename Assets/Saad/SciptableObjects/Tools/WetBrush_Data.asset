@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
   m_Name: WetBrush_Data
   m_EditorClassIdentifier: 
-  hasVariants: 0
-  toolVariants: []
+  hasVariants: 1
+  toolVariants:
+  - variantName: WetBrush
+    toolSprite: {fileID: -1165259615240445614, guid: f63b4a39e8db07b43b68af4d86c47df1, type: 3}
+    iconSprite: {fileID: -5986452673002578869, guid: 49b17bbc107bee34da09cb94054d6c06, type: 3}
+    coinPrice: 10
+  - variantName: WetBrush01
+    toolSprite: {fileID: -1165259615240445614, guid: f63b4a39e8db07b43b68af4d86c47df1, type: 3}
+    iconSprite: {fileID: -5986452673002578869, guid: 49b17bbc107bee34da09cb94054d6c06, type: 3}
+    coinPrice: 20
+  - variantName: WetBrush02
+    toolSprite: {fileID: -1165259615240445614, guid: f63b4a39e8db07b43b68af4d86c47df1, type: 3}
+    iconSprite: {fileID: 21300000, guid: 3cdb78e5dc8482b43baacfc820541863, type: 3}
+    coinPrice: 10
   toolName: WetBrush
   cameraZoomSize: 5
   toolType: 3
@@ -32,7 +44,7 @@ MonoBehaviour:
   useSecondParticles: 0
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
-  eraseOffset: {x: 0, y: 0, z: 0}
+  eraseOffset: {x: 0, y: 0.5, z: 0}
   toolSound: {fileID: 8300000, guid: 873801e3ead0a434aaa9186940f09aa4, type: 3}
   toolOffset: {x: 0, y: 0, z: 0}
   panelIcon: {fileID: -5986452673002578869, guid: 49b17bbc107bee34da09cb94054d6c06, type: 3}

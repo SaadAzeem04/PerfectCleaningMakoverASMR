@@ -40,6 +40,9 @@ public class MaskEraser : MonoBehaviour
     public GameObject levelCompletePanel;
     public Image backgroundImage;
 
+    [Tooltip("Gameplay me jo Pause Button hai use yahan drag karein")]
+    public GameObject pauseButton;
+
     [Header("Coin UI Settings")]
     [Tooltip("Gameplay ke dauran jo Coin UI bar dikhana hai use yahan drag karein")]
     public GameObject gameplayCoinPanel;
@@ -145,10 +148,14 @@ public class MaskEraser : MonoBehaviour
         PlayerPrefs.SetInt("Coins", 100);
         PlayerPrefs.Save();
 
-        // NAYA CODE: Gameplay Coin UI ko enable aur update karna
+        // Gameplay UI panels ko default par active karna start me
         if (gameplayCoinPanel != null)
         {
             gameplayCoinPanel.SetActive(true);
+        }
+        if (pauseButton != null)
+        {
+            pauseButton.SetActive(true);
         }
         UpdateGameplayCoinsUI();
 
@@ -202,7 +209,6 @@ public class MaskEraser : MonoBehaviour
         StartCoroutine(AnimateFirstToolOnStartup());
     }
 
-    // NAYA FUNCTION: Gameplay screen par coin count update karne ke liye
     public void UpdateGameplayCoinsUI()
     {
         if (gameplayCoinText != null)
@@ -331,7 +337,7 @@ public class MaskEraser : MonoBehaviour
             return;
         }
 
-        // BUG FIX: Jab tak mouse ya finger UI/Buttons ke upar hai, follower ko stop rakhein taake tool jump na kare
+        // BUG FIX: Jab tak mouse ya finger UI/Buttons ke upar hai, follower ko stop rakhein
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
             StopToolEffects();
@@ -343,24 +349,23 @@ public class MaskEraser : MonoBehaviour
         }
         else
         {
-            // Jaise hi mouse UI se bahar aaye, follower ko dobara chalu kardo
             if (toolFollower != null && !toolFollower.enabled && !isTransitioningTool)
             {
                 toolFollower.enabled = true;
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && !gameCompleted && !isTransitioningTool)
+        // UNIFIED LOGIC: Touch down/up par panels ko hide aur show karna
+        if (!gameCompleted && !isTransitioningTool)
         {
-            ToggleVariantPanelDuringCleaning(true);
-            // Hide Panel
-        }
-
-        // Jaise hi player ne touch choda aur layer abhi complete NAHI hui -> Panel Wapas le aao!
-        if (Input.GetMouseButtonUp(0) && !gameCompleted && !isTransitioningTool && !layerFinishedWaitingRelease)
-        {
-            ToggleVariantPanelDuringCleaning(false);
-            // Show Panel
+            if (Input.GetMouseButtonDown(0))
+            {
+                ToggleGameplayUI(true);  // Sab hide ho jayega
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                ToggleGameplayUI(false); // Sab wapas show ho jayega
+            }
         }
 
         if (Camera.main != null)
@@ -447,6 +452,29 @@ public class MaskEraser : MonoBehaviour
 
         currentFill = Mathf.Lerp(currentFill, targetFill, Time.deltaTime * 15f);
         progressFill.fillAmount = currentFill;
+    }
+
+    // UNIFIED FUNCTION: Teeno panels ko hide/show karne ke liye ek single controller
+    public void ToggleGameplayUI(bool hide)
+    {
+        // 1. Variant Panel (Sirf tabhi slide hoga jab tool ke paas variants hon)
+        if (currentToolData != null && currentToolData.hasVariants && currentToolData.toolVariants.Count > 0 && variantMainPanel != null)
+        {
+            if (panelAnimCoroutine != null) StopCoroutine(panelAnimCoroutine);
+            panelAnimCoroutine = StartCoroutine(AnimateVariantPanelVideoStyle(!hide));
+        }
+
+        // 2. Gameplay Coin Bar Toggle
+        if (gameplayCoinPanel != null)
+        {
+            gameplayCoinPanel.SetActive(!hide);
+        }
+
+        // 3. Pause Button Toggle
+        if (pauseButton != null)
+        {
+            pauseButton.SetActive(!hide);
+        }
     }
 
     void PlayToolEffects()
@@ -761,6 +789,14 @@ public class MaskEraser : MonoBehaviour
         if (currentToolUIImage != null) currentToolUIImage.gameObject.SetActive(false);
         if (upcomingToolUIImage != null) upcomingToolUIImage.gameObject.SetActive(false);
         UpdateUpcomingIconsPanel(false);
+
+        // Level complete hone par variant aur pause panel ko permanent hide karein
+        if (variantMainPanel != null) variantMainPanel.SetActive(false);
+        if (pauseButton != null) pauseButton.SetActive(false);
+
+        // GAMEPLAY COIN BAR: Jab tak win panel delayed chal raha hai, tab tak isko hide rakhein
+        if (gameplayCoinPanel != null) gameplayCoinPanel.SetActive(false);
+
         StartCoroutine(ShowDelayedUIAndCoinsRoutine());
         if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
         if (celebrationSound != null && AudioManager.Instance != null)
@@ -972,12 +1008,17 @@ public class MaskEraser : MonoBehaviour
             Debug.LogError("MaskEraser: levelCompletePanel reference missing in Inspector!");
         }
 
+        // COIN BAR RE-ACTIVATION: Level Complete screen aate hi coin counter wapas ON ho jayega
+        if (gameplayCoinPanel != null)
+        {
+            gameplayCoinPanel.SetActive(true);
+        }
+
         if (CoinManager.Instance != null)
         {
             CoinManager.Instance.TriggerCoinSwoopAnimation(20);
         }
 
-        // Level complete hone par gameplay wale coins ko bhi update kardein
         UpdateGameplayCoinsUI();
     }
 
@@ -1146,15 +1187,6 @@ public class MaskEraser : MonoBehaviour
         toolFollower.enabled = true;
     }
 
-    public void ToggleVariantPanelDuringCleaning(bool hide)
-    {
-        if (currentToolData == null || !currentToolData.hasVariants || currentToolData.toolVariants.Count == 0) return;
-        if (variantMainPanel == null) return;
-
-        if (panelAnimCoroutine != null) StopCoroutine(panelAnimCoroutine);
-        panelAnimCoroutine = StartCoroutine(AnimateVariantPanelVideoStyle(!hide));
-    }
-
     IEnumerator AnimateVariantPanelVideoStyle(bool show)
     {
         if (variantMainPanel == null) yield break;
@@ -1162,8 +1194,6 @@ public class MaskEraser : MonoBehaviour
         {
             variantMainPanel.transform.localScale = new Vector3(0.5f, 0f, 1f);
             variantMainPanel.SetActive(true);
-
-            // DELAY
             yield return new WaitForSeconds(0.8f);
         }
 

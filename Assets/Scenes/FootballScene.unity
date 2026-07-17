@@ -1145,6 +1145,7 @@ MonoBehaviour:
   celebrationSound: {fileID: 8300000, guid: 2e1cabf2167c80c4a9aa23084ead8f38, type: 3}
   levelCompletePanel: {fileID: 1300243365}
   backgroundImage: {fileID: 0}
+  pauseButton: {fileID: 1320420390}
   gameplayCoinPanel: {fileID: 1227842178}
   gameplayCoinText: {fileID: 1908325720}
   variantMainPanel: {fileID: 2109210720}
