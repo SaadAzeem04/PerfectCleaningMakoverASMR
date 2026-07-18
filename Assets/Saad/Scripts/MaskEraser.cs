@@ -60,6 +60,12 @@ public class MaskEraser : MonoBehaviour
 
     private Coroutine panelAnimCoroutine;
 
+    // NAYE COROUTINE & POSITION VARIABLES: Coin aur Pause button animation ke liye
+    private Coroutine cornerButtonsCoroutine;
+    private Vector2 coinPanelOriginalPos;
+    private Vector2 pauseButtonOriginalPos;
+    private bool areCornerPosSaved = false;
+
     // NAYA VARIABLE: Pehle se active variant ko track karne ke liye
     private ToolVariant currentEquippedVariant;
 
@@ -71,7 +77,6 @@ public class MaskEraser : MonoBehaviour
     [Header("Tool UI Sizes & Spacing")]
     public float activeToolScale = 2f;
     public float inactiveToolScale = 1.5f;
-    // Yeh line add karein:
     public float toolSpacing = 100f;
 
     [Header("Upcoming Objects Panel")]
@@ -126,6 +131,12 @@ public class MaskEraser : MonoBehaviour
     Texture2D texture;
     int totalOpaquePixels = 0;
 
+    // Inko class ke top par declare karein
+    private float totalChunksCount = 0f;
+    private float remainingChunksCount = 0f;
+
+   // private int totalChunksCount = 0; // Chunks ki kul tadad save karne ke liye
+
     float targetFill;
     private bool isLayerClearSoundPlayed = false;
     float currentFill;
@@ -135,6 +146,7 @@ public class MaskEraser : MonoBehaviour
     float progressTimer = 0f;
     bool needsProgressCheck = false;
 
+
     Vector2 prevPos, currPos, upPos;
     bool positionsSaved = false;
 
@@ -142,6 +154,9 @@ public class MaskEraser : MonoBehaviour
     bool isTransitioningTool = false;
     float targetCameraSize = 5f;
     float effectGraceTimer = 0f;
+
+    private int totalChunksInLayer = 0;
+    private int removedChunksCount = 0;
 
     void Start()
     {
@@ -222,6 +237,7 @@ public class MaskEraser : MonoBehaviour
     {
         if (backgroundImage != null && objectData.backgroundSprite != null)
             backgroundImage.sprite = objectData.backgroundSprite;
+
         if (levelParentAnchor == null)
         {
             Debug.LogError("MaskEraser: Please assign Level Parent Anchor!");
@@ -260,6 +276,10 @@ public class MaskEraser : MonoBehaviour
                 {
                     sr.sprite = objectData.cleanSprite;
                     sr.sortingOrder = 0;
+
+                    // --- NAYA CODE: Clean object agar pehle se hierarchy me ho to uski position/scale ---
+                    sr.transform.localPosition = objectData.cleanObjectOffset;
+                    sr.transform.localScale = objectData.cleanObjectScale;
                 }
                 else
                 {
@@ -267,6 +287,16 @@ public class MaskEraser : MonoBehaviour
                     {
                         sr.sprite = objectData.dirtyLayers[dirtyIndex];
                         sr.sortingOrder = totalLayers - dirtyIndex;
+
+                        if (objectData.layerOffsets != null && dirtyIndex < objectData.layerOffsets.Length)
+                        {
+                            sr.transform.localPosition = objectData.layerOffsets[dirtyIndex];
+                        }
+
+                        if (objectData.layerScales != null && dirtyIndex < objectData.layerScales.Length)
+                        {
+                            sr.transform.localScale = objectData.layerScales[dirtyIndex];
+                        }
 
                         layersList.Add(sr);
 
@@ -290,8 +320,11 @@ public class MaskEraser : MonoBehaviour
             {
                 GameObject cleanObj = new GameObject("Base_Clean_Object");
                 cleanObj.transform.SetParent(levelParentAnchor);
-                cleanObj.transform.localPosition = Vector3.zero;
-                cleanObj.transform.localScale = Vector3.one;
+                cleanObj.transform.localRotation = Quaternion.identity;
+
+                // --- NAYA CODE: Runtime par banne wale clean object ki position/scale ---
+                cleanObj.transform.localPosition = objectData.cleanObjectOffset;
+                cleanObj.transform.localScale = objectData.cleanObjectScale;
 
                 SpriteRenderer sr = cleanObj.AddComponent<SpriteRenderer>();
                 sr.sprite = objectData.cleanSprite;
@@ -307,8 +340,23 @@ public class MaskEraser : MonoBehaviour
                     GameObject dirtyObj = new GameObject("Dirty_Layer_" + i);
                     dirtyObj.transform.SetParent(levelParentAnchor);
 
-                    dirtyObj.transform.localPosition = Vector3.zero;
-                    dirtyObj.transform.localScale = Vector3.one;
+                    if (objectData.layerOffsets != null && i < objectData.layerOffsets.Length)
+                    {
+                        dirtyObj.transform.localPosition = objectData.layerOffsets[i];
+                    }
+                    else
+                    {
+                        dirtyObj.transform.localPosition = Vector3.zero;
+                    }
+
+                    if (objectData.layerScales != null && i < objectData.layerScales.Length)
+                    {
+                        dirtyObj.transform.localScale = objectData.layerScales[i];
+                    }
+                    else
+                    {
+                        dirtyObj.transform.localScale = Vector3.one;
+                    }
 
                     SpriteRenderer sr = dirtyObj.AddComponent<SpriteRenderer>();
                     sr.sprite = objectData.dirtyLayers[i];
@@ -337,7 +385,7 @@ public class MaskEraser : MonoBehaviour
             return;
         }
 
-        // BUG FIX: Jab tak mouse ya finger UI/Buttons ke upar hai, follower ko stop rakhein
+        // Jab tak mouse ya finger UI/Buttons ke upar hai, follower ko stop rakhein
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
             StopToolEffects();
@@ -405,21 +453,40 @@ public class MaskEraser : MonoBehaviour
         }
 
         if (currentLayer >= layersList.Count) return;
-        if (Input.GetMouseButton(0) && currentToolData != null && toolFollower.CanClean)
+
+        // --- MOUSE INPUT FOR ANIMATION AND SCRUBBING ---
+        if (Input.GetMouseButton(0) && currentToolData != null && toolFollower != null && toolFollower.CanClean)
         {
             Vector3 world;
             if (eraseAnchor != null) world = eraseAnchor.position;
             else
             {
                 float cameraDistance = Mathf.Abs(Camera.main.transform.position.z);
-                world = Camera.main.ScreenToWorldPoint(new Vector3(currentMousePos.x, currentMousePos.y, cameraDistance));
+                world = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cameraDistance));
             }
-
             world.z = 0;
-            bool isOverLayer = EraseAtWorldPosition(world);
-            bool shouldPlay = currentToolData.soundOnlyOnHit ? isOverLayer : true;
 
-            if (shouldPlay) effectGraceTimer = 0.15f;
+            // Har tool ke liye mitti kaatna lazmi karein
+            bool isOverLayer = EraseAtWorldPosition(world);
+
+            //  Hawa mein click block fix: Progress check tabhi chalega jab mouse click dabba hua ho!
+            needsProgressCheck = true;
+            textureNeedsApply = true;
+
+            if (currentToolData.name.Contains("Scraper") || currentToolData.toolName.Contains("Scraper"))
+            {
+                AnimateTool(); // Shake karega
+                effectGraceTimer = 0.15f;
+            }
+            else
+            {
+                bool shouldPlay = currentToolData.soundOnlyOnHit ? isOverLayer : true;
+                if (shouldPlay) effectGraceTimer = 0.15f;
+            }
+        }
+        else if (!Input.GetMouseButton(0) && currentToolData != null)
+        {
+            ResetToolPosition();
         }
 
         if (effectGraceTimer > 0)
@@ -436,15 +503,44 @@ public class MaskEraser : MonoBehaviour
         {
             texture.Apply(false);
             textureNeedsApply = false;
-            needsProgressCheck = true;
         }
 
+        // --- RESET AND REALTIME PROGRESS CALCULATION ---
         if (needsProgressCheck)
         {
             progressTimer += Time.deltaTime;
-            if (progressTimer > 0.15f || !Input.GetMouseButton(0))
+
+            if (!Input.GetMouseButton(0) || progressTimer > 0.15f)
             {
-                UpdateProgress();
+                // Automatic Chunks System Finder:
+                Transform existingChunks = levelParentAnchor.Find("Scraper_Chunks_Runtime");
+
+                // 1. Agar scene mein chunks object active aur maujood hai
+                if (existingChunks != null && existingChunks.gameObject.activeInHierarchy)
+                {
+                    int currentLeftChunks = 0;
+                    foreach (Transform child in existingChunks)
+                    {
+                        // Sirf un chunks ko gino jo abhi tak nahi gire/gayab nahi hue (active hain)
+                        if (child.gameObject.activeSelf)
+                        {
+                            currentLeftChunks++;
+                        }
+                    }
+
+                    if (totalChunksCount > 0)
+                    {
+                        // Progress = Kitne percent gir chuke hain
+                        float progress = 1f - ((float)currentLeftChunks / totalChunksCount);
+                        targetFill = Mathf.Clamp01(progress);
+                    }
+                }
+                else
+                {
+                    // 2. Agar chunks nahi hain (Brush/Water tool chal raha hai), to pixels se calculation karo
+                    UpdateProgress();
+                }
+
                 progressTimer = 0f;
                 needsProgressCheck = false;
             }
@@ -454,7 +550,9 @@ public class MaskEraser : MonoBehaviour
         progressFill.fillAmount = currentFill;
     }
 
-    // UNIFIED FUNCTION: Teeno panels ko hide/show karne ke liye ek single controller
+
+
+    // UNIFIED FUNCTION: Teeno panels ko smooth animation ke sath hide/show karne ke liye
     public void ToggleGameplayUI(bool hide)
     {
         // 1. Variant Panel (Sirf tabhi slide hoga jab tool ke paas variants hon)
@@ -464,16 +562,86 @@ public class MaskEraser : MonoBehaviour
             panelAnimCoroutine = StartCoroutine(AnimateVariantPanelVideoStyle(!hide));
         }
 
-        // 2. Gameplay Coin Bar Toggle
-        if (gameplayCoinPanel != null)
+        // 2 & 3. Coin Bar aur Pause Button ki smooth animation
+        if (gameplayCoinPanel != null || pauseButton != null)
         {
-            gameplayCoinPanel.SetActive(!hide);
+            if (cornerButtonsCoroutine != null) StopCoroutine(cornerButtonsCoroutine);
+            cornerButtonsCoroutine = StartCoroutine(AnimateCornerButtonsRoutine(!hide));
+        }
+    }
+
+    // NAYI COROUTINE: Coin aur Pause button ko smooth slide/scale karane ke liye
+    IEnumerator AnimateCornerButtonsRoutine(bool show)
+    {
+        RectTransform coinRect = gameplayCoinPanel != null ? gameplayCoinPanel.GetComponent<RectTransform>() : null;
+        RectTransform pauseRect = pauseButton != null ? pauseButton.GetComponent<RectTransform>() : null;
+
+        // Start me dono ki original positions save karna taake animation hamesha accurate rahe
+        if (!areCornerPosSaved)
+        {
+            if (coinRect != null) coinPanelOriginalPos = coinRect.anchoredPosition;
+            if (pauseRect != null) pauseButtonOriginalPos = pauseRect.anchoredPosition;
+            areCornerPosSaved = true;
         }
 
-        // 3. Pause Button Toggle
-        if (pauseButton != null)
+        if (show)
         {
-            pauseButton.SetActive(!hide);
+            if (gameplayCoinPanel != null) gameplayCoinPanel.SetActive(true);
+            if (pauseButton != null) pauseButton.SetActive(true);
+        }
+
+        Vector3 startCoinScale = coinRect != null ? coinRect.localScale : Vector3.one;
+        Vector3 startPauseScale = pauseRect != null ? pauseRect.localScale : Vector3.one;
+
+        Vector3 targetScale = show ? Vector3.one : new Vector3(0f, 0f, 1f);
+
+        Vector2 startCoinPos = coinRect != null ? coinRect.anchoredPosition : Vector2.zero;
+        Vector2 startPausePos = pauseRect != null ? pauseRect.anchoredPosition : Vector2.zero;
+
+        // Hide hote waqt coin bar left ki taraf aur pause button right ki taraf slide hoga
+        Vector2 targetCoinPos = show ? coinPanelOriginalPos : coinPanelOriginalPos + new Vector2(-150f, 0f);
+        Vector2 targetPausePos = show ? pauseButtonOriginalPos : pauseButtonOriginalPos + new Vector2(150f, 0f);
+
+        float time = 0f;
+        float duration = 0.25f;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float t = time / duration;
+            float smoothT = t * t * (3f - 2f * t);
+
+            if (coinRect != null)
+            {
+                coinRect.localScale = Vector3.Lerp(startCoinScale, targetScale, smoothT);
+                coinRect.anchoredPosition = Vector2.Lerp(startCoinPos, targetCoinPos, smoothT);
+            }
+
+            if (pauseRect != null)
+            {
+                pauseRect.localScale = Vector3.Lerp(startPauseScale, targetScale, smoothT);
+                pauseRect.anchoredPosition = Vector2.Lerp(startPausePos, targetPausePos, smoothT);
+            }
+
+            yield return null;
+        }
+
+        if (coinRect != null)
+        {
+            coinRect.localScale = targetScale;
+            coinRect.anchoredPosition = targetCoinPos;
+        }
+
+        if (pauseRect != null)
+        {
+            pauseRect.localScale = targetScale;
+            pauseRect.anchoredPosition = targetPausePos;
+        }
+
+        if (!show)
+        {
+            if (gameplayCoinPanel != null) gameplayCoinPanel.SetActive(false);
+            if (pauseButton != null) pauseButton.SetActive(false);
         }
     }
 
@@ -988,6 +1156,106 @@ public class MaskEraser : MonoBehaviour
         currentEquippedVariant = null;
 
         SetupToolVariantsPanel(tool);
+
+        // =================================================================
+        // --- HYBRID SYSTEM (SIRF CLICK HONE PAR CHUNKS DETECT KAREGA) ---
+        // =================================================================
+        if (currentToolData != null)
+        {
+            // Check karein ke jo tool select hua hai kya wo Scraper hai?
+            bool isScraper = currentToolData.name.Contains("Scraper") || currentToolData.toolName.Contains("Scraper");
+
+            if (isScraper)
+            {
+                // 1. Agar Scraper hai, to purani plain mud layer photo ko chupa do
+                if (currentLayer < layersList.Count && layersList[currentLayer] != null)
+                {
+                    layersList[currentLayer].gameObject.SetActive(false);
+                }
+
+                // 2. Chunks wala prefab dhoondhein ya spawn karein
+                Transform existingChunks = levelParentAnchor.Find("Scraper_Chunks_Runtime");
+                if (existingChunks == null && objectData.scraperChunksPrefab != null)
+                {
+                    // Purani layer ki position aur transform nikalna
+                    Transform originalLayerTransform = layersList[currentLayer].transform;
+
+                    // Chunks ko usi exact position aur parent par spawn karein jahan purani mitti thi
+                    GameObject chunksInstance = Instantiate(objectData.scraperChunksPrefab, originalLayerTransform.parent);
+
+                    MudChunk[] allChunks = chunksInstance.GetComponentsInChildren<MudChunk>();
+                    InitializeChunksCount(allChunks.Length);
+
+                    chunksInstance.name = "Scraper_Chunks_Runtime";
+
+                    // Exact position, rotation aur scale match karna taake ball ke upar fit aaye
+                    chunksInstance.transform.localPosition = originalLayerTransform.localPosition;
+                    chunksInstance.transform.localRotation = originalLayerTransform.localRotation;
+                    chunksInstance.transform.localScale = originalLayerTransform.localScale;
+
+                    // LIVE FIX 1: Chunks ki Z position ko 0 par force karein taake collision intersect ho
+                    Vector3 chunkPos = chunksInstance.transform.localPosition;
+                    chunkPos.z = 0;
+                    chunksInstance.transform.localPosition = chunkPos;
+
+                    // Rigidbodies ko ignore collision dena taake tool freeze na ho
+                    Collider2D[] childColliders = chunksInstance.GetComponentsInChildren<Collider2D>();
+                    InitializeChunksCount(childColliders.Length);
+                }
+                else if (existingChunks != null)
+                {
+                    existingChunks.gameObject.SetActive(true);
+
+                    // Z-position alignment check for existing chunks
+                    Vector3 chunkPos = existingChunks.localPosition;
+                    chunkPos.z = 0;
+                    existingChunks.localPosition = chunkPos;
+                }
+            }
+            else
+            {
+                // 3. Agar koi doosra tool select hua (Brush/Water), to chunks ko chupa do aur purani photo wapas lao
+                Transform existingChunks = levelParentAnchor.Find("Scraper_Chunks_Runtime");
+                if (existingChunks != null)
+                {
+                    existingChunks.gameObject.SetActive(false);
+                }
+
+                if (currentLayer < layersList.Count && layersList[currentLayer] != null)
+                {
+                    layersList[currentLayer].gameObject.SetActive(true);
+                }
+            }
+        }
+        // =================================================================
+
+        // Tool follower par automatic collider lagana taake mitti ko gira sake
+        if (toolFollower != null)
+        {
+            //  LIVE FIX 2: Tool ki apni local Z position ko bhi zero karein
+            Vector3 toolPos = toolFollower.transform.localPosition;
+            toolPos.z = 0;
+            toolFollower.transform.localPosition = toolPos;
+
+            Collider2D toolCol = toolFollower.GetComponent<Collider2D>();
+            if (toolCol == null)
+            {
+                // Agar tool par collider nahi hai to CircleCollider2D laga do
+                CircleCollider2D circleCol = toolFollower.gameObject.AddComponent<CircleCollider2D>();
+                // Radius thoda bada rakhein taake ragadte waqt aaram se touch ho
+                circleCol.radius = 0.5f;
+                toolCol = circleCol;
+            }
+            toolCol.isTrigger = true; // Is ka trigger hona lazmi hai
+
+            Rigidbody2D toolRb = toolFollower.GetComponent<Rigidbody2D>();
+            if (toolRb == null)
+            {
+                toolRb = toolFollower.gameObject.AddComponent<Rigidbody2D>();
+            }
+            toolRb.bodyType = RigidbodyType2D.Kinematic; // Taake tool khud neeche na gire
+            toolRb.simulated = true;
+        }
     }
 
     public void GoToHome()
@@ -1020,7 +1288,69 @@ public class MaskEraser : MonoBehaviour
         }
 
         UpdateGameplayCoinsUI();
+        // Tool load hone ke baad, use collider aur trigger banayein:
+        if (toolFollower != null)
+        {
+            // Agar pehle se collider nahi hai to add karein
+            Collider2D toolCollider = toolFollower.GetComponent<Collider2D>();
+            if (toolCollider == null)
+            {
+                toolCollider = toolFollower.gameObject.AddComponent<CircleCollider2D>();
+            }
+            toolCollider.isTrigger = true; // Is ko check rakhna zaroori hai
+
+            // Rigidbody2D zaroori hai triggers ke takrane ke liye
+            Rigidbody2D toolRb = toolFollower.GetComponent<Rigidbody2D>();
+            if (toolRb == null)
+            {
+                toolRb = toolFollower.gameObject.AddComponent<Rigidbody2D>();
+            }
+            toolRb.bodyType = RigidbodyType2D.Kinematic; // Taake tool gravity se neeche na gire
+        }
+        // --- HYBRID SYSTEM LOGIC ---
+        // --- HYBRID SYSTEM LOGIC (FIXED) ---
+        if (currentToolData != null && (currentToolData.name.Contains("Scraper") || currentToolData.toolName.Contains("Scraper")))
+        {
+            // 1. Agar Scraper select hua hai, to purani sprite layer ko hide kar do
+            if (currentLayer < layersList.Count && layersList[currentLayer] != null)
+            {
+                layersList[currentLayer].gameObject.SetActive(false);
+            }
+
+            // 2. Chunks wala prefab spawn karo agar pehle se nahi hua verna use active karo
+            GameObject chunksInstance = levelParentAnchor.Find("Scraper_Chunks_Runtime")?.gameObject;
+
+            if (chunksInstance == null && objectData.scraperChunksPrefab != null)
+            {
+                chunksInstance = Instantiate(objectData.scraperChunksPrefab, levelParentAnchor);
+                chunksInstance.name = "Scraper_Chunks_Runtime";
+
+                chunksInstance.transform.localPosition = objectData.cleanObjectOffset;
+                chunksInstance.transform.localScale = objectData.cleanObjectScale;
+
+                InitializeChunksCount(chunksInstance.GetComponentsInChildren<MudChunk>().Length);
+            }
+            else if (chunksInstance != null)
+            {
+                chunksInstance.SetActive(true);
+            }
+        }
+        else
+        {
+            // 3. Agar koi DOOSRA tool select hua hai, to chunks ko hide karo aur purani sprite dikhao
+            GameObject chunksInstance = levelParentAnchor.Find("Scraper_Chunks_Runtime")?.gameObject;
+            if (chunksInstance != null)
+            {
+                chunksInstance.SetActive(false);
+            }
+
+            if (currentLayer < layersList.Count && layersList[currentLayer] != null)
+            {
+                layersList[currentLayer].gameObject.SetActive(true);
+            }
+        }
     }
+
 
     Transform GetToolTransformToAnimate()
     {
@@ -1042,6 +1372,7 @@ public class MaskEraser : MonoBehaviour
             isToolPosSaved = true;
         }
 
+        // --- FIXED: Brackets aur Duplicate Code Saaf Kar Diya ---
         if (currentToolData.movementType == ToolMovementType.Scrubbing)
         {
             float shake = Mathf.Sin(Time.time * currentToolData.scrubSpeed) * currentToolData.scrubAmount;
@@ -1072,6 +1403,7 @@ public class MaskEraser : MonoBehaviour
             toolObj.localRotation = originalToolRotation;
         }
     }
+
 
     void SetupToolVariantsPanel(ToolData tool)
     {
@@ -1248,5 +1580,47 @@ public class MaskEraser : MonoBehaviour
         }
 
         isTransitioningTool = false;
+    }
+    public void InitializeChunksCount(int count)
+    {
+        totalChunksCount = count;
+        remainingChunksCount = count;
+
+        // Agar pehle se hi progress 0 set karni ho
+        targetFill = 0f;
+    }
+
+    // Naya function jo MudChunk.cs direct call karega jab chunk girega
+    public void ChunkFallen()
+    {
+        if (totalChunksCount > 0)
+        {
+            remainingChunksCount--;
+            if (remainingChunksCount < 0) remainingChunksCount = 0;
+
+            // Progress calculate karein: Jitne chunks gir gaye hain uske mutabik
+            float progress = 1f - (remainingChunksCount / totalChunksCount);
+            targetFill = Mathf.Clamp01(progress);
+        }
+    }
+
+    // Har tukda girne par yeh call hoga
+    public void ChunkRemoved()
+    {
+        removedChunksCount++;
+
+        // Progress calculation (0 se 1 ke beech fill amount)
+        if (totalChunksInLayer > 0)
+        {
+            targetFill = (float)removedChunksCount / totalChunksInLayer;
+            percentText.text = Mathf.RoundToInt(targetFill * 100f) + "%";
+
+            // Agar saare chunks gir gaye to next layer par jao
+            if (removedChunksCount >= totalChunksInLayer)
+            {
+                // Aapka next layer par jaane ka purana function
+                StartCoroutine(TransitionToNextLayerRoutine());
+            }
+        }
     }
 }
