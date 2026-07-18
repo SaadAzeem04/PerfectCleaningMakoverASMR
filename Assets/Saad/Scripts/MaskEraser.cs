@@ -150,8 +150,6 @@ public class MaskEraser : MonoBehaviour
     Vector2 prevPos, currPos, upPos;
     bool positionsSaved = false;
 
-
-    public Text progressText;
     bool layerFinishedWaitingRelease = false;
     bool isTransitioningTool = false;
     float targetCameraSize = 5f;
@@ -548,31 +546,8 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // --- REALTIME UI SMOOTH FILL AND TEXT SYNC ---
-        // --- REALTIME UI SMOOTH FILL AND TEXT SYNC (ZABARDASTI 100% FIX) ---
         currentFill = Mathf.Lerp(currentFill, targetFill, Time.deltaTime * 15f);
-
-        // Agar layer khatam hone ka wait ho raha hai ya target 100% ho chuka hai, to direct 100% force karo
-        if (layerFinishedWaitingRelease || targetFill >= 0.93f)
-        {
-            currentFill = 1f;
-        }
-
-        if (progressFill != null)
-        {
-            progressFill.fillAmount = currentFill;
-        }
-
-        // Percentage text update logic
-        if (progressText != null)
-        {
-            int displayPercentage = Mathf.RoundToInt(currentFill * 100f);
-
-            // Kisi bhi crash ya minus value se bachne ke liye clamp lagayein
-            displayPercentage = Mathf.Clamp(displayPercentage, 0, 100);
-
-            progressText.text = displayPercentage + "%";
-        }
+        progressFill.fillAmount = currentFill;
     }
 
 
@@ -1623,36 +1598,9 @@ public class MaskEraser : MonoBehaviour
             remainingChunksCount--;
             if (remainingChunksCount < 0) remainingChunksCount = 0;
 
+            // Progress calculate karein: Jitne chunks gir gaye hain uske mutabik
             float progress = 1f - (remainingChunksCount / totalChunksCount);
-
-            // Agar 93% se zyada mitti saaf ho jaye to auto-complete
-            if (progress >= 0.93f)
-            {
-                targetFill = 1f;
-                remainingChunksCount = 0;
-
-                Transform existingChunks = levelParentAnchor.Find("Scraper_Chunks_Runtime");
-                if (existingChunks != null)
-                {
-                    foreach (Transform child in existingChunks)
-                    {
-                        if (child.gameObject.activeSelf)
-                        {
-                            MudChunk chunkScript = child.GetComponent<MudChunk>();
-                            if (chunkScript != null) chunkScript.FallDown();
-                        }
-                    }
-                }
-
-                if (!layerFinishedWaitingRelease)
-                {
-                    layerFinishedWaitingRelease = true;
-                }
-            }
-            else
-            {
-                targetFill = Mathf.Clamp01(progress);
-            }
+            targetFill = Mathf.Clamp01(progress);
         }
     }
 

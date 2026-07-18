@@ -18,7 +18,7 @@ MonoBehaviour:
   cameraZoomSize: 5
   toolType: 0
   toolSprite: {fileID: -7260706826572596083, guid: 05a26877cb3d7484e9f708887d54a9b7, type: 3}
-  soundOnlyOnHit: 0
+  soundOnlyOnHit: 1
   cleaningSpeed: 1
   brushSize: 73
   movementType: 3
