@@ -5,7 +5,6 @@ TagManager:
   serializedVersion: 3
   tags:
   - CleanLayer
-  - ToolFollower
   layers:
   - Default
   - TransparentFX

@@ -15,8 +15,6 @@ MonoBehaviour:
   objectName: 'Football '
   backgroundSprite: {fileID: -6695950386315148514, guid: 2b5334e76890cbd498f6981f2f30f4d2, type: 3}
   cleanSprite: {fileID: 7336298474659753992, guid: 2e114a465762b714d972e882d4027e66, type: 3}
-  cleanObjectOffset: {x: -0.028, y: 0, z: 0}
-  cleanObjectScale: {x: 1.0619, y: 1.0619, z: 1.0619}
   dirtyLayers:
   - {fileID: -3164809056393425246, guid: dc3a2c3a77c812f44b7287a4f9330c0e, type: 3}
   - {fileID: -5225540622116197949, guid: 56d838a16cfca454a9ca1d0d6e0a79de, type: 3}
@@ -24,20 +22,6 @@ MonoBehaviour:
   - {fileID: 2750298860172458669, guid: 9fde41cfd1bcc664b8851fe2b424142a, type: 3}
   - {fileID: -2276259661975475453, guid: 58b1551881eae2047b235eb992afd6a8, type: 3}
   - {fileID: 141893073332109768, guid: 2838d853109587a40a468307384ea526, type: 3}
-  layerOffsets:
-  - {x: 0, y: 0, z: 0}
-  - {x: -0.022, y: 0, z: 0}
-  - {x: -0.038, y: 0.01, z: 0}
-  - {x: -0.019, y: -0.038, z: 0}
-  - {x: -0.028, y: -0.047, z: 0}
-  - {x: -0.09, y: -0.028, z: 0}
-  layerScales:
-  - {x: 1, y: 1, z: 1}
-  - {x: 1.05069, y: 1.05069, z: 1.05069}
-  - {x: 1.0619, y: 1.0619, z: 1.0619}
-  - {x: 1.055, y: 1.055, z: 1.055}
-  - {x: 1.0619, y: 1.0619, z: 1.0619}
-  - {x: 1.053, y: 1.053, z: 1.053}
   requiredTools:
   - {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
   - {fileID: 11400000, guid: bdab883a2eb5d4a42952bc8c56c2acdb, type: 2}
@@ -45,4 +29,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bbc0dc95d91ed5b4d9fe24396025dfff, type: 2}
   - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
   - {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
-  scraperChunksPrefab: {fileID: 5915248798135929991, guid: 3b25e137f0abbc446af6f297020c86a8, type: 3}
+  cleanObjectScale: {x: 1, y: 1, z: 1}
+  layerScales:
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  layerOffsets:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
