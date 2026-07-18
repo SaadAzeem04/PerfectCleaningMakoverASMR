@@ -7,7 +7,7 @@ public class ToolVariantButton : MonoBehaviour
     public Image iconImage;
     public TMP_Text priceText;
     public Button selectButton;
-    public GameObject equippedCheckmark; // Video wala green tick (Optional)
+    public GameObject equippedCheckmark; // Video wala green tick
 
     private ToolVariant currentVariant;
     private ToolData parentTool;
@@ -86,11 +86,11 @@ public class ToolVariantButton : MonoBehaviour
                 }
                 else
                 {
-                    // Backup Updater: Agar Instance na mile to direct UI text badal do
-                    TMP_Text[] allTexts = FindObjectsOfType<TMP_Text>();
+                    // UNIVERSAL FIX: GameObject standard search lagaya jo har version me safe hai
+                    TMP_Text[] allTexts = GameObject.FindObjectsOfType<TMP_Text>();
                     foreach (TMP_Text txt in allTexts)
                     {
-                        if (txt.gameObject.name.ToLower().Contains("coin"))
+                        if (txt != null && txt.gameObject.name.ToLower().Contains("coin"))
                         {
                             txt.text = currentCoins.ToString();
                         }
@@ -115,6 +115,16 @@ public class ToolVariantButton : MonoBehaviour
         if (eraserManager != null)
         {
             eraserManager.ApplyVariantSkin(parentTool, currentVariant, true);
+        }
+
+        //  UNIVERSAL FIX: Buttons ko refresh karne ke liye standard method bina parameters ke
+        ToolVariantButton[] allButtons = GameObject.FindObjectsOfType<ToolVariantButton>();
+        foreach (ToolVariantButton btn in allButtons)
+        {
+            if (btn != null && btn.gameObject.activeInHierarchy)
+            {
+                btn.UpdateUI();
+            }
         }
     }
 }
