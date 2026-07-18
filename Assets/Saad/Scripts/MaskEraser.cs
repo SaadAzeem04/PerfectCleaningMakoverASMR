@@ -126,6 +126,8 @@ public class MaskEraser : MonoBehaviour
     Texture2D texture;
     int totalOpaquePixels = 0;
 
+    public GameObject scraperPhysicsEdge;
+
     float targetFill;
     private bool isLayerClearSoundPlayed = false;
     float currentFill;
@@ -331,6 +333,15 @@ public class MaskEraser : MonoBehaviour
 
     void Update()
     {
+
+        if (scraperPhysicsEdge != null && currentToolData != null)
+        {
+            // Agar current tool ka type ya naam Scraper hai, to hi collider active hoga
+            bool isScraperActive = currentToolData.toolType == ToolType.Scraper || currentToolData.toolName.Contains("Scraper") || currentToolData.name.Contains("Scraper");
+
+            scraperPhysicsEdge.SetActive(isScraperActive);
+        }
+
         if (PauseManager.IsGamePaused)
         {
             StopToolEffects();
@@ -452,6 +463,10 @@ public class MaskEraser : MonoBehaviour
 
         currentFill = Mathf.Lerp(currentFill, targetFill, Time.deltaTime * 15f);
         progressFill.fillAmount = currentFill;
+    }
+    public void ChunkFallen()
+    {
+        // Abhi isme koi progress logic nahi dalenge taake baki cheezein effect na hon
     }
 
     // UNIFIED FUNCTION: Teeno panels ko hide/show karne ke liye ek single controller
