@@ -15,7 +15,6 @@ MonoBehaviour:
   objectName: 'Football '
   backgroundSprite: {fileID: -6695950386315148514, guid: 2b5334e76890cbd498f6981f2f30f4d2, type: 3}
   cleanSprite: {fileID: 7336298474659753992, guid: 2e114a465762b714d972e882d4027e66, type: 3}
-  scraperChunksPrefab: {fileID: 4327062767962575664, guid: 147c71173f5e0144c8f312c51b86ddd4, type: 3}
   dirtyLayers:
   - {fileID: -3164809056393425246, guid: dc3a2c3a77c812f44b7287a4f9330c0e, type: 3}
   - {fileID: -5225540622116197949, guid: 56d838a16cfca454a9ca1d0d6e0a79de, type: 3}
@@ -30,3 +29,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bbc0dc95d91ed5b4d9fe24396025dfff, type: 2}
   - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
   - {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
+  cleanObjectScale: {x: 1, y: 1, z: 1}
+  layerScales:
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  layerOffsets:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
