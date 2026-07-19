@@ -123,6 +123,10 @@ public class MaskEraser : MonoBehaviour
     private int remainingScraperChunks = 0;
     private bool isScraperActive = false;
 
+    [Header("UI Animation References")]
+    public SmoothUIAnimate pauseButtonAnim;
+    public SmoothUIAnimate coinCounterAnim;
+
     // Runtime Generated Layers
     private List<SpriteRenderer> layersList = new List<SpriteRenderer>();
     private List<ToolData> layerRequiredTools = new List<ToolData>();
@@ -374,7 +378,9 @@ public class MaskEraser : MonoBehaviour
 
             Debug.Log($"MaskEraser: Chunks Parent Prefab Loaded Successfully! Total Progress Chunks Counted: {totalScraperChunks}");
         }
+
     }
+
 
     void Update()
     {
@@ -531,26 +537,35 @@ public class MaskEraser : MonoBehaviour
     // UNIFIED FUNCTION: Teeno panels ko hide/show karne ke liye ek single controller
     public void ToggleGameplayUI(bool hide)
     {
-        // 1. Variant Panel (Sirf tabhi slide hoga jab tool ke paas variants hon)
+        // 1. Variant Panel (Aapka purana variant code waise hi rahega)
         if (currentToolData != null && currentToolData.hasVariants && currentToolData.toolVariants.Count > 0 && variantMainPanel != null)
         {
             if (panelAnimCoroutine != null) StopCoroutine(panelAnimCoroutine);
             panelAnimCoroutine = StartCoroutine(AnimateVariantPanelVideoStyle(!hide));
         }
 
-        // 2. Gameplay Coin Bar Toggle
-        if (gameplayCoinPanel != null)
+        // 2. Gameplay Coin Bar Toggle (Bina Animator ke Smooth Scale)
+        if (coinCounterAnim != null)
+        {
+            if (hide) coinCounterAnim.HideUI();
+            else coinCounterAnim.ShowUI();
+        }
+        else if (gameplayCoinPanel != null) // Fallback safe check
         {
             gameplayCoinPanel.SetActive(!hide);
         }
 
-        // 3. Pause Button Toggle
-        if (pauseButton != null)
+        // 3. Pause Button Toggle (Bina Animator ke Smooth Scale)
+        if (pauseButtonAnim != null)
+        {
+            if (hide) pauseButtonAnim.HideUI();
+            else pauseButtonAnim.ShowUI();
+        }
+        else if (pauseButton != null) // Fallback safe check
         {
             pauseButton.SetActive(!hide);
         }
     }
-
     void PlayToolEffects()
     {
         AnimateTool();
@@ -727,21 +742,40 @@ public class MaskEraser : MonoBehaviour
     {
         if (gameCompleted || layerFinishedWaitingRelease || layersList.Count == 0) return;
 
-        // Check karein ke kya haath mein Scraper tool hai
         isScraperActive = (currentToolData != null && (currentToolData.toolType == ToolType.Scraper || currentToolData.name.Contains("Scraper")));
 
         float percent = 0f;
+        bool isLayerFullyCleaned = false;
 
         if (isScraperActive)
         {
-            // SCRAPER LOGIC: Chunks ki base par progress nikalein
+            //  AGAR TOTAL CHUNKS ZERO HAIN, TO INSANE 100% SE BACHNE KE LIYE RE-COUNT KAREIN
+            if (totalScraperChunks <= 0)
+            {
+                if (levelParentAnchor != null)
+                {
+                    MudChunk[] allChunks = levelParentAnchor.GetComponentsInChildren<MudChunk>(true);
+                    totalScraperChunks = allChunks.Length;
+                    remainingScraperChunks = totalScraperChunks;
+                }
+            }
+
             if (totalScraperChunks == 0) totalScraperChunks = 1;
+
             int removedChunks = totalScraperChunks - remainingScraperChunks;
             percent = ((float)removedChunks / totalScraperChunks) * 100f;
+
+            // FORCE CHECK: Jab tak aakhri chunk baqi hai, percent 100% nahi ho sakta!
+            if (remainingScraperChunks > 0 && percent >= 99f)
+            {
+                percent = 99f;
+            }
+
+            isLayerFullyCleaned = (remainingScraperChunks <= 0);
         }
         else
         {
-            //  PURANI LOGIC: Saare baqi tools ke liye pixels count karein
+            //  Normal tools ke liye pixels count karein
             Color[] pixels = texture.GetPixels();
             int currentOpaque = 0;
             foreach (Color c in pixels)
@@ -752,18 +786,21 @@ public class MaskEraser : MonoBehaviour
             if (totalOpaquePixels == 0) totalOpaquePixels = 1;
             int removed = totalOpaquePixels - currentOpaque;
             percent = ((float)removed / totalOpaquePixels) * 100f;
+
+            isLayerFullyCleaned = (percent >= cleaningThreshold);
         }
 
         float visualPercent = percent;
         if (visualPercent > 100f) visualPercent = 100f;
 
+        //  UI UPDATE: Sirf tabhi 100% dikhaye jab such mein complete ho
         targetFill = visualPercent / 100f;
+        progressFill.fillAmount = targetFill; // Direct fill amount assign karke test karein lerp ke bajaye
         percentText.text = Mathf.RoundToInt(visualPercent) + "%";
 
-        // Agar target complete ho gaya (cleaningThreshold achieved)
-        if (percent >= cleaningThreshold)
+        if (isLayerFullyCleaned)
         {
-            Debug.Log("LAYER TARGET ACHIEVED!");
+            Debug.Log("LAYER TARGET ACHIEVED COMPLETELY!");
             if (!isLayerClearSoundPlayed)
             {
                 if (AudioManager.Instance != null && AudioManager.Instance.layerClearSFX != null)
@@ -776,7 +813,6 @@ public class MaskEraser : MonoBehaviour
             effectGraceTimer = 0f;
             StopToolEffects();
 
-            // Custom Layer Clear process call hoga
             ClearRemainingLayer();
 
             if (currentLayer >= layersList.Count - 1)
