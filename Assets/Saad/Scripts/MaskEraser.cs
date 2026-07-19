@@ -17,7 +17,6 @@ public class MaskEraser : MonoBehaviour
     public ToolFollower toolFollower;
     public TMP_Text percentText;
     public Image progressFill;
-    //public AudioSource audioSource;
 
     //  TOOL ANIMATION VARIABLES
     private Vector3 originalToolLocalPos;
@@ -29,7 +28,6 @@ public class MaskEraser : MonoBehaviour
     public Transform eraseAnchor;
     public GameObject currentParticle;
 
-    // Naya private reference list taake dono active particles control ho sakein
     private List<GameObject> activeParticlesList = new List<GameObject>();
 
     [Header("Celebration")]
@@ -44,23 +42,22 @@ public class MaskEraser : MonoBehaviour
     public GameObject pauseButton;
 
     [Header("Coin UI Settings")]
-    [Tooltip("Gameplay ke dauran jo Coin UI bar dikhana hai use yahan drag karein")]
     public GameObject gameplayCoinPanel;
-    [Tooltip("Coin bar ke andar ka Text Mesh Pro (TMP_Text) component yahan drag karein")]
     public TMP_Text gameplayCoinText;
 
     [Header("--- Ref Video Tool Variant UI ---")]
     public GameObject variantMainPanel;
-    // Niche wala poora UI Dabba
     public Transform variantButtonsContainer;
-    // Jahan 3 buttons lagenge (Horizontal Layout Group)
     public GameObject variantButtonPrefab;
-    // Button ka Prefab
     private List<ToolVariantButton> spawnedVariantButtons = new List<ToolVariantButton>();
 
     private Coroutine panelAnimCoroutine;
 
-    // NAYA VARIABLE: Pehle se active variant ko track karne ke liye
+    private Coroutine cornerButtonsCoroutine;
+    private Vector2 coinPanelOriginalPos;
+    private Vector2 pauseButtonOriginalPos;
+    private bool areCornerPosSaved = false;
+
     private ToolVariant currentEquippedVariant;
 
     [Header("Tool UI Panel")]
@@ -71,54 +68,39 @@ public class MaskEraser : MonoBehaviour
     [Header("Tool UI Sizes & Spacing")]
     public float activeToolScale = 2f;
     public float inactiveToolScale = 1.5f;
-    // Yeh line add karein:
     public float toolSpacing = 100f;
 
     [Header("Upcoming Objects Panel")]
     public Image[] upcomingIcons;
 
     [Header("End Game Settings")]
-    [Tooltip("Level complete hone par window kitni der baad aaye")]
     public float levelCompleteDelay = 3.0f;
-    // Window aane mein delay
-    [Tooltip("Sari layers clean hone ke baad camera ka zoom size kya ho")]
     public float levelCompleteZoomSize = 4.5f;
-    // Thora zoom karne ke liye (kam value = zoom in, zyada = zoom out)
 
     [Header("Eraser Smoothness Settings")]
     [Range(0.01f, 1.0f)]
-    [Tooltip("Kam value se edges soft aur smooth honge. Zyada se sharp honge.")]
     public float brushHardness = 0.15f;
     [Range(0.01f, 1.0f)]
-    [Tooltip("Kam value se mitti dheere aur smoothly saaf hogi (Intensity kam hogi).")]
     public float eraserIntensityMultiplier = 0.1f;
 
     [Header("Level Completion Settings")]
     [Range(0f, 100f)]
-    [Tooltip("Kitne percent mitti saaf hone par level complete mana jaye (e.g., 95% ya 98%)")]
     public float cleaningThreshold = 95f;
 
     [Header("Camera Settings")]
-    [Tooltip("Camera zoom hone ki speed/intensity. Default 4 hai, jitna zyada karenge utna fast zoom hoga.")]
     public float cameraTransitionIntensity = 3f;
 
     [Header("Camera Parallax Settings")]
     public float cameraMoveIntensity = 0.2f;
 
     [Header("Camera Zoom Settings")]
-    [Tooltip("Default camera size jab koi tool active na ho ya game start ho.")]
     public float defaultCameraSize = 5f;
 
     [Header("Level Completed UI Settings")]
-    [Tooltip("Is level ke khatam hone par jo ALAG ya SHINY photo dikhani hai.")]
     public Sprite completedLevelSprite;
-    //  Har level ki special win photo ke liye
-
-    [Tooltip("Completed Window ke andar wala UI Image dabba jahan photo dikhegi.")]
     public UnityEngine.UI.Image winPanelIconImage;
     public GameObject progressBarMainPanel;
 
-    // Runtime Generated Layers
     private List<SpriteRenderer> layersList = new List<SpriteRenderer>();
     private List<ToolData> layerRequiredTools = new List<ToolData>();
 
@@ -143,20 +125,16 @@ public class MaskEraser : MonoBehaviour
     float targetCameraSize = 5f;
     float effectGraceTimer = 0f;
 
+    private int totalChunksInLayer = 0;
+    private int removedChunksCount = 0;
+
     void Start()
     {
         PlayerPrefs.SetInt("Coins", 100);
         PlayerPrefs.Save();
 
-        // Gameplay UI panels ko default par active karna start me
-        if (gameplayCoinPanel != null)
-        {
-            gameplayCoinPanel.SetActive(true);
-        }
-        if (pauseButton != null)
-        {
-            pauseButton.SetActive(true);
-        }
+        if (gameplayCoinPanel != null) gameplayCoinPanel.SetActive(true);
+        if (pauseButton != null) pauseButton.SetActive(true);
         UpdateGameplayCoinsUI();
 
         if (AudioManager.Instance != null && AudioManager.Instance.gameSceneMusic != null)
@@ -165,15 +143,11 @@ public class MaskEraser : MonoBehaviour
         }
         if (Camera.main != null)
         {
-            defaultCameraSize = Camera.main.orthographic ?
-                Camera.main.orthographicSize : Camera.main.fieldOfView;
+            defaultCameraSize = Camera.main.orthographic ? Camera.main.orthographicSize : Camera.main.fieldOfView;
             targetCameraSize = defaultCameraSize;
         }
 
-        if (LevelManager.SelectedObject != null)
-        {
-            objectData = LevelManager.SelectedObject;
-        }
+        if (LevelManager.SelectedObject != null) objectData = LevelManager.SelectedObject;
 
         if (objectData == null)
         {
@@ -188,13 +162,9 @@ public class MaskEraser : MonoBehaviour
             SelectTool(layerRequiredTools[currentLayer], false);
 
             if (layerRequiredTools[currentLayer] != null && layerRequiredTools[currentLayer].cameraZoomSize > 0.1f)
-            {
                 targetCameraSize = layerRequiredTools[currentLayer].cameraZoomSize;
-            }
             else
-            {
                 targetCameraSize = defaultCameraSize;
-            }
         }
 
         UpdateUpcomingIconsPanel(true);
@@ -222,6 +192,7 @@ public class MaskEraser : MonoBehaviour
     {
         if (backgroundImage != null && objectData.backgroundSprite != null)
             backgroundImage.sprite = objectData.backgroundSprite;
+
         if (levelParentAnchor == null)
         {
             Debug.LogError("MaskEraser: Please assign Level Parent Anchor!");
@@ -260,6 +231,10 @@ public class MaskEraser : MonoBehaviour
                 {
                     sr.sprite = objectData.cleanSprite;
                     sr.sortingOrder = 0;
+
+                    // Fallback direct vectors used to bypass missing fields in CleaningObjectData
+                    sr.transform.localPosition = Vector3.zero;
+                    sr.transform.localScale = Vector3.one;
                 }
                 else
                 {
@@ -267,6 +242,9 @@ public class MaskEraser : MonoBehaviour
                     {
                         sr.sprite = objectData.dirtyLayers[dirtyIndex];
                         sr.sortingOrder = totalLayers - dirtyIndex;
+
+                        sr.transform.localPosition = Vector3.zero;
+                        sr.transform.localScale = Vector3.one;
 
                         layersList.Add(sr);
 
@@ -290,6 +268,8 @@ public class MaskEraser : MonoBehaviour
             {
                 GameObject cleanObj = new GameObject("Base_Clean_Object");
                 cleanObj.transform.SetParent(levelParentAnchor);
+                cleanObj.transform.localRotation = Quaternion.identity;
+
                 cleanObj.transform.localPosition = Vector3.zero;
                 cleanObj.transform.localScale = Vector3.one;
 
@@ -337,7 +317,6 @@ public class MaskEraser : MonoBehaviour
             return;
         }
 
-        // BUG FIX: Jab tak mouse ya finger UI/Buttons ke upar hai, follower ko stop rakhein
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
             StopToolEffects();
@@ -355,17 +334,10 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // UNIFIED LOGIC: Touch down/up par panels ko hide aur show karna
         if (!gameCompleted && !isTransitioningTool)
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                ToggleGameplayUI(true);  // Sab hide ho jayega
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                ToggleGameplayUI(false); // Sab wapas show ho jayega
-            }
+            if (Input.GetMouseButtonDown(0)) ToggleGameplayUI(true);
+            else if (Input.GetMouseButtonUp(0)) ToggleGameplayUI(false);
         }
 
         if (Camera.main != null)
@@ -405,21 +377,35 @@ public class MaskEraser : MonoBehaviour
         }
 
         if (currentLayer >= layersList.Count) return;
-        if (Input.GetMouseButton(0) && currentToolData != null && toolFollower.CanClean)
+
+        // --- UPDATED MOUSE INPUT SECTION WITH NULL/SCRAPER CHECKS ---
+        if (Input.GetMouseButton(0) && currentToolData != null && toolFollower != null && toolFollower.CanClean)
         {
-            Vector3 world;
-            if (eraseAnchor != null) world = eraseAnchor.position;
+            bool isScraper = currentToolData.name.Contains("Scraper") || currentToolData.toolName.Contains("Scraper");
+
+            if (isScraper)
+            {
+                effectGraceTimer = 0.15f;
+            }
             else
             {
-                float cameraDistance = Mathf.Abs(Camera.main.transform.position.z);
-                world = Camera.main.ScreenToWorldPoint(new Vector3(currentMousePos.x, currentMousePos.y, cameraDistance));
+                // Sirf tabhi texture base cleaning chalegi jab texture waqai ban chuka ho
+                if (texture != null)
+                {
+                    Vector3 world;
+                    if (eraseAnchor != null) world = eraseAnchor.position;
+                    else
+                    {
+                        float cameraDistance = Mathf.Abs(Camera.main.transform.position.z);
+                        world = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cameraDistance));
+                    }
+                    world.z = 0;
+
+                    bool isOverLayer = EraseAtWorldPosition(world);
+                    bool shouldPlay = currentToolData.soundOnlyOnHit ? isOverLayer : true;
+                    if (shouldPlay) effectGraceTimer = 0.15f;
+                }
             }
-
-            world.z = 0;
-            bool isOverLayer = EraseAtWorldPosition(world);
-            bool shouldPlay = currentToolData.soundOnlyOnHit ? isOverLayer : true;
-
-            if (shouldPlay) effectGraceTimer = 0.15f;
         }
 
         if (effectGraceTimer > 0)
@@ -454,26 +440,88 @@ public class MaskEraser : MonoBehaviour
         progressFill.fillAmount = currentFill;
     }
 
-    // UNIFIED FUNCTION: Teeno panels ko hide/show karne ke liye ek single controller
     public void ToggleGameplayUI(bool hide)
     {
-        // 1. Variant Panel (Sirf tabhi slide hoga jab tool ke paas variants hon)
         if (currentToolData != null && currentToolData.hasVariants && currentToolData.toolVariants.Count > 0 && variantMainPanel != null)
         {
             if (panelAnimCoroutine != null) StopCoroutine(panelAnimCoroutine);
             panelAnimCoroutine = StartCoroutine(AnimateVariantPanelVideoStyle(!hide));
         }
 
-        // 2. Gameplay Coin Bar Toggle
-        if (gameplayCoinPanel != null)
+        if (gameplayCoinPanel != null || pauseButton != null)
         {
-            gameplayCoinPanel.SetActive(!hide);
+            if (cornerButtonsCoroutine != null) StopCoroutine(cornerButtonsCoroutine);
+            cornerButtonsCoroutine = StartCoroutine(AnimateCornerButtonsRoutine(!hide));
+        }
+    }
+
+    IEnumerator AnimateCornerButtonsRoutine(bool show)
+    {
+        RectTransform coinRect = gameplayCoinPanel != null ? gameplayCoinPanel.GetComponent<RectTransform>() : null;
+        RectTransform pauseRect = pauseButton != null ? pauseButton.GetComponent<RectTransform>() : null;
+
+        if (!areCornerPosSaved)
+        {
+            if (coinRect != null) coinPanelOriginalPos = coinRect.anchoredPosition;
+            if (pauseRect != null) pauseButtonOriginalPos = pauseRect.anchoredPosition;
+            areCornerPosSaved = true;
         }
 
-        // 3. Pause Button Toggle
-        if (pauseButton != null)
+        if (show)
         {
-            pauseButton.SetActive(!hide);
+            if (gameplayCoinPanel != null) gameplayCoinPanel.SetActive(true);
+            if (pauseButton != null) pauseButton.SetActive(true);
+        }
+
+        Vector3 startCoinScale = coinRect != null ? coinRect.localScale : Vector3.one;
+        Vector3 startPauseScale = pauseRect != null ? pauseRect.localScale : Vector3.one;
+        Vector3 targetScale = show ? Vector3.one : new Vector3(0f, 0f, 1f);
+
+        Vector2 startCoinPos = coinRect != null ? coinRect.anchoredPosition : Vector2.zero;
+        Vector2 startPausePos = pauseRect != null ? pauseRect.anchoredPosition : Vector2.zero;
+
+        Vector2 targetCoinPos = show ? coinPanelOriginalPos : coinPanelOriginalPos + new Vector2(-150f, 0f);
+        Vector2 targetPausePos = show ? pauseButtonOriginalPos : pauseButtonOriginalPos + new Vector2(150f, 0f);
+
+        float time = 0f;
+        float duration = 0.25f;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float t = time / duration;
+            float smoothT = t * t * (3f - 2f * t);
+
+            if (coinRect != null)
+            {
+                coinRect.localScale = Vector3.Lerp(startCoinScale, targetScale, smoothT);
+                coinRect.anchoredPosition = Vector2.Lerp(startCoinPos, targetCoinPos, smoothT);
+            }
+
+            if (pauseRect != null)
+            {
+                pauseRect.localScale = Vector3.Lerp(startPauseScale, targetScale, smoothT);
+                pauseRect.anchoredPosition = Vector2.Lerp(startPausePos, targetPausePos, smoothT);
+            }
+
+            yield return null;
+        }
+
+        if (coinRect != null)
+        {
+            coinRect.localScale = targetScale;
+            coinRect.anchoredPosition = targetCoinPos;
+        }
+        if (pauseRect != null)
+        {
+            pauseRect.localScale = targetScale;
+            pauseRect.anchoredPosition = targetPausePos;
+        }
+
+        if (!show)
+        {
+            if (gameplayCoinPanel != null) gameplayCoinPanel.SetActive(false);
+            if (pauseButton != null) pauseButton.SetActive(false);
         }
     }
 
@@ -503,17 +551,11 @@ public class MaskEraser : MonoBehaviour
             if (activePart != null)
             {
                 ParticleSystem[] allParticles = activePart.GetComponentsInChildren<ParticleSystem>();
-                foreach (ParticleSystem ps in allParticles)
-                {
-                    ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                }
+                foreach (ParticleSystem ps in allParticles) ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
             }
         }
 
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.StopToolSFX();
-        }
+        if (AudioManager.Instance != null) AudioManager.Instance.StopToolSFX();
     }
 
     void LoadToolEffect(ToolData tool)
@@ -533,11 +575,9 @@ public class MaskEraser : MonoBehaviour
             ParticleSystem[] allParticles = currentParticle.GetComponentsInChildren<ParticleSystem>();
             foreach (ParticleSystem ps in allParticles)
             {
-                var main = ps.main;
-                main.playOnAwake = false;
+                var main = ps.main; main.playOnAwake = false;
                 ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             }
-
             activeParticlesList.Add(currentParticle);
         }
 
@@ -549,11 +589,9 @@ public class MaskEraser : MonoBehaviour
             ParticleSystem[] allParticles = secondParticle.GetComponentsInChildren<ParticleSystem>();
             foreach (ParticleSystem ps in allParticles)
             {
-                var main = ps.main;
-                main.playOnAwake = false;
+                var main = ps.main; main.playOnAwake = false;
                 ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             }
-
             activeParticlesList.Add(secondParticle);
         }
     }
@@ -561,11 +599,14 @@ public class MaskEraser : MonoBehaviour
     void PrepareLayer()
     {
         if (currentLayer >= layersList.Count) return;
+
+        bool isScraper = currentToolData != null && (currentToolData.name.Contains("Scraper") || currentToolData.toolName.Contains("Scraper"));
+        if (isScraper) return;
+
         layersList[currentLayer].gameObject.SetActive(true);
 
         Sprite originalSprite = layersList[currentLayer].sprite;
         Texture2D sheetTexture = originalSprite.texture;
-
         Rect sliceRect = originalSprite.rect;
 
         int x = Mathf.RoundToInt(sliceRect.x);
@@ -575,40 +616,34 @@ public class MaskEraser : MonoBehaviour
 
         Color[] slicePixels = sheetTexture.GetPixels(x, y, width, height);
         totalOpaquePixels = 0;
-        foreach (Color c in slicePixels)
-        {
-            if (c.a > 0.25f) totalOpaquePixels++;
-        }
+        foreach (Color c in slicePixels) if (c.a > 0.25f) totalOpaquePixels++;
 
         texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
         texture.SetPixels(slicePixels);
         texture.Apply();
         Vector2 exactPivot = new Vector2(originalSprite.pivot.x / width, originalSprite.pivot.y / height);
-        layersList[currentLayer].sprite = Sprite.Create(
-            texture,
-            new Rect(0, 0, width, height),
-            exactPivot,
-            originalSprite.pixelsPerUnit,
-            0,
-            SpriteMeshType.FullRect
-        );
+        layersList[currentLayer].sprite = Sprite.Create(texture, new Rect(0, 0, width, height), exactPivot, originalSprite.pixelsPerUnit, 0, SpriteMeshType.FullRect);
     }
 
     public bool EraseAtWorldPosition(Vector3 world)
     {
-        if (currentLayer >= layersList.Count) return false;
+        // SAFETY CHECK: Agar layer valid na ho ya texture initialize na hua ho, to crash na ho
+        if (currentLayer >= layersList.Count || texture == null) return false;
+
         Vector3 local = layersList[currentLayer].transform.InverseTransformPoint(world);
         SpriteRenderer sr = layersList[currentLayer];
+
+        if (sr == null || sr.sprite == null) return false;
 
         float width = sr.sprite.bounds.size.x;
         float height = sr.sprite.bounds.size.y;
         float xp = (local.x + width / 2) / width;
         float yp = (local.y + height / 2) / height;
+
         int x = Mathf.RoundToInt(xp * texture.width);
         int y = Mathf.RoundToInt(yp * texture.height);
         int size = currentToolData.brushSize;
 
-        float brushHardness = 0.1f;
         bool actualCleaningDone = false;
         for (int i = -size; i < size; i++)
         {
@@ -642,17 +677,16 @@ public class MaskEraser : MonoBehaviour
     void UpdateProgress()
     {
         if (gameCompleted || layerFinishedWaitingRelease || layersList.Count == 0) return;
-        Color[] pixels = texture.GetPixels();
 
+        bool isScraper = currentToolData != null && (currentToolData.name.Contains("Scraper") || currentToolData.toolName.Contains("Scraper"));
+        if (isScraper) return;
+
+        Color[] pixels = texture.GetPixels();
         int currentOpaque = 0;
-        foreach (Color c in pixels)
-        {
-            if (c.a > 0.25f) currentOpaque++;
-        }
+        foreach (Color c in pixels) if (c.a > 0.25f) currentOpaque++;
 
         if (totalOpaquePixels == 0) totalOpaquePixels = 1;
         int removed = totalOpaquePixels - currentOpaque;
-
         float percent = ((float)removed / totalOpaquePixels) * 100f;
 
         float visualPercent = percent;
@@ -662,7 +696,6 @@ public class MaskEraser : MonoBehaviour
         percentText.text = Mathf.RoundToInt(visualPercent) + "%";
         if (percent >= cleaningThreshold)
         {
-            Debug.Log("LAYER TARGET ACHIEVED!");
             if (!isLayerClearSoundPlayed)
             {
                 if (AudioManager.Instance != null && AudioManager.Instance.layerClearSFX != null)
@@ -675,23 +708,26 @@ public class MaskEraser : MonoBehaviour
             effectGraceTimer = 0f;
             StopToolEffects();
             ClearRemainingLayer();
-            if (currentLayer >= layersList.Count - 1)
-            {
-                CompleteGame();
-            }
-            else
-            {
-                layerFinishedWaitingRelease = true;
-            }
+            if (currentLayer >= layersList.Count - 1) CompleteGame();
+            else layerFinishedWaitingRelease = true;
         }
     }
 
     void ClearRemainingLayer()
     {
-        Color[] pixels = texture.GetPixels();
-        for (int i = 0; i < pixels.Length; i++) pixels[i].a = 0f;
-        texture.SetPixels(pixels);
-        texture.Apply(false);
+        bool isScraper = currentToolData != null && (currentToolData.name.Contains("Scraper") || currentToolData.toolName.Contains("Scraper"));
+        if (isScraper)
+        {
+            Transform existingChunks = levelParentAnchor.Find("Scraper_Chunks_Runtime");
+            if (existingChunks != null) existingChunks.gameObject.SetActive(false);
+        }
+        else
+        {
+            Color[] pixels = texture.GetPixels();
+            for (int i = 0; i < pixels.Length; i++) pixels[i].a = 0f;
+            texture.SetPixels(pixels);
+            texture.Apply(false);
+        }
 
         targetFill = 1f;
         currentFill = 1f;
@@ -703,7 +739,6 @@ public class MaskEraser : MonoBehaviour
     {
         isTransitioningTool = true;
         if (toolFollower != null) toolFollower.enabled = false;
-
         targetCameraSize = defaultCameraSize;
 
         yield return new WaitForSeconds(0.5f);
@@ -711,8 +746,7 @@ public class MaskEraser : MonoBehaviour
         Vector3 startPos = toolFollower.transform.position;
         Vector3 leftTarget = startPos + Vector3.left * 15f;
 
-        float time = 0;
-        float durationOut = 0.5f;
+        float time = 0; float durationOut = 0.5f;
         while (time < durationOut)
         {
             time += Time.deltaTime;
@@ -722,12 +756,9 @@ public class MaskEraser : MonoBehaviour
         }
 
         if (currentLayer < layersList.Count && layersList[currentLayer] != null)
-        {
             layersList[currentLayer].gameObject.SetActive(false);
-        }
 
         currentLayer++;
-
         if (currentLayer >= layersList.Count)
         {
             CompleteGame();
@@ -735,33 +766,26 @@ public class MaskEraser : MonoBehaviour
             yield break;
         }
 
+        currentFill = 0f; targetFill = 0f;
+        progressFill.fillAmount = 0f; percentText.text = "0%";
+
         PrepareLayer();
         ToolData nextTool = layerRequiredTools[currentLayer];
-
         SelectTool(nextTool, true);
         targetCameraSize = (nextTool != null && nextTool.cameraZoomSize > 0.1f) ? nextTool.cameraZoomSize : defaultCameraSize;
 
         float camZ = Mathf.Abs(Camera.main.transform.position.z);
-
         isLayerClearSoundPlayed = false;
 
-        currentFill = 0f;
-        targetFill = 0f;
-        progressFill.fillAmount = 0f;
-        percentText.text = "0%";
-
         yield return new WaitForSeconds(0.4f);
-        time = 0;
-        float durationIn = 0.6f;
+        time = 0; float durationIn = 0.6f;
         while (time < durationIn)
         {
             time += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, time / durationIn);
-
             Vector3 currentRestTarget = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.2f, camZ));
             currentRestTarget.z = 0f;
             Vector3 currentRightStart = currentRestTarget + Vector3.right * 15f;
-
             toolFollower.transform.position = Vector3.Lerp(currentRightStart, currentRestTarget, t);
             yield return null;
         }
@@ -777,7 +801,6 @@ public class MaskEraser : MonoBehaviour
 
     void CompleteGame()
     {
-        Debug.Log("CompleteGame() START HUA HAI!");
         gameCompleted = true;
         percentText.text = "100%";
         progressFill.fillAmount = 1f;
@@ -790,24 +813,15 @@ public class MaskEraser : MonoBehaviour
         if (upcomingToolUIImage != null) upcomingToolUIImage.gameObject.SetActive(false);
         UpdateUpcomingIconsPanel(false);
 
-        // Level complete hone par variant aur pause panel ko permanent hide karein
         if (variantMainPanel != null) variantMainPanel.SetActive(false);
         if (pauseButton != null) pauseButton.SetActive(false);
-
-        // GAMEPLAY COIN BAR: Jab tak win panel delayed chal raha hai, tab tak isko hide rakhein
         if (gameplayCoinPanel != null) gameplayCoinPanel.SetActive(false);
 
         StartCoroutine(ShowDelayedUIAndCoinsRoutine());
         if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
-        if (celebrationSound != null && AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlaySFX(celebrationSound);
-        }
+        if (celebrationSound != null && AudioManager.Instance != null) AudioManager.Instance.PlaySFX(celebrationSound);
 
-        if (winPanelIconImage != null && completedLevelSprite != null)
-        {
-            winPanelIconImage.sprite = completedLevelSprite;
-        }
+        if (winPanelIconImage != null && completedLevelSprite != null) winPanelIconImage.sprite = completedLevelSprite;
     }
 
     void SnapToolUI()
@@ -837,34 +851,29 @@ public class MaskEraser : MonoBehaviour
 
     IEnumerator SlideToolUI()
     {
-        float duration = 0.5f;
-        float time = 0;
+        float duration = 0.5f; float time = 0;
         Vector3 smallScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
         Vector3 largeScale = new Vector3(activeToolScale, activeToolScale, 1f);
         if (previousToolUIImage != null && previousToolUIImage.gameObject.activeSelf)
         {
             previousToolUIImage.rectTransform.anchoredPosition = currPos;
-            previousToolUIImage.transform.localScale = largeScale;
-            SetImageAlpha(previousToolUIImage, 1f);
+            previousToolUIImage.transform.localScale = largeScale; SetImageAlpha(previousToolUIImage, 1f);
         }
         if (currentToolUIImage != null && currentToolUIImage.gameObject.activeSelf)
         {
             currentToolUIImage.rectTransform.anchoredPosition = upPos;
-            currentToolUIImage.transform.localScale = smallScale;
-            SetImageAlpha(currentToolUIImage, 0.6f);
+            currentToolUIImage.transform.localScale = smallScale; SetImageAlpha(currentToolUIImage, 0.6f);
         }
         if (upcomingToolUIImage != null && upcomingToolUIImage.gameObject.activeSelf)
         {
             upcomingToolUIImage.rectTransform.anchoredPosition = upPos + new Vector2(toolSpacing, 0);
-            upcomingToolUIImage.transform.localScale = smallScale;
-            SetImageAlpha(upcomingToolUIImage, 0f);
+            upcomingToolUIImage.transform.localScale = smallScale; SetImageAlpha(upcomingToolUIImage, 0f);
         }
 
         while (time < duration)
         {
             time += Time.deltaTime;
-            float t = time / duration;
-            float smoothT = t * t * (3f - 2f * t);
+            float t = time / duration; float smoothT = t * t * (3f - 2f * t);
             if (previousToolUIImage != null && previousToolUIImage.gameObject.activeSelf)
             {
                 previousToolUIImage.rectTransform.anchoredPosition = Vector2.Lerp(currPos, prevPos, smoothT);
@@ -948,8 +957,7 @@ public class MaskEraser : MonoBehaviour
         float time = 0; float duration = 0.3f;
         while (time < duration)
         {
-            time += Time.deltaTime;
-            float t = time / duration;
+            time += Time.deltaTime; float t = time / duration;
             float scale = Mathf.Lerp(0, 1, t * t * (3f - 2f * t));
             img.transform.localScale = new Vector3(scale, scale, scale);
             yield return null;
@@ -967,7 +975,8 @@ public class MaskEraser : MonoBehaviour
             if (layerIndex < layersList.Count && layersList[layerIndex] != null)
             {
                 upcomingIcons[i].gameObject.SetActive(true);
-                upcomingIcons[i].sprite = layersList[layerIndex].sprite; if (animate)
+                upcomingIcons[i].sprite = layersList[layerIndex].sprite;
+                if (animate)
                 {
                     StartCoroutine(AnimateUIPopup(upcomingIcons[i], delay));
                     delay += 0.1f;
@@ -988,6 +997,118 @@ public class MaskEraser : MonoBehaviour
         currentEquippedVariant = null;
 
         SetupToolVariantsPanel(tool);
+
+        if (currentToolData != null)
+        {
+            bool isScraper = currentToolData.name.Contains("Scraper") || currentToolData.toolName.Contains("Scraper");
+
+            if (isScraper)
+            {
+                if (currentLayer < layersList.Count && layersList[currentLayer] != null)
+                {
+                    layersList[currentLayer].gameObject.SetActive(false);
+                }
+
+                Transform existingChunks = levelParentAnchor.Find("Scraper_Chunks_Runtime");
+                if (existingChunks == null && objectData.scraperChunksPrefab != null)
+                {
+                    Transform originalLayerTransform = layersList[currentLayer].transform;
+                    GameObject chunksInstance = Instantiate(objectData.scraperChunksPrefab, originalLayerTransform.parent);
+                    chunksInstance.name = "Scraper_Chunks_Runtime";
+
+                    chunksInstance.transform.localPosition = originalLayerTransform.localPosition;
+                    chunksInstance.transform.localRotation = originalLayerTransform.localRotation;
+                    chunksInstance.transform.localScale = originalLayerTransform.localScale;
+
+                    MudChunk[] childChunks = chunksInstance.GetComponentsInChildren<MudChunk>(true);
+                    InitializeChunksCount(childChunks.Length);
+                }
+                else if (existingChunks != null)
+                {
+                    existingChunks.gameObject.SetActive(true);
+                    MudChunk[] childChunks = existingChunks.GetComponentsInChildren<MudChunk>(true);
+                    InitializeChunksCount(childChunks.Length);
+                }
+            }
+            else
+            {
+                Transform existingChunks = levelParentAnchor.Find("Scraper_Chunks_Runtime");
+                if (existingChunks != null) existingChunks.gameObject.SetActive(false);
+
+                if (currentLayer < layersList.Count && layersList[currentLayer] != null)
+                {
+                    layersList[currentLayer].gameObject.SetActive(true);
+                }
+            }
+        }
+
+        // --- NEW UPDATE: Target 'Scraper_Trigger_Edge' for Collider & Rigidbody ---
+        // --- UPDATED: Dynamic Reference Selection (Only Scraper uses Scraper_Trigger_Edge) ---
+        // --- UPDATED & FIXED: Safe Dynamic Reference Selection ---
+        if (toolFollower != null)
+        {
+            // Hum direct 'tool' parameter ko check karenge kyunki 'currentToolData' ho sakta hai Start() me abhi null ho
+            bool isScraper = false;
+            if (tool != null)
+            {
+                bool nameCheck = !string.IsNullOrEmpty(tool.name) && tool.name.Contains("Scraper");
+                bool toolNameCheck = !string.IsNullOrEmpty(tool.toolName) && tool.toolName.Contains("Scraper");
+                isScraper = nameCheck || toolNameCheck;
+            }
+
+            GameObject targetObject = null;
+
+            if (isScraper)
+            {
+                // Scraper_Trigger_Edge child dhoondna
+                Transform triggerEdgeChild = toolFollower.transform.Find("Scraper_Trigger_Edge");
+
+                if (triggerEdgeChild == null)
+                {
+                    foreach (Transform child in toolFollower.transform.GetComponentsInChildren<Transform>(true))
+                    {
+                        if (child.name == "Scraper_Trigger_Edge")
+                        {
+                            triggerEdgeChild = child;
+                            break;
+                        }
+                    }
+                }
+
+                if (triggerEdgeChild != null)
+                {
+                    targetObject = triggerEdgeChild.gameObject;
+                }
+                else
+                {
+                    targetObject = toolFollower.gameObject;
+                }
+            }
+            else
+            {
+                // Baaki saare tools ke liye direct main object
+                targetObject = toolFollower.gameObject;
+            }
+
+            // --- SAFETY CHECK: Agar targetObject kisi wajah se null ho to aage na barhein ---
+            if (targetObject != null)
+            {
+                // Purane colliders aur rigidbodies ko safe tarike se remove karna (Immediate use karenge taake Start me masla na ho)
+                Collider2D oldCol = targetObject.GetComponent<Collider2D>();
+                if (oldCol != null) DestroyImmediate(oldCol);
+
+                Rigidbody2D oldRb = targetObject.GetComponent<Rigidbody2D>();
+                if (oldRb != null) DestroyImmediate(oldRb);
+
+                // Fresh Collider aur Rigidbody setup
+                Collider2D toolCol = targetObject.AddComponent<CircleCollider2D>();
+                toolCol.isTrigger = true;
+
+                Rigidbody2D toolRb = targetObject.AddComponent<Rigidbody2D>();
+                toolRb.bodyType = RigidbodyType2D.Kinematic;
+                toolRb.simulated = true;
+            }
+        }
     }
 
     public void GoToHome()
@@ -999,25 +1120,10 @@ public class MaskEraser : MonoBehaviour
     IEnumerator ShowDelayedUIAndCoinsRoutine()
     {
         yield return new WaitForSeconds(levelCompleteDelay);
-        if (levelCompletePanel != null)
-        {
-            levelCompletePanel.SetActive(true);
-        }
-        else
-        {
-            Debug.LogError("MaskEraser: levelCompletePanel reference missing in Inspector!");
-        }
+        if (levelCompletePanel != null) levelCompletePanel.SetActive(true);
 
-        // COIN BAR RE-ACTIVATION: Level Complete screen aate hi coin counter wapas ON ho jayega
-        if (gameplayCoinPanel != null)
-        {
-            gameplayCoinPanel.SetActive(true);
-        }
-
-        if (CoinManager.Instance != null)
-        {
-            CoinManager.Instance.TriggerCoinSwoopAnimation(20);
-        }
+        if (gameplayCoinPanel != null) gameplayCoinPanel.SetActive(true);
+        if (CoinManager.Instance != null) CoinManager.Instance.TriggerCoinSwoopAnimation(20);
 
         UpdateGameplayCoinsUI();
     }
@@ -1025,8 +1131,7 @@ public class MaskEraser : MonoBehaviour
     Transform GetToolTransformToAnimate()
     {
         if (toolFollower == null) return null;
-        return toolFollower.transform.childCount > 0 ?
-            toolFollower.transform.GetChild(0) : toolFollower.transform;
+        return toolFollower.transform.childCount > 0 ? toolFollower.transform.GetChild(0) : toolFollower.transform;
     }
 
     void AnimateTool()
@@ -1046,19 +1151,16 @@ public class MaskEraser : MonoBehaviour
         {
             float shake = Mathf.Sin(Time.time * currentToolData.scrubSpeed) * currentToolData.scrubAmount;
             toolObj.localPosition = originalToolLocalPos + new Vector3(shake, 0, 0);
-            toolObj.localRotation = originalToolRotation;
         }
         else if (currentToolData.movementType == ToolMovementType.Spraying)
         {
             float vibration = Random.Range(-0.05f, 0.05f);
             toolObj.localPosition = originalToolLocalPos + new Vector3(vibration, vibration, 0);
-            toolObj.localRotation = originalToolRotation;
         }
         else if (currentToolData.movementType == ToolMovementType.Rotation)
         {
             float angle = Mathf.Sin(Time.time * currentToolData.rotationSpeed) * currentToolData.rotationAmount;
             toolObj.localRotation = originalToolRotation * Quaternion.Euler(0, 0, angle);
-            toolObj.localPosition = originalToolLocalPos;
         }
     }
 
@@ -1080,8 +1182,7 @@ public class MaskEraser : MonoBehaviour
 
         if (tool == null || !tool.hasVariants || tool.toolVariants.Count == 0)
         {
-            if (variantMainPanel != null && variantMainPanel.activeSelf)
-                StartCoroutine(AnimateVariantPanelVideoStyle(false));
+            if (variantMainPanel != null && variantMainPanel.activeSelf) StartCoroutine(AnimateVariantPanelVideoStyle(false));
             return;
         }
 
@@ -1091,10 +1192,7 @@ public class MaskEraser : MonoBehaviour
             StartCoroutine(AnimateVariantPanelVideoStyle(true));
         }
 
-        if (tool.toolVariants.Count > 0)
-        {
-            PlayerPrefs.SetString(tool.name + "_Equipped", tool.toolVariants[0].variantName);
-        }
+        if (tool.toolVariants.Count > 0) PlayerPrefs.SetString(tool.name + "_Equipped", tool.toolVariants[0].variantName);
 
         foreach (ToolVariant varData in tool.toolVariants)
         {
@@ -1107,41 +1205,23 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        if (tool.toolVariants.Count > 0)
-        {
-            ApplyVariantSkin(tool, tool.toolVariants[0], false);
-        }
+        if (tool.toolVariants.Count > 0) ApplyVariantSkin(tool, tool.toolVariants[0], false);
     }
 
     public void ApplyVariantSkin(ToolData tool, ToolVariant variant, bool animate = false)
     {
         if (toolFollower == null || variant == null) return;
-
-        if (animate && variant == currentEquippedVariant)
-        {
-            Debug.Log("Variant is already equipped. Animation and execution skipped.");
-            return;
-        }
+        if (animate && variant == currentEquippedVariant) return;
 
         currentEquippedVariant = variant;
-
-        if (animate)
-        {
-            StartCoroutine(AnimateVariantSkinRoutine(variant));
-        }
+        if (animate) StartCoroutine(AnimateVariantSkinRoutine(variant));
         else
         {
             SpriteRenderer toolSR = toolFollower.GetComponentInChildren<SpriteRenderer>();
-            if (toolSR != null && variant.toolSprite != null)
-            {
-                toolSR.sprite = variant.toolSprite;
-            }
+            if (toolSR != null && variant.toolSprite != null) toolSR.sprite = variant.toolSprite;
         }
 
-        foreach (ToolVariantButton btn in spawnedVariantButtons)
-        {
-            if (btn != null) btn.UpdateUI();
-        }
+        foreach (ToolVariantButton btn in spawnedVariantButtons) if (btn != null) btn.UpdateUI();
     }
 
     IEnumerator AnimateVariantSkinRoutine(ToolVariant variant)
@@ -1150,40 +1230,30 @@ public class MaskEraser : MonoBehaviour
         toolFollower.enabled = false;
         Vector3 startPos = toolFollower.transform.position;
         Vector3 outTarget = startPos + Vector3.left * 15f;
-        float time = 0;
-        float durationOut = 0.3f;
+        float time = 0; float durationOut = 0.3f;
         while (time < durationOut)
         {
-            time += Time.deltaTime;
-            float t = time / durationOut;
+            time += Time.deltaTime; float t = time / durationOut;
             toolFollower.transform.position = Vector3.Lerp(startPos, outTarget, t * t);
             yield return null;
         }
 
         SpriteRenderer toolSR = toolFollower.GetComponentInChildren<SpriteRenderer>();
-        if (toolSR != null && variant.toolSprite != null)
-        {
-            toolSR.sprite = variant.toolSprite;
-        }
+        if (toolSR != null && variant.toolSprite != null) toolSR.sprite = variant.toolSprite;
 
         float camZ = Mathf.Abs(Camera.main.transform.position.z);
         Vector3 bottomScreenTarget = new Vector3(Screen.width / 2f, Screen.height * 0.3f, camZ);
         Vector3 restTarget = Camera.main.ScreenToWorldPoint(bottomScreenTarget);
-        restTarget.z = 0;
-        Vector3 inStart = restTarget + Vector3.right * 15f;
-
+        restTarget.z = 0; Vector3 inStart = restTarget + Vector3.right * 15f;
         toolFollower.transform.position = inStart;
 
-        time = 0;
-        float durationIn = 0.4f;
+        time = 0; float durationIn = 0.4f;
         while (time < durationIn)
         {
-            time += Time.deltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, time / durationIn);
+            time += Time.deltaTime; float t = Mathf.SmoothStep(0f, 1f, time / durationIn);
             toolFollower.transform.position = Vector3.Lerp(inStart, restTarget, t);
             yield return null;
         }
-
         toolFollower.enabled = true;
     }
 
@@ -1193,20 +1263,16 @@ public class MaskEraser : MonoBehaviour
         if (show)
         {
             variantMainPanel.transform.localScale = new Vector3(0.5f, 0f, 1f);
-            variantMainPanel.SetActive(true);
-            yield return new WaitForSeconds(0.8f);
+            variantMainPanel.SetActive(true); yield return new WaitForSeconds(0.8f);
         }
 
         Vector3 startScale = variantMainPanel.transform.localScale;
         Vector3 targetScale = show ? Vector3.one : new Vector3(0.5f, 0f, 1f);
-
-        float time = 0f;
-        float duration = 0.25f;
+        float time = 0f; float duration = 0.25f;
 
         while (time < duration)
         {
-            time += Time.deltaTime;
-            float t = time / duration;
+            time += Time.deltaTime; float t = time / duration;
             float smoothT = t * t * (3f - 2f * t);
             variantMainPanel.transform.localScale = Vector3.Lerp(startScale, targetScale, smoothT);
             yield return null;
@@ -1218,35 +1284,63 @@ public class MaskEraser : MonoBehaviour
 
     IEnumerator AnimateFirstToolOnStartup()
     {
-        isTransitioningTool = true;
-        yield return new WaitForSeconds(0.15f);
+        isTransitioningTool = true; yield return new WaitForSeconds(0.15f);
         if (toolFollower != null && Camera.main != null)
         {
             toolFollower.gameObject.SetActive(true);
             Vector3 restTarget = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.2f, 10f));
             restTarget.z = 0f;
-
             Vector3 startPos = restTarget + Vector3.right * 15f;
             toolFollower.transform.position = startPos;
-            if (currentToolData != null)
-            {
-                SetupToolVariantsPanel(currentToolData);
-            }
+            if (currentToolData != null) SetupToolVariantsPanel(currentToolData);
 
-            float time = 0f;
-            float duration = 0.4f;
-
+            float time = 0f; float duration = 0.4f;
             while (time < duration)
             {
-                time += Time.deltaTime;
-                float t = Mathf.SmoothStep(0f, 1f, time / duration);
+                time += Time.deltaTime; float t = Mathf.SmoothStep(0f, 1f, time / duration);
                 toolFollower.transform.position = Vector3.Lerp(startPos, restTarget, t);
                 yield return null;
             }
-
             toolFollower.transform.position = restTarget;
         }
-
         isTransitioningTool = false;
+    }
+
+    public void InitializeChunksCount(int total)
+    {
+        totalChunksInLayer = total;
+        removedChunksCount = 0;
+    }
+
+    // Dono functions add kiye hain taake pichla code ya MudChunk kisi par bhi crash na ho
+    public void ScraperChunkDestroyed()
+    {
+        ChunkRemoved();
+    }
+
+    public void ChunkRemoved()
+    {
+        removedChunksCount++;
+        if (totalChunksInLayer > 0)
+        {
+            targetFill = (float)removedChunksCount / totalChunksInLayer;
+            percentText.text = Mathf.RoundToInt(targetFill * 100f) + "%";
+
+            if (removedChunksCount >= totalChunksInLayer)
+            {
+                if (!isLayerClearSoundPlayed)
+                {
+                    if (AudioManager.Instance != null && AudioManager.Instance.layerClearSFX != null)
+                    {
+                        AudioManager.Instance.PlaySFX(AudioManager.Instance.layerClearSFX);
+                    }
+                    isLayerClearSoundPlayed = true;
+                }
+
+                ClearRemainingLayer();
+                if (currentLayer >= layersList.Count - 1) CompleteGame();
+                else layerFinishedWaitingRelease = true;
+            }
+        }
     }
 }
