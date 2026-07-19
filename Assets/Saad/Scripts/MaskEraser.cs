@@ -118,6 +118,11 @@ public class MaskEraser : MonoBehaviour
     public UnityEngine.UI.Image winPanelIconImage;
     public GameObject progressBarMainPanel;
 
+    [Header("Scraper Progress Variables")]
+    private int totalScraperChunks = 0;
+    private int remainingScraperChunks = 0;
+    private bool isScraperActive = false;
+
     // Runtime Generated Layers
     private List<SpriteRenderer> layersList = new List<SpriteRenderer>();
     private List<ToolData> layerRequiredTools = new List<ToolData>();
@@ -143,6 +148,8 @@ public class MaskEraser : MonoBehaviour
     float targetCameraSize = 5f;
     float effectGraceTimer = 0f;
 
+
+    public GameObject scraperTriggerEdge;
     void Start()
     {
         PlayerPrefs.SetInt("Coins", 100);
@@ -279,6 +286,19 @@ public class MaskEraser : MonoBehaviour
 
                         layerRequiredTools.Add(assignedTool);
                         sr.gameObject.SetActive(true);
+
+                        // ---  MUD CHUNKS SYSTEM: AGAR NAYA PREFAB HAI TO PEHLI SOLID MITTI KO HIDE KAREIN ---
+                        if (dirtyIndex == 0 && objectData.scraperChunksPrefab != null)
+                        {
+                            sr.gameObject.SetActive(false); // Purani solid layer chhupegi
+                            sr.enabled = false;
+                        }
+                        else
+                        {
+                            sr.gameObject.SetActive(true);
+                            sr.enabled = true;
+                        }
+
                         dirtyIndex++;
                     }
                 }
@@ -324,13 +344,45 @@ public class MaskEraser : MonoBehaviour
 
                     layerRequiredTools.Add(assignedTool);
                     dirtyObj.SetActive(true);
+
+                    // ---  MUD CHUNKS SYSTEM: AGAR NAYA PREFAB HAI TO PEHLI SOLID MITTI KO HIDE KAREIN ---
+                    if (i == 0 && objectData.scraperChunksPrefab != null)
+                    {
+                        dirtyObj.SetActive(false); // Purani solid layer chhupegi
+                    }
                 }
             }
+        }
+
+        // ================================================================
+        //  NAYA CUSTOM CHUNKS SYSTEM OVERRIDE (BILKUL END MEIN)
+        // ================================================================
+        if (objectData != null && objectData.scraperChunksPrefab != null)
+        {
+            // Split chunks wale prefab ko levelParentAnchor ke andar instantiate (spawn) karein
+            GameObject instantiatedChunks = Instantiate(objectData.scraperChunksPrefab, levelParentAnchor);
+
+            // Taake coordinates local level par bilkul target image ke upar center align hon
+            instantiatedChunks.transform.localPosition = Vector3.zero;
+            instantiatedChunks.transform.localRotation = Quaternion.identity;
+            instantiatedChunks.transform.localScale = Vector3.one;
+
+            // CHUNKS COUNTING FOR PROGRESS BAR INTEGRATION
+            MudChunk[] allChunks = instantiatedChunks.GetComponentsInChildren<MudChunk>(true);
+            totalScraperChunks = allChunks.Length;
+            remainingScraperChunks = totalScraperChunks;
+
+            Debug.Log($"MaskEraser: Chunks Parent Prefab Loaded Successfully! Total Progress Chunks Counted: {totalScraperChunks}");
         }
     }
 
     void Update()
     {
+        if (scraperTriggerEdge != null && currentToolData != null)
+        {
+            bool isScraper = currentToolData.toolType == ToolType.Scraper || currentToolData.name.Contains("Scraper");
+            scraperTriggerEdge.SetActive(isScraper);
+        }
         if (PauseManager.IsGamePaused)
         {
             StopToolEffects();
@@ -452,6 +504,28 @@ public class MaskEraser : MonoBehaviour
 
         currentFill = Mathf.Lerp(currentFill, targetFill, Time.deltaTime * 15f);
         progressFill.fillAmount = currentFill;
+
+        if (objectData != null && objectData.scraperChunksPrefab != null)
+        {
+            // Agar list mein layers hain, toh pehli layer (Index 0) ko hamesha band rakho
+            if (layersList != null && layersList.Count > 0 && layersList[0] != null)
+            {
+                if (layersList[0].gameObject.activeSelf)
+                {
+                    layersList[0].gameObject.SetActive(false);
+                }
+            }
+
+            // Backup Check: Agar Hierarchy mein direct child pada hai bina list ke, use bhi band karo
+            if (levelParentAnchor != null)
+            {
+                Transform oldLayer = levelParentAnchor.Find("Dirty_Layer_0");
+                if (oldLayer != null && oldLayer.gameObject.activeSelf)
+                {
+                    oldLayer.gameObject.SetActive(false);
+                }
+            }
+        }
     }
 
     // UNIFIED FUNCTION: Teeno panels ko hide/show karne ke liye ek single controller
@@ -596,6 +670,16 @@ public class MaskEraser : MonoBehaviour
 
     public bool EraseAtWorldPosition(Vector3 world)
     {
+        // ================================================================
+        //  ISOLATED SCRAPER BYPASS RULE (BILKUL TOP PAR)
+        // ================================================================
+        if (currentToolData != null && (currentToolData.toolType == ToolType.Scraper || currentToolData.name.Contains("Scraper")))
+        {
+            // Scraper ke liye pixel manipulation skip karein aur true return kar dein
+            return true;
+        }
+
+        // --- Baki Saari Purani Logic Bilkul Same Rahegi (Brush/Water ke liye) ---
         if (currentLayer >= layersList.Count) return false;
         Vector3 local = layersList[currentLayer].transform.InverseTransformPoint(world);
         SpriteRenderer sr = layersList[currentLayer];
@@ -642,24 +726,41 @@ public class MaskEraser : MonoBehaviour
     void UpdateProgress()
     {
         if (gameCompleted || layerFinishedWaitingRelease || layersList.Count == 0) return;
-        Color[] pixels = texture.GetPixels();
 
-        int currentOpaque = 0;
-        foreach (Color c in pixels)
+        // Check karein ke kya haath mein Scraper tool hai
+        isScraperActive = (currentToolData != null && (currentToolData.toolType == ToolType.Scraper || currentToolData.name.Contains("Scraper")));
+
+        float percent = 0f;
+
+        if (isScraperActive)
         {
-            if (c.a > 0.25f) currentOpaque++;
+            // SCRAPER LOGIC: Chunks ki base par progress nikalein
+            if (totalScraperChunks == 0) totalScraperChunks = 1;
+            int removedChunks = totalScraperChunks - remainingScraperChunks;
+            percent = ((float)removedChunks / totalScraperChunks) * 100f;
         }
+        else
+        {
+            //  PURANI LOGIC: Saare baqi tools ke liye pixels count karein
+            Color[] pixels = texture.GetPixels();
+            int currentOpaque = 0;
+            foreach (Color c in pixels)
+            {
+                if (c.a > 0.25f) currentOpaque++;
+            }
 
-        if (totalOpaquePixels == 0) totalOpaquePixels = 1;
-        int removed = totalOpaquePixels - currentOpaque;
-
-        float percent = ((float)removed / totalOpaquePixels) * 100f;
+            if (totalOpaquePixels == 0) totalOpaquePixels = 1;
+            int removed = totalOpaquePixels - currentOpaque;
+            percent = ((float)removed / totalOpaquePixels) * 100f;
+        }
 
         float visualPercent = percent;
         if (visualPercent > 100f) visualPercent = 100f;
 
         targetFill = visualPercent / 100f;
         percentText.text = Mathf.RoundToInt(visualPercent) + "%";
+
+        // Agar target complete ho gaya (cleaningThreshold achieved)
         if (percent >= cleaningThreshold)
         {
             Debug.Log("LAYER TARGET ACHIEVED!");
@@ -674,7 +775,10 @@ public class MaskEraser : MonoBehaviour
 
             effectGraceTimer = 0f;
             StopToolEffects();
+
+            // Custom Layer Clear process call hoga
             ClearRemainingLayer();
+
             if (currentLayer >= layersList.Count - 1)
             {
                 CompleteGame();
@@ -685,13 +789,41 @@ public class MaskEraser : MonoBehaviour
             }
         }
     }
+    public void ScraperChunkDestroyed()
+    {
+        if (remainingScraperChunks > 0)
+        {
+            remainingScraperChunks--;
+
+            // Progress bar aur text UI ko automatic refresh karne ke liye function call
+            UpdateProgress();
+        }
+    }
 
     void ClearRemainingLayer()
     {
-        Color[] pixels = texture.GetPixels();
-        for (int i = 0; i < pixels.Length; i++) pixels[i].a = 0f;
-        texture.SetPixels(pixels);
-        texture.Apply(false);
+        // Agar Scraper tool chal raha hai, to bache-kuche mitti ke chunks ko clean kar dein
+        if (isScraperActive)
+        {
+            remainingScraperChunks = 0;
+            // Level anchor ke andar search karke saare active MudChunks ko clear karein
+            if (levelParentAnchor != null)
+            {
+                MudChunk[] remainingList = levelParentAnchor.GetComponentsInChildren<MudChunk>(true);
+                foreach (MudChunk chunk in remainingList)
+                {
+                    if (chunk.gameObject.activeSelf) chunk.gameObject.SetActive(false);
+                }
+            }
+        }
+        else
+        {
+            // Purani texture clear karne wali logic (Brush vagaira ke liye)
+            Color[] pixels = texture.GetPixels();
+            for (int i = 0; i < pixels.Length; i++) pixels[i].a = 0f;
+            texture.SetPixels(pixels);
+            texture.Apply(false);
+        }
 
         targetFill = 1f;
         currentFill = 1f;

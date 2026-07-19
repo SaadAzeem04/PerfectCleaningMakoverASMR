@@ -10,5 +10,8 @@ public class CleaningObjectData : ScriptableObject
     public Sprite[] dirtyLayers;
     // NAYA: Har layer ke samne uska tool assign karne ke liye array
     public ToolData[] requiredTools;
+    public GameObject scraperChunksPrefab;
 
+
+    
 }
