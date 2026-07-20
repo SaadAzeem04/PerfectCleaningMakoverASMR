@@ -117,6 +117,8 @@ public class MaskEraser : MonoBehaviour
     public Sprite completedLevelSprite;
     //  Har level ki special win photo ke liye
 
+    [SerializeField] private UnityEngine.UI.Image levelCompleteIconImage; // Hierarchy se LevelCompleteIconImage drag karein
+
     [Tooltip("Completed Window ke andar wala UI Image dabba jahan photo dikhegi.")]
     public UnityEngine.UI.Image winPanelIconImage;
     public GameObject progressBarMainPanel;
@@ -129,6 +131,7 @@ public class MaskEraser : MonoBehaviour
     [Header("UI Animation References")]
     public SmoothUIAnimate pauseButtonAnim;
     public SmoothUIAnimate coinCounterAnim;
+
 
     // Runtime Generated Layers
     private List<SpriteRenderer> layersList = new List<SpriteRenderer>();
@@ -240,12 +243,29 @@ public class MaskEraser : MonoBehaviour
 
     void SetupGenericLevel()
     {
-        // --- BACKGROUND & CAMERA SETUP ---
+        if (levelParentAnchor == null)
+        {
+            Debug.LogError("MaskEraser: Please assign Level Parent Anchor!");
+            return;
+        }
+
+        // --- 1. PURANE PURANE SABHI LAYERS KO CLEAR/DESTROY KAREIN ---
+        // Is se Football ki koi bhi puraani layer/sprite hierarchy mein baqi nahi rahegi
+        for (int i = levelParentAnchor.childCount - 1; i >= 0; i--)
+        {
+            DestroyImmediate(levelParentAnchor.GetChild(i).gameObject);
+        }
+
+        layersList.Clear();
+        layerRequiredTools.Clear();
+
+        // --- 2. BACKGROUND SETUP ---
         if (objectData != null && backgroundRenderer != null)
         {
             if (objectData.levelBackgroundSprite != null)
             {
                 backgroundRenderer.sprite = objectData.levelBackgroundSprite;
+                backgroundRenderer.sortingOrder = -10;
                 backgroundRenderer.gameObject.SetActive(true);
             }
             if (objectData != null)
@@ -257,149 +277,79 @@ public class MaskEraser : MonoBehaviour
         if (backgroundImage != null && objectData.backgroundSprite != null)
             backgroundImage.sprite = objectData.backgroundSprite;
 
-        if (levelParentAnchor == null)
-        {
-            Debug.LogError("MaskEraser: Please assign Level Parent Anchor!");
-            return;
-        }
-
         Vector3 currentPos = levelParentAnchor.position;
         levelParentAnchor.position = new Vector3(currentPos.x, currentPos.y, 0f);
         levelParentAnchor.rotation = Quaternion.identity;
 
-        layersList.Clear();
-        layerRequiredTools.Clear();
-
-        // Purane spawned objects ko clean karein
-        foreach (Transform child in levelParentAnchor)
+        if (objectData == null)
         {
-            if (child.gameObject.name.Contains("(Clone)"))
+            Debug.LogError("MaskEraser: ObjectData is missing!");
+            return;
+        }
+
+        // --- 3. DYNAMICALLY CREATE FRESH BASE CLEAN OBJECT ---
+        GameObject cleanObj = new GameObject("Base_Clean_Object");
+        cleanObj.transform.SetParent(levelParentAnchor, false);
+        cleanObj.transform.localPosition = Vector3.zero;
+        cleanObj.transform.localRotation = Quaternion.identity;
+        cleanObj.transform.localScale = Vector3.one;
+
+        SpriteRenderer baseCleanSR = cleanObj.AddComponent<SpriteRenderer>();
+
+        if (objectData.cleanSprite != null)
+        {
+            baseCleanSR.sprite = objectData.cleanSprite; // Selected ObjectData (Trophy/Football) ki clean image
+            baseCleanSR.sortingOrder = 0; // Sab se peeche base image
+            baseCleanSR.maskInteraction = SpriteMaskInteraction.None;
+            baseCleanSR.material = new Material(Shader.Find("Sprites/Default"));
+            baseCleanSR.enabled = true;
+            cleanObj.SetActive(true);
+            Debug.Log($"<color=green>[MaskEraser] Loaded NEW Clean Sprite: {objectData.cleanSprite.name}</color>");
+        }
+
+        // --- 4. DYNAMICALLY CREATE FRESH DIRTY LAYERS ---
+        if (objectData.dirtyLayers != null && objectData.dirtyLayers.Length > 0)
+        {
+            int totalLayers = objectData.dirtyLayers.Length;
+            for (int i = 0; i < totalLayers; i++)
             {
-                DestroyImmediate(child.gameObject);
+                if (objectData.dirtyLayers[i] == null) continue;
+
+                GameObject dirtyObj = new GameObject("Dirty_Layer_" + i);
+                dirtyObj.transform.SetParent(levelParentAnchor, false);
+                dirtyObj.transform.localPosition = Vector3.zero;
+                dirtyObj.transform.localRotation = Quaternion.identity;
+                dirtyObj.transform.localScale = Vector3.one;
+
+                SpriteRenderer sr = dirtyObj.AddComponent<SpriteRenderer>();
+                sr.sprite = objectData.dirtyLayers[i];
+                sr.sortingOrder = (totalLayers + 5) - i;
+
+                layersList.Add(sr);
+
+                ToolData assignedTool = null;
+                if (objectData.requiredTools != null && i < objectData.requiredTools.Length)
+                    assignedTool = objectData.requiredTools[i];
+
+                CleaningLayer cleaningLayerComponent = dirtyObj.AddComponent<CleaningLayer>();
+                cleaningLayerComponent.requiredTool = assignedTool;
+
+                layerRequiredTools.Add(assignedTool);
+
+                // Layer 0 ko hide karein agar Mud Chunks ka Prefab maujood hai
+                if (i == 0 && objectData.scraperChunksPrefab != null)
+                {
+                    sr.enabled = false;
+                }
+
+                dirtyObj.SetActive(true);
             }
         }
 
-        SpriteRenderer[] existingRenderers = levelParentAnchor.GetComponentsInChildren<SpriteRenderer>(true);
-
-        if (existingRenderers.Length > 0)
-        {
-            int totalLayers = 0;
-            foreach (SpriteRenderer sr in existingRenderers)
-            {
-                if (sr.gameObject.name.Contains("Dirty_Layer") || System.Char.IsDigit(sr.gameObject.name[0]))
-                {
-                    totalLayers++;
-                }
-            }
-
-            int dirtyIndex = 0;
-            foreach (SpriteRenderer sr in existingRenderers)
-            {
-                Vector3 childLocalPos = sr.transform.localPosition;
-                childLocalPos.z = 0f;
-                sr.transform.localPosition = childLocalPos;
-                sr.transform.localRotation = Quaternion.identity;
-
-                if (sr.gameObject.name.Contains("Base_Clean_Object") || sr.gameObject.name.Contains("07"))
-                {
-                    sr.sprite = objectData.cleanSprite;
-                    sr.sortingOrder = 0;
-                }
-                else
-                {
-                    if (dirtyIndex < objectData.dirtyLayers.Length)
-                    {
-                        sr.sprite = objectData.dirtyLayers[dirtyIndex];
-                        sr.sortingOrder = totalLayers - dirtyIndex;
-
-                        layersList.Add(sr);
-
-                        ToolData assignedTool = null;
-                        if (objectData.requiredTools != null && dirtyIndex < objectData.requiredTools.Length)
-                            assignedTool = objectData.requiredTools[dirtyIndex];
-
-                        CleaningLayer cleaningLayerComponent = sr.GetComponent<CleaningLayer>();
-                        if (cleaningLayerComponent == null) cleaningLayerComponent = sr.gameObject.AddComponent<CleaningLayer>();
-                        cleaningLayerComponent.requiredTool = assignedTool;
-
-                        layerRequiredTools.Add(assignedTool);
-
-                        // --- FIX: LAYER KO LIST MEIN RAKHO, BUT INVISBLE KAR DO AGAR CHUNKS HAIN ---
-                        if (dirtyIndex == 0 && objectData.scraperChunksPrefab != null)
-                        {
-                            sr.enabled = false; // Visual render band, par Layer/Tool intact rahega!
-                        }
-                        else
-                        {
-                            sr.enabled = true;
-                        }
-
-                        sr.gameObject.SetActive(true);
-                        dirtyIndex++;
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (objectData.cleanSprite != null)
-            {
-                GameObject cleanObj = new GameObject("Base_Clean_Object");
-                cleanObj.transform.SetParent(levelParentAnchor);
-                cleanObj.transform.localPosition = Vector3.zero;
-                cleanObj.transform.localScale = Vector3.one;
-
-                SpriteRenderer sr = cleanObj.AddComponent<SpriteRenderer>();
-                sr.sprite = objectData.cleanSprite;
-                sr.sortingOrder = 0;
-            }
-
-            if (objectData.dirtyLayers != null && objectData.dirtyLayers.Length > 0)
-            {
-                int totalLayers = objectData.dirtyLayers.Length;
-                for (int i = 0; i < totalLayers; i++)
-                {
-                    if (objectData.dirtyLayers[i] == null) continue;
-
-                    GameObject dirtyObj = new GameObject("Dirty_Layer_" + i);
-                    dirtyObj.transform.SetParent(levelParentAnchor);
-
-                    dirtyObj.transform.localPosition = Vector3.zero;
-                    dirtyObj.transform.localScale = Vector3.one;
-
-                    SpriteRenderer sr = dirtyObj.AddComponent<SpriteRenderer>();
-                    sr.sprite = objectData.dirtyLayers[i];
-                    sr.sortingOrder = totalLayers - i;
-
-                    layersList.Add(sr);
-
-                    ToolData assignedTool = null;
-                    if (objectData.requiredTools != null && i < objectData.requiredTools.Length)
-                        assignedTool = objectData.requiredTools[i];
-
-                    CleaningLayer cleaningLayerComponent = dirtyObj.AddComponent<CleaningLayer>();
-                    cleaningLayerComponent.requiredTool = assignedTool;
-
-                    layerRequiredTools.Add(assignedTool);
-
-                    // --- FIX: VISUAL SPRITE OFF KARO PAR GAMEOBJECT ACTIVE RAKHO ---
-                    if (i == 0 && objectData.scraperChunksPrefab != null)
-                    {
-                        sr.enabled = false; // Mesh/Sprite render nahi hogi, par Tool logic count karega
-                    }
-
-                    dirtyObj.SetActive(true);
-                }
-            }
-        }
-
-        // ================================================================
-        // CUSTOM CHUNKS SYSTEM SPAWN
-        // ================================================================
-        if (objectData != null && objectData.scraperChunksPrefab != null)
+        // --- 5. CHUNKS PREFAB SPAWN ---
+        if (objectData.scraperChunksPrefab != null)
         {
             GameObject instantiatedChunks = Instantiate(objectData.scraperChunksPrefab, levelParentAnchor);
-
             instantiatedChunks.transform.localPosition = Vector3.zero;
             instantiatedChunks.transform.localRotation = Quaternion.identity;
             instantiatedChunks.transform.localScale = Vector3.one;
@@ -407,11 +357,8 @@ public class MaskEraser : MonoBehaviour
             MudChunk[] allChunks = instantiatedChunks.GetComponentsInChildren<MudChunk>(true);
             totalScraperChunks = allChunks.Length;
             remainingScraperChunks = totalScraperChunks;
-
-            Debug.Log($"MaskEraser: Chunks Parent Prefab Loaded Successfully! Total Chunks Counted: {totalScraperChunks}");
         }
     }
-
 
     void Update()
     {
@@ -472,6 +419,7 @@ public class MaskEraser : MonoBehaviour
 
         Vector3 currentMousePos = Input.mousePosition;
         Vector3 targetCameraPos = new Vector3(0, 0, Camera.main.transform.position.z);
+
         if (!gameCompleted && !isTransitioningTool && layersList.Count > 0 && Input.GetMouseButton(0))
         {
             Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -479,7 +427,13 @@ public class MaskEraser : MonoBehaviour
                 (currentMousePos.x - screenCenter.x) / screenCenter.x,
                 (currentMousePos.y - screenCenter.y) / screenCenter.y
             );
-            targetCameraPos = new Vector3(mouseOffset.x * currentIntensity, 0, Camera.main.transform.position.z);
+
+            // --- Y-AXIS OPTIONAL MOVEMENT CHECK ---
+            float targetY = (objectData != null && objectData.enableYAxisMovement)
+                ? mouseOffset.y * currentIntensity
+                : 0f;
+
+            targetCameraPos = new Vector3(mouseOffset.x * currentIntensity, targetY, Camera.main.transform.position.z);
         }
 
         if (Camera.main != null)
@@ -1008,9 +962,21 @@ public class MaskEraser : MonoBehaviour
             AudioManager.Instance.PlaySFX(celebrationSound);
         }
 
-        if (winPanelIconImage != null && completedLevelSprite != null)
+        // --- DYNAMIC WIN PANEL ICON ASSIGNMENT ---
+        if (winPanelIconImage != null)
         {
-            winPanelIconImage.sprite = completedLevelSprite;
+            if (objectData != null && objectData.levelCompleteIcon != null)
+            {
+                winPanelIconImage.sprite = objectData.levelCompleteIcon;
+            }
+            else if (objectData != null && objectData.cleanSprite != null)
+            {
+                winPanelIconImage.sprite = objectData.cleanSprite;
+            }
+            else if (completedLevelSprite != null)
+            {
+                winPanelIconImage.sprite = completedLevelSprite;
+            }
         }
     }
 

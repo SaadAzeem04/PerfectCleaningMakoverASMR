@@ -18,6 +18,7 @@ public class CleaningObjectData : ScriptableObject
     [Header("Camera Settings")]
     public float cameraMovementIntensity = 1.0f; // Default intensity
     public float customCameraZoomSize = 5.0f;
+    public bool enableYAxisMovement = false;
 
     [Header("Layer Transform Overrides (Optional)")]
     [Tooltip("Agar aap kisi specific layer ki position badalna chahte hain, to yahan vector offset dein. (Element 0 = Layer 1)")]
@@ -25,5 +26,7 @@ public class CleaningObjectData : ScriptableObject
 
     [Tooltip("Agar aap kisi specific layer ka size badalna chahte hain, to yahan scale dein. Default (1,1,1) rahega.")]
     public Vector3[] customLayerScales;
+    [Header("UI Settings")]
+    public Sprite levelCompleteIcon;
 
 }

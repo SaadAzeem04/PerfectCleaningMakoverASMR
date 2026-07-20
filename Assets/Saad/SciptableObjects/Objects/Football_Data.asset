@@ -33,5 +33,7 @@ MonoBehaviour:
   scraperChunksPrefab: {fileID: 6922760847136583357, guid: 45d25d2b048dcc742a2d7335e7325cf4, type: 3}
   cameraMovementIntensity: 0
   customCameraZoomSize: 5
+  enableYAxisMovement: 0
   customLayerOffsets: []
   customLayerScales: []
+  levelCompleteIcon: {fileID: -1076756275187474144, guid: ff85ca60ff3833444b615610d48db71d, type: 3}

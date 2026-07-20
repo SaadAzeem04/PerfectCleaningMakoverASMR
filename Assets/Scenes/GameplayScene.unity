@@ -1169,6 +1169,7 @@ MonoBehaviour:
   cameraMoveIntensity: 0
   defaultCameraSize: 5
   completedLevelSprite: {fileID: 6336155520827525835, guid: 9131f4c79346add4ba946e722e67d539, type: 3}
+  levelCompleteIconImage: {fileID: 413143177}
   winPanelIconImage: {fileID: 413143177}
   progressBarMainPanel: {fileID: 235937588}
   pauseButtonAnim: {fileID: 1320420397}
@@ -2058,7 +2059,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 7
+  m_SortingOrder: 100
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
