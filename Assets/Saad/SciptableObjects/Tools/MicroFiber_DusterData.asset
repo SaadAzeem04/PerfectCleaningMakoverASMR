@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
+  m_Name: MicroFiber_DusterData
+  m_EditorClassIdentifier: 
+  hasVariants: 0
+  toolVariants: []
+  toolName: 
+  cameraZoomSize: 5
+  toolType: 1
+  toolSprite: {fileID: -1674507125856555730, guid: 195b8029fcef37140a9b6f5a1f68546f, type: 3}
+  soundOnlyOnHit: 1
+  cleaningSpeed: 1
+  brushSize: 35
+  movementType: 3
+  scrubSpeed: 15
+  scrubAmount: 0.4
+  rotationSpeed: 5
+  rotationAmount: 15
+  useParticles: 0
+  particlePrefab: {fileID: 0}
+  particleOffset: {x: 0, y: 0, z: 0}
+  useSecondParticles: 0
+  secondParticlePrefab: {fileID: 0}
+  secondParticleOffset: {x: 0, y: 0, z: 0}
+  eraseOffset: {x: 0, y: 0, z: 0}
+  toolSound: {fileID: 0}
+  toolOffset: {x: 0, y: 0, z: 0}
+  panelIcon: {fileID: -961448968163893087, guid: ad8e1748b3a6c4544a2631f109bd5b9e, type: 3}

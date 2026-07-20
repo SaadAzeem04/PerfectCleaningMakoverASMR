@@ -1,27 +1,32 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LevelButton : MonoBehaviour
 {
-    [Header("Object Data")]
-    public CleaningObjectData objectData; // Isme ScriptableObject data file aayegi
+    [Header("Assign New Level Data Asset")]
+    public LevelData levelData; // Ab direct CleaningObjectData ke bajaye LevelData aayega
+
+    private Button btn;
+
+    private void Awake()
+    {
+        btn = GetComponent<Button>();
+        if (btn != null)
+        {
+            btn.onClick.AddListener(LoadLevel);
+        }
+    }
 
     public void LoadLevel()
     {
-        Debug.Log("Football Button Clicked");
-
-        if (objectData != null)
+        if (levelData != null && LevelManager.Instance != null)
         {
-            LevelManager.SelectedObject = objectData;
-            SceneManager.LoadScene("FootballScene");
+            // LevelManager through FootballScene switch hoga
+            LevelManager.Instance.LoadLevel(levelData);
         }
         else
         {
-            Debug.LogError("Object Data Missing");
+            Debug.LogWarning("LevelData ya LevelManager missing hai!");
         }
-    }
-    void OnMouseDown()
-    {
-        Debug.Log("Mouse Down");
     }
 }

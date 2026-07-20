@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e81ac08d3849ce54b81fb6315a0cb56c, type: 3}
+  m_Name: Level2_Data
+  m_EditorClassIdentifier: 
+  levelID: 1
+  levelName: 'Trophy '
+  levelIcon: {fileID: 7336298474659753992, guid: 7d21c91a7b16b274da3d63c52bd569b0, type: 3}
+  stepList:
+  - stepName: Scraping
+    stepType: 0
+    cleaningObjectData: {fileID: 11400000, guid: e2ae8f52b9a7a334486aad5c63930837, type: 2}
+    stepPrefab: {fileID: 0}
+  - stepName: 
+    stepType: 0
+    cleaningObjectData: {fileID: 0}
+    stepPrefab: {fileID: 0}

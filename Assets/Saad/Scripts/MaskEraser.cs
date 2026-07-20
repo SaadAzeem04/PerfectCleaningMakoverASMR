@@ -68,6 +68,9 @@ public class MaskEraser : MonoBehaviour
     public Image currentToolUIImage;
     public Image upcomingToolUIImage;
 
+    [Header("Background Reference")]
+    public SpriteRenderer backgroundRenderer; // Inspector mein BG wale GameObject ka SpriteRenderer drag karein
+
     [Header("Tool UI Sizes & Spacing")]
     public float activeToolScale = 2f;
     public float inactiveToolScale = 1.5f;
@@ -181,16 +184,21 @@ public class MaskEraser : MonoBehaviour
             targetCameraSize = defaultCameraSize;
         }
 
+        // --- DYNAMIC DATA FETCH WITH FALLBACK ---
         if (LevelManager.SelectedObject != null)
         {
             objectData = LevelManager.SelectedObject;
         }
 
+        // Safety Check: Agar LevelManager se Data nahi aaya to Inspector wala fallback chalega
         if (objectData == null)
         {
-            Debug.LogError("MaskEraser: No CleaningObjectData assigned!");
+            Debug.LogWarning("MaskEraser: SelectedObject was NULL! Please assign a default objectData in Inspector or select a level from HomeScene.");
             return;
         }
+
+        // Purani Generated Layers saaf karein
+        ClearOldGeneratedLayers();
 
         SetupGenericLevel();
         if (layersList.Count > 0)
@@ -217,6 +225,7 @@ public class MaskEraser : MonoBehaviour
 
         if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
 
+        // Tools animate kar ke screen par laane ke liye
         StartCoroutine(AnimateFirstToolOnStartup());
     }
 
@@ -231,8 +240,23 @@ public class MaskEraser : MonoBehaviour
 
     void SetupGenericLevel()
     {
+        // --- BACKGROUND & CAMERA SETUP ---
+        if (objectData != null && backgroundRenderer != null)
+        {
+            if (objectData.levelBackgroundSprite != null)
+            {
+                backgroundRenderer.sprite = objectData.levelBackgroundSprite;
+                backgroundRenderer.gameObject.SetActive(true);
+            }
+            if (objectData != null)
+            {
+                cameraMoveIntensity = objectData.cameraMovementIntensity;
+            }
+        }
+
         if (backgroundImage != null && objectData.backgroundSprite != null)
             backgroundImage.sprite = objectData.backgroundSprite;
+
         if (levelParentAnchor == null)
         {
             Debug.LogError("MaskEraser: Please assign Level Parent Anchor!");
@@ -245,6 +269,15 @@ public class MaskEraser : MonoBehaviour
 
         layersList.Clear();
         layerRequiredTools.Clear();
+
+        // Purane spawned objects ko clean karein
+        foreach (Transform child in levelParentAnchor)
+        {
+            if (child.gameObject.name.Contains("(Clone)"))
+            {
+                DestroyImmediate(child.gameObject);
+            }
+        }
 
         SpriteRenderer[] existingRenderers = levelParentAnchor.GetComponentsInChildren<SpriteRenderer>(true);
 
@@ -284,25 +317,24 @@ public class MaskEraser : MonoBehaviour
                         ToolData assignedTool = null;
                         if (objectData.requiredTools != null && dirtyIndex < objectData.requiredTools.Length)
                             assignedTool = objectData.requiredTools[dirtyIndex];
+
                         CleaningLayer cleaningLayerComponent = sr.GetComponent<CleaningLayer>();
                         if (cleaningLayerComponent == null) cleaningLayerComponent = sr.gameObject.AddComponent<CleaningLayer>();
                         cleaningLayerComponent.requiredTool = assignedTool;
 
                         layerRequiredTools.Add(assignedTool);
-                        sr.gameObject.SetActive(true);
 
-                        // ---  MUD CHUNKS SYSTEM: AGAR NAYA PREFAB HAI TO PEHLI SOLID MITTI KO HIDE KAREIN ---
+                        // --- FIX: LAYER KO LIST MEIN RAKHO, BUT INVISBLE KAR DO AGAR CHUNKS HAIN ---
                         if (dirtyIndex == 0 && objectData.scraperChunksPrefab != null)
                         {
-                            sr.gameObject.SetActive(false); // Purani solid layer chhupegi
-                            sr.enabled = false;
+                            sr.enabled = false; // Visual render band, par Layer/Tool intact rahega!
                         }
                         else
                         {
-                            sr.gameObject.SetActive(true);
                             sr.enabled = true;
                         }
 
+                        sr.gameObject.SetActive(true);
                         dirtyIndex++;
                     }
                 }
@@ -328,6 +360,7 @@ public class MaskEraser : MonoBehaviour
                 for (int i = 0; i < totalLayers; i++)
                 {
                     if (objectData.dirtyLayers[i] == null) continue;
+
                     GameObject dirtyObj = new GameObject("Dirty_Layer_" + i);
                     dirtyObj.transform.SetParent(levelParentAnchor);
 
@@ -343,42 +376,40 @@ public class MaskEraser : MonoBehaviour
                     ToolData assignedTool = null;
                     if (objectData.requiredTools != null && i < objectData.requiredTools.Length)
                         assignedTool = objectData.requiredTools[i];
+
                     CleaningLayer cleaningLayerComponent = dirtyObj.AddComponent<CleaningLayer>();
                     cleaningLayerComponent.requiredTool = assignedTool;
 
                     layerRequiredTools.Add(assignedTool);
-                    dirtyObj.SetActive(true);
 
-                    // ---  MUD CHUNKS SYSTEM: AGAR NAYA PREFAB HAI TO PEHLI SOLID MITTI KO HIDE KAREIN ---
+                    // --- FIX: VISUAL SPRITE OFF KARO PAR GAMEOBJECT ACTIVE RAKHO ---
                     if (i == 0 && objectData.scraperChunksPrefab != null)
                     {
-                        dirtyObj.SetActive(false); // Purani solid layer chhupegi
+                        sr.enabled = false; // Mesh/Sprite render nahi hogi, par Tool logic count karega
                     }
+
+                    dirtyObj.SetActive(true);
                 }
             }
         }
 
         // ================================================================
-        //  NAYA CUSTOM CHUNKS SYSTEM OVERRIDE (BILKUL END MEIN)
+        // CUSTOM CHUNKS SYSTEM SPAWN
         // ================================================================
         if (objectData != null && objectData.scraperChunksPrefab != null)
         {
-            // Split chunks wale prefab ko levelParentAnchor ke andar instantiate (spawn) karein
             GameObject instantiatedChunks = Instantiate(objectData.scraperChunksPrefab, levelParentAnchor);
 
-            // Taake coordinates local level par bilkul target image ke upar center align hon
             instantiatedChunks.transform.localPosition = Vector3.zero;
             instantiatedChunks.transform.localRotation = Quaternion.identity;
             instantiatedChunks.transform.localScale = Vector3.one;
 
-            // CHUNKS COUNTING FOR PROGRESS BAR INTEGRATION
             MudChunk[] allChunks = instantiatedChunks.GetComponentsInChildren<MudChunk>(true);
             totalScraperChunks = allChunks.Length;
             remainingScraperChunks = totalScraperChunks;
 
-            Debug.Log($"MaskEraser: Chunks Parent Prefab Loaded Successfully! Total Progress Chunks Counted: {totalScraperChunks}");
+            Debug.Log($"MaskEraser: Chunks Parent Prefab Loaded Successfully! Total Chunks Counted: {totalScraperChunks}");
         }
-
     }
 
 
@@ -434,6 +465,11 @@ public class MaskEraser : MonoBehaviour
                 Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, targetCameraSize, Time.deltaTime * cameraTransitionIntensity);
         }
 
+        // Camera Intensity setup (Dynamic from ObjectData or Fallback)
+        float currentIntensity = (objectData != null && objectData.cameraMovementIntensity > 0)
+            ? objectData.cameraMovementIntensity
+            : cameraMoveIntensity;
+
         Vector3 currentMousePos = Input.mousePosition;
         Vector3 targetCameraPos = new Vector3(0, 0, Camera.main.transform.position.z);
         if (!gameCompleted && !isTransitioningTool && layersList.Count > 0 && Input.GetMouseButton(0))
@@ -443,7 +479,7 @@ public class MaskEraser : MonoBehaviour
                 (currentMousePos.x - screenCenter.x) / screenCenter.x,
                 (currentMousePos.y - screenCenter.y) / screenCenter.y
             );
-            targetCameraPos = new Vector3(mouseOffset.x * cameraMoveIntensity, 0, Camera.main.transform.position.z);
+            targetCameraPos = new Vector3(mouseOffset.x * currentIntensity, 0, Camera.main.transform.position.z);
         }
 
         if (Camera.main != null)
@@ -1417,4 +1453,45 @@ public class MaskEraser : MonoBehaviour
 
         isTransitioningTool = false;
     }
+
+    void ClearOldGeneratedLayers()
+    {
+        if (levelParentAnchor == null) return;
+
+        // Purani mitti ke chunks, dynamic layers aur base object ko remove karein
+        foreach (Transform child in levelParentAnchor)
+        {
+            if (child.gameObject.name.Contains("Dirty_Layer") ||
+                child.gameObject.name.Contains("Base_Clean_Object") ||
+                child.gameObject.name.Contains("Chunk"))
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
+    public void InitializeCleaningObject(CleaningObjectData newObjectData)
+    {
+        if (newObjectData == null) return;
+
+        // 1. Data replace karein
+        objectData = newObjectData;
+        LevelManager.SelectedObject = newObjectData;
+
+        // 2. Clear old generated objects/layers
+        ClearOldGeneratedLayers();
+
+        // 3. Reset level states
+        currentLayer = 0;
+        gameCompleted = false;
+
+        // 4. Fresh level setup
+        SetupGenericLevel();
+
+        if (layersList.Count > 0)
+        {
+            PrepareLayer();
+            SelectTool(layerRequiredTools[currentLayer], false);
+        }
+    }
+
 }
