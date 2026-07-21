@@ -44,7 +44,7 @@ MonoBehaviour:
   useSecondParticles: 0
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
-  eraseOffset: {x: 0, y: 2.1, z: 0}
+  eraseOffset: {x: 0, y: 1.8, z: 0}
   toolSound: {fileID: 8300000, guid: e993c567098bfc04a94bc58d009efab3, type: 3}
   toolOffset: {x: 0, y: -1, z: 0}
   panelIcon: {fileID: 1755050588376245985, guid: 7375f16d19076f74ea0af73eb178c3a1, type: 3}

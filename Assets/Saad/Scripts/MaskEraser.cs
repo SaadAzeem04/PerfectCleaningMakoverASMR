@@ -342,7 +342,15 @@ public class MaskEraser : MonoBehaviour
                     sr.enabled = false;
                 }
 
-                dirtyObj.SetActive(true);
+                // --- FIXED LOGIC: Sirf Step 0 (Top Layer) aur Step 1 (Underneath Layer) active honge ---
+                if (i == 0 || i == 1)
+                {
+                    dirtyObj.SetActive(true);
+                }
+                else
+                {
+                    dirtyObj.SetActive(false); // Baaki Layer 2, 3, 4, etc. START MEIN HIDE RAHENGI
+                }
             }
         }
 
@@ -707,8 +715,28 @@ public class MaskEraser : MonoBehaviour
     void PrepareLayer()
     {
         if (currentLayer >= layersList.Count) return;
-        layersList[currentLayer].gameObject.SetActive(true);
 
+        // --- ONLY CHANGE: 2 Layers at a time Active (Current Layer + Next Layer) ---
+        for (int i = 0; i < layersList.Count; i++)
+        {
+            if (layersList[i] != null)
+            {
+                // Sirf current layer (jis par erasing honi hai) aur uske bilkul neeche wali next layer active rahegi
+                if (i == currentLayer || i == currentLayer + 1)
+                {
+                    layersList[i].gameObject.SetActive(true);
+                }
+                else
+                {
+                    // Baaki sab layers hide rahengi
+                    layersList[i].gameObject.SetActive(false);
+                }
+            }
+        }
+
+        // =========================================================================
+        //  AAPKA PURANA CODE (NO CHANGES AT ALL BELOW THIS POINT)
+        // =========================================================================
         Sprite originalSprite = layersList[currentLayer].sprite;
         Texture2D sheetTexture = originalSprite.texture;
 
@@ -946,12 +974,15 @@ public class MaskEraser : MonoBehaviour
             yield return null;
         }
 
+        // Purani finish hone wali layer ko hide karein
         if (currentLayer < layersList.Count && layersList[currentLayer] != null)
         {
             layersList[currentLayer].gameObject.SetActive(false);
         }
 
         currentLayer++;
+
+        // Nayi layer par aate hi PrepareLayer() execute hoga jo Layer 1 aur Layer 2 ko active kar dega!
 
         if (currentLayer >= layersList.Count)
         {
