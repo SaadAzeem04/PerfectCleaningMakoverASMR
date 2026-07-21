@@ -525,35 +525,102 @@ public class MaskEraser : MonoBehaviour
     }
 
     // UNIFIED FUNCTION: Teeno panels ko hide/show karne ke liye ek single controller
+    [Header("Slide UI Animations")]
+    private Coroutine topUISlideCoroutine;
+    private Vector2 pauseBasePos;
+    private Vector2 coinBasePos;
+    private Vector3 pauseBaseScale = Vector3.one;
+    private Vector3 coinBaseScale = Vector3.one;
+    private bool isBasePosSaved = false;
+
+    // UNIFIED FUNCTION: Controls Slide Animations for Side Panels
     public void ToggleGameplayUI(bool hide)
     {
-        // 1. Variant Panel (Aapka purana variant code waise hi rahega)
+        // 1. Variant Panel (Existing Logic)
         if (currentToolData != null && currentToolData.hasVariants && currentToolData.toolVariants.Count > 0 && variantMainPanel != null)
         {
             if (panelAnimCoroutine != null) StopCoroutine(panelAnimCoroutine);
             panelAnimCoroutine = StartCoroutine(AnimateVariantPanelVideoStyle(!hide));
         }
 
-        // 2. Gameplay Coin Bar Toggle (Bina Animator ke Smooth Scale)
-        if (coinCounterAnim != null)
+        // 2. Pause Button & Coin Bar (Slide + Scale Animation)
+        if (topUISlideCoroutine != null) StopCoroutine(topUISlideCoroutine);
+        topUISlideCoroutine = StartCoroutine(SlideSideUIRoutine(hide));
+    }
+
+    private IEnumerator SlideSideUIRoutine(bool hide)
+    {
+        RectTransform pauseRect = pauseButton != null ? pauseButton.GetComponent<RectTransform>() : null;
+        RectTransform coinRect = gameplayCoinPanel != null ? gameplayCoinPanel.GetComponent<RectTransform>() : null;
+
+        // Pehli dafa Original Positions aur Scales safe store karein
+        if (!isBasePosSaved)
         {
-            if (hide) coinCounterAnim.HideUI();
-            else coinCounterAnim.ShowUI();
-        }
-        else if (gameplayCoinPanel != null) // Fallback safe check
-        {
-            gameplayCoinPanel.SetActive(!hide);
+            if (pauseRect != null)
+            {
+                pauseBasePos = pauseRect.anchoredPosition;
+                pauseBaseScale = pauseRect.localScale;
+            }
+            if (coinRect != null)
+            {
+                coinBasePos = coinRect.anchoredPosition;
+                coinBaseScale = coinRect.localScale;
+            }
+            isBasePosSaved = true;
         }
 
-        // 3. Pause Button Toggle (Bina Animator ke Smooth Scale)
-        if (pauseButtonAnim != null)
+        float duration = 0.25f; // Animation duration
+        float time = 0f;
+
+        // Start Positions & Scales
+        Vector2 pauseStartPos = pauseRect != null ? pauseRect.anchoredPosition : Vector2.zero;
+        Vector2 coinStartPos = coinRect != null ? coinRect.anchoredPosition : Vector2.zero;
+
+        Vector3 pauseStartScale = pauseRect != null ? pauseRect.localScale : Vector3.one;
+        Vector3 coinStartScale = coinRect != null ? coinRect.localScale : Vector3.one;
+
+        // Target Positions & Scales:
+        // Hide = True  -> Position Outside (+350 / -350) & Scale = ZERO (Small to disappear)
+        // Hide = False -> Position Original Base & Scale = FULL (Base Scale)
+        Vector2 pauseTargetPos = hide ? new Vector2(pauseBasePos.x + 350f, pauseBasePos.y) : pauseBasePos;
+        Vector2 coinTargetPos = hide ? new Vector2(coinBasePos.x - 350f, coinBasePos.y) : coinBasePos;
+
+        Vector3 pauseTargetScale = hide ? Vector3.zero : pauseBaseScale;
+        Vector3 coinTargetScale = hide ? Vector3.zero : coinBaseScale;
+
+        while (time < duration)
         {
-            if (hide) pauseButtonAnim.HideUI();
-            else pauseButtonAnim.ShowUI();
+            time += Time.deltaTime;
+            float t = time / duration;
+            float smoothT = t * t * (3f - 2f * t); // Smooth interpolation
+
+            // Position Lerp (Slide)
+            if (pauseRect != null)
+                pauseRect.anchoredPosition = Vector2.Lerp(pauseStartPos, pauseTargetPos, smoothT);
+
+            if (coinRect != null)
+                coinRect.anchoredPosition = Vector2.Lerp(coinStartPos, coinTargetPos, smoothT);
+
+            // Scale Lerp (Small to Full / Full to Small)
+            if (pauseRect != null)
+                pauseRect.localScale = Vector3.Lerp(pauseStartScale, pauseTargetScale, smoothT);
+
+            if (coinRect != null)
+                coinRect.localScale = Vector3.Lerp(coinStartScale, coinTargetScale, smoothT);
+
+            yield return null;
         }
-        else if (pauseButton != null) // Fallback safe check
+
+        // Direct Exact Targets Lock
+        if (pauseRect != null)
         {
-            pauseButton.SetActive(!hide);
+            pauseRect.anchoredPosition = pauseTargetPos;
+            pauseRect.localScale = pauseTargetScale;
+        }
+        if (coinRect != null)
+        {
+            coinRect.anchoredPosition = coinTargetPos;
+            coinRect.localScale = coinTargetScale;
         }
     }
     void PlayToolEffects()
@@ -1199,6 +1266,9 @@ public class MaskEraser : MonoBehaviour
             toolFollower.transform.GetChild(0) : toolFollower.transform;
     }
 
+    // MaskEraser.cs ke andar is function ko public banayein:
+    
+
     void AnimateTool()
     {
         if (currentToolData == null || toolFollower == null) return;
@@ -1245,27 +1315,28 @@ public class MaskEraser : MonoBehaviour
 
     void SetupToolVariantsPanel(ToolData tool)
     {
-        foreach (ToolVariantButton btn in spawnedVariantButtons) if (btn != null) Destroy(btn.gameObject);
+        // 1. INSTANT CLEANUP: Purani sari variant images/buttons panel se destroy karein
+        if (variantButtonsContainer != null)
+        {
+            foreach (Transform child in variantButtonsContainer)
+            {
+                Destroy(child.gameObject);
+            }
+        }
         spawnedVariantButtons.Clear();
 
+        // 2. Agar tool ke variants nahi hain, to panel hide karein
+        // Updated (Fixed Code):
         if (tool == null || !tool.hasVariants || tool.toolVariants.Count == 0)
         {
-            if (variantMainPanel != null && variantMainPanel.activeSelf)
-                StartCoroutine(AnimateVariantPanelVideoStyle(false));
+            if (variantMainPanel != null)
+            {
+                variantMainPanel.SetActive(false);
+            }
             return;
         }
 
-        if (variantMainPanel != null)
-        {
-            variantMainPanel.SetActive(true);
-            StartCoroutine(AnimateVariantPanelVideoStyle(true));
-        }
-
-        if (tool.toolVariants.Count > 0)
-        {
-            PlayerPrefs.SetString(tool.name + "_Equipped", tool.toolVariants[0].variantName);
-        }
-
+        // 3. Naye Tool ke Variant Buttons Spawn Karein
         foreach (ToolVariant varData in tool.toolVariants)
         {
             GameObject btnObj = Instantiate(variantButtonPrefab, variantButtonsContainer);
@@ -1277,19 +1348,72 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
+        // 4. PLAYER SAVED SKIN APPLY: Check karein agar player ne koi skin pehle se equip ki hai
         if (tool.toolVariants.Count > 0)
         {
-            ApplyVariantSkin(tool, tool.toolVariants[0], false);
+            string equippedVariantName = PlayerPrefs.GetString(tool.name + "_Equipped", tool.toolVariants[0].variantName);
+            ToolVariant targetVariant = tool.toolVariants.Find(v => v.variantName == equippedVariantName);
+
+            if (targetVariant == null)
+            {
+                targetVariant = tool.toolVariants[0];
+            }
+
+            ApplyVariantSkin(tool, targetVariant, false);
+        }
+
+        // 5. Panel Animation Start Karein (Zero scale se smooth pop-up)
+        if (variantMainPanel != null)
+        {
+            variantMainPanel.transform.localScale = new Vector3(0.5f, 0f, 1f);
+            variantMainPanel.SetActive(true);
+
+            StartCoroutine(AnimateVariantPanelVideoStyle(true));
         }
     }
 
+    // Variant Panel Pop-up / Hide Coroutine
+    // Variant Panel Pop-up / Hide Coroutine (Fixed without unwanted delays during gameplay)
+    private IEnumerator AnimateVariantPanelVideoStyle(bool show)
+    {
+        if (variantMainPanel == null) yield break;
+
+        // Agar show kar rahe hain to panel ko turant Active karein
+        if (show)
+        {
+            variantMainPanel.SetActive(true);
+        }
+
+        Vector3 startScale = variantMainPanel.transform.localScale;
+        Vector3 targetScale = show ? Vector3.one : new Vector3(0.5f, 0f, 1f);
+
+        float time = 0f;
+        float duration = 0.2f; // Quick and smooth response for cleaning stop/start
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float t = time / duration;
+            float smoothT = t * t * (3f - 2f * t);
+            variantMainPanel.transform.localScale = Vector3.Lerp(startScale, targetScale, smoothT);
+            yield return null;
+        }
+
+        variantMainPanel.transform.localScale = targetScale;
+
+        // Agar hide hua hai to animation khatam hone par SetActive(false) karein
+        if (!show)
+        {
+            variantMainPanel.SetActive(false);
+        }
+    }
     public void ApplyVariantSkin(ToolData tool, ToolVariant variant, bool animate = false)
     {
         if (toolFollower == null || variant == null) return;
 
         if (animate && variant == currentEquippedVariant)
         {
-            Debug.Log("Variant is already equipped. Animation and execution skipped.");
+            Debug.Log("Variant is already equipped. Animation skipped.");
             return;
         }
 
@@ -1314,14 +1438,18 @@ public class MaskEraser : MonoBehaviour
         }
     }
 
-    IEnumerator AnimateVariantSkinRoutine(ToolVariant variant)
+    // Variant Skin Change Animation Coroutine
+    private IEnumerator AnimateVariantSkinRoutine(ToolVariant variant)
     {
         if (toolFollower == null) yield break;
+
         toolFollower.enabled = false;
         Vector3 startPos = toolFollower.transform.position;
         Vector3 outTarget = startPos + Vector3.left * 15f;
         float time = 0;
         float durationOut = 0.3f;
+
+        // Tool screen se bahar jayega
         while (time < durationOut)
         {
             time += Time.deltaTime;
@@ -1330,12 +1458,14 @@ public class MaskEraser : MonoBehaviour
             yield return null;
         }
 
+        // Sprite update
         SpriteRenderer toolSR = toolFollower.GetComponentInChildren<SpriteRenderer>();
         if (toolSR != null && variant.toolSprite != null)
         {
             toolSR.sprite = variant.toolSprite;
         }
 
+        // Tool screen par wapas aayega
         float camZ = Mathf.Abs(Camera.main.transform.position.z);
         Vector3 bottomScreenTarget = new Vector3(Screen.width / 2f, Screen.height * 0.3f, camZ);
         Vector3 restTarget = Camera.main.ScreenToWorldPoint(bottomScreenTarget);
@@ -1357,39 +1487,11 @@ public class MaskEraser : MonoBehaviour
         toolFollower.enabled = true;
     }
 
-    IEnumerator AnimateVariantPanelVideoStyle(bool show)
-    {
-        if (variantMainPanel == null) yield break;
-        if (show)
-        {
-            variantMainPanel.transform.localScale = new Vector3(0.5f, 0f, 1f);
-            variantMainPanel.SetActive(true);
-            yield return new WaitForSeconds(0.8f);
-        }
-
-        Vector3 startScale = variantMainPanel.transform.localScale;
-        Vector3 targetScale = show ? Vector3.one : new Vector3(0.5f, 0f, 1f);
-
-        float time = 0f;
-        float duration = 0.25f;
-
-        while (time < duration)
-        {
-            time += Time.deltaTime;
-            float t = time / duration;
-            float smoothT = t * t * (3f - 2f * t);
-            variantMainPanel.transform.localScale = Vector3.Lerp(startScale, targetScale, smoothT);
-            yield return null;
-        }
-
-        variantMainPanel.transform.localScale = targetScale;
-        if (!show) variantMainPanel.SetActive(false);
-    }
-
     IEnumerator AnimateFirstToolOnStartup()
     {
         isTransitioningTool = true;
         yield return new WaitForSeconds(0.15f);
+
         if (toolFollower != null && Camera.main != null)
         {
             toolFollower.gameObject.SetActive(true);
@@ -1398,6 +1500,7 @@ public class MaskEraser : MonoBehaviour
 
             Vector3 startPos = restTarget + Vector3.right * 15f;
             toolFollower.transform.position = startPos;
+
             if (currentToolData != null)
             {
                 SetupToolVariantsPanel(currentToolData);
