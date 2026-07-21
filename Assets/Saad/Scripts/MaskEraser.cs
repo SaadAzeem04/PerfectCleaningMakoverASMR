@@ -141,6 +141,8 @@ public class MaskEraser : MonoBehaviour
     Texture2D texture;
     int totalOpaquePixels = 0;
 
+    private bool isTransitioningLayer = false;
+
     float targetFill;
     private bool isLayerClearSoundPlayed = false;
     float currentFill;
@@ -527,29 +529,53 @@ public class MaskEraser : MonoBehaviour
     // UNIFIED FUNCTION: Teeno panels ko hide/show karne ke liye ek single controller
     public void ToggleGameplayUI(bool hide)
     {
-        // 1. Variant Panel (Aapka purana variant code waise hi rahega)
+        // 1. Variant Panel
         if (currentToolData != null && currentToolData.hasVariants && currentToolData.toolVariants.Count > 0 && variantMainPanel != null)
         {
             if (panelAnimCoroutine != null) StopCoroutine(panelAnimCoroutine);
             panelAnimCoroutine = StartCoroutine(AnimateVariantPanelVideoStyle(!hide));
         }
 
-        // 2. Gameplay Coin Bar Toggle (Bina Animator ke Smooth Scale)
+        // 2. Gameplay Coin Bar Toggle
         if (coinCounterAnim != null)
         {
-            if (hide) coinCounterAnim.HideUI();
-            else coinCounterAnim.ShowUI();
+            if (hide)
+            {
+                // Direct activeInHierarchy check: Agar pehle se visible hai tabhi Hide animation chalao
+                if (coinCounterAnim.gameObject.activeInHierarchy)
+                {
+                    coinCounterAnim.HideUI();
+                }
+            }
+            else
+            {
+                // Show karte waqt PEHLE SetActive(true) karein taake Coroutine start hone mein issue na aaye
+                coinCounterAnim.gameObject.SetActive(true);
+                coinCounterAnim.ShowUI();
+            }
         }
         else if (gameplayCoinPanel != null) // Fallback safe check
         {
             gameplayCoinPanel.SetActive(!hide);
         }
 
-        // 3. Pause Button Toggle (Bina Animator ke Smooth Scale)
+        // 3. Pause Button Toggle
         if (pauseButtonAnim != null)
         {
-            if (hide) pauseButtonAnim.HideUI();
-            else pauseButtonAnim.ShowUI();
+            if (hide)
+            {
+                // Direct activeInHierarchy check: Agar pehle se visible hai tabhi Hide animation chalao
+                if (pauseButtonAnim.gameObject.activeInHierarchy)
+                {
+                    pauseButtonAnim.HideUI();
+                }
+            }
+            else
+            {
+                // Show karte waqt PEHLE SetActive(true) karein taake Coroutine start hone mein issue na aaye
+                pauseButtonAnim.gameObject.SetActive(true);
+                pauseButtonAnim.ShowUI();
+            }
         }
         else if (pauseButton != null) // Fallback safe check
         {
@@ -817,15 +843,54 @@ public class MaskEraser : MonoBehaviour
     }
     public void ScraperChunkDestroyed()
     {
-        if (remainingScraperChunks > 0)
-        {
-            remainingScraperChunks--;
+        remainingScraperChunks--;
 
-            // Progress bar aur text UI ko automatic refresh karne ke liye function call
-            UpdateProgress();
+        // Realtime progress bar update
+        UpdateProgress();
+
+        // Agar chunks khatam ho chuke hain aur TRANSITION pehle se chal nahi raha
+        if (remainingScraperChunks <= 0 && !isTransitioningLayer)
+        {
+            isTransitioningLayer = true; // Lock laga diya taake duplicate calls execute na hon
+            StartCoroutine(DelayedLayerTransitionRoutine());
         }
     }
 
+    private System.Collections.IEnumerator DelayedLayerTransitionRoutine()
+    {
+        // 1. UI updates ko 100% lock karein
+        targetFill = 1f;
+        currentFill = 1f;
+        progressFill.fillAmount = 1f;
+        percentText.text = "100%";
+
+        // 2. Sound Effect
+        if (!isLayerClearSoundPlayed)
+        {
+            if (AudioManager.Instance != null && AudioManager.Instance.layerClearSFX != null)
+            {
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.layerClearSFX);
+            }
+            isLayerClearSoundPlayed = true;
+        }
+
+        // 3. Last chunk fade-out wait
+        yield return new WaitForSeconds(1.0f);
+
+        // 4. Clean up effects
+        effectGraceTimer = 0f;
+        StopToolEffects();
+
+        // 5. Next layer decision
+        if (currentLayer >= layersList.Count - 1)
+        {
+            CompleteGame();
+        }
+        else
+        {
+            StartCoroutine(TransitionToNextLayerRoutine());
+        }
+    }
     void ClearRemainingLayer()
     {
         // Agar Scraper tool chal raha hai, to bache-kuche mitti ke chunks ko clean kar dein
@@ -879,13 +944,16 @@ public class MaskEraser : MonoBehaviour
             yield return null;
         }
 
+        // Purani layer ko hide karein
         if (currentLayer < layersList.Count && layersList[currentLayer] != null)
         {
             layersList[currentLayer].gameObject.SetActive(false);
         }
 
+        // LAYER INCREMENT: Agli layer par move karein
         currentLayer++;
 
+        // Check karein agar layers khatam ho gayi hain
         if (currentLayer >= layersList.Count)
         {
             CompleteGame();
@@ -931,6 +999,7 @@ public class MaskEraser : MonoBehaviour
         UpdateUpcomingIconsPanel(true);
         if (toolFollower != null) toolFollower.enabled = true;
         isTransitioningTool = false;
+        isTransitioningLayer = false;
     }
 
     void CompleteGame()

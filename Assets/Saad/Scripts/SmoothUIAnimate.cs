@@ -27,7 +27,17 @@ public class SmoothUIAnimate : MonoBehaviour
     {
         if (activeCoroutine != null) StopCoroutine(activeCoroutine);
 
-        activeCoroutine = StartCoroutine(ScaleRoutine(Vector3.zero, true));
+        // Check karein ke GameObject active hai aur Hierarchy mein activeInHierarchy true hai ya nahi
+        if (gameObject.activeInHierarchy)
+        {
+            // FIX: 'HideRoutine' ki jagah ScaleRoutine(Vector3.zero, true) call kiya hai
+            activeCoroutine = StartCoroutine(ScaleRoutine(Vector3.zero, true));
+        }
+        else
+        {
+            // Agar pehle se inactive hai, to Coroutine chalanay ki zaroorat nahi hai
+            gameObject.SetActive(false);
+        }
     }
 
     private IEnumerator ScaleRoutine(Vector3 targetScale, bool disableAtEnd)
