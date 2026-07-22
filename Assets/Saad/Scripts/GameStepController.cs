@@ -13,7 +13,15 @@ public class GameStepController : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
 
         // Safety: Start hote hi Win Panel ko hide rakhein
         if (winPanelUI != null)
@@ -21,15 +29,12 @@ public class GameStepController : MonoBehaviour
             winPanelUI.SetActive(false);
         }
     }
-    // Top variables check karein ke level data variable ka naam kya hai (e.g., levelData ya objectData)
-    // Agar variable ka naam "levelData" ya "cleaningObjectData" hai, to niche check karein:
 
     void Start()
     {
         // Agar LevelManager se SelectedObject mil jaye to use pick karein
         if (LevelManager.SelectedObject != null)
         {
-            // Safe check: MaskEraser ko pass kar de
             MaskEraser eraser = FindFirstObjectByType<MaskEraser>();
             if (eraser != null)
             {
@@ -44,7 +49,7 @@ public class GameStepController : MonoBehaviour
     {
         if (LevelManager.Instance == null || LevelManager.Instance.currentLevelData == null)
         {
-            Debug.LogWarning("No Level Data assigned!");
+            Debug.LogWarning("No Level Data or LevelManager assigned!");
             return;
         }
 
@@ -72,10 +77,7 @@ public class GameStepController : MonoBehaviour
                     maskEraser.gameObject.SetActive(true);
                     if (step.cleaningObjectData != null)
                     {
-                        // LevelManager me SelectedObject assign karein
                         LevelManager.SelectedObject = step.cleaningObjectData;
-
-                        // IMPORTANT: MaskEraser ko force-refresh karein naye Object (Trophy) ke data se
                         maskEraser.InitializeCleaningObject(step.cleaningObjectData);
                     }
                 }
@@ -98,12 +100,25 @@ public class GameStepController : MonoBehaviour
 
     public void OnStepFinishedFromMinigame()
     {
-        LevelManager.Instance.AdvanceToNextStep();
+        // SAFE CHECK: LevelManager.Instance null hone par crash hone se bachayein
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.AdvanceToNextStep();
+            ExecuteCurrentStep(); // Agla step execute karein ya complete win trigger karein
+        }
+        else
+        {
+            Debug.LogWarning("LevelManager.Instance Scene mein missing hai! Direct Win panel trigger kar rahe hain.");
+            OnAllStepsCompleted(); // Fallback taake game stuck na ho
+        }
     }
 
     private void OnAllStepsCompleted()
     {
         if (maskEraser != null) maskEraser.gameObject.SetActive(false);
         if (winPanelUI != null) winPanelUI.SetActive(true);
+        if (winPanelUI != null) winPanelUI.SetActive(true);
     }
+
+
 }

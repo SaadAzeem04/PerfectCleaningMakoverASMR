@@ -132,6 +132,8 @@ public class MaskEraser : MonoBehaviour
     public SmoothUIAnimate pauseButtonAnim;
     public SmoothUIAnimate coinCounterAnim;
 
+    private List<GameObject> stepGameObjects = new List<GameObject>();
+
 
     // Runtime Generated Layers
     private List<SpriteRenderer> layersList = new List<SpriteRenderer>();
@@ -243,14 +245,14 @@ public class MaskEraser : MonoBehaviour
 
     void SetupGenericLevel()
     {
+
         if (levelParentAnchor == null)
         {
             Debug.LogError("MaskEraser: Please assign Level Parent Anchor!");
             return;
         }
 
-        // --- 1. PURANE PURANE SABHI LAYERS KO CLEAR/DESTROY KAREIN ---
-        // Is se Football ki koi bhi puraani layer/sprite hierarchy mein baqi nahi rahegi
+        // 1. Purane sabhi generated objects clear karein
         for (int i = levelParentAnchor.childCount - 1; i >= 0; i--)
         {
             DestroyImmediate(levelParentAnchor.GetChild(i).gameObject);
@@ -259,23 +261,23 @@ public class MaskEraser : MonoBehaviour
         layersList.Clear();
         layerRequiredTools.Clear();
 
-        // --- 2. BACKGROUND SETUP ---
-        if (objectData != null && backgroundRenderer != null)
+        // 2. Background setup
+        if (objectData != null)
         {
-            if (objectData.levelBackgroundSprite != null)
+            if (backgroundRenderer != null && objectData.levelBackgroundSprite != null)
             {
                 backgroundRenderer.sprite = objectData.levelBackgroundSprite;
                 backgroundRenderer.sortingOrder = -10;
                 backgroundRenderer.gameObject.SetActive(true);
             }
-            if (objectData != null)
-            {
-                cameraMoveIntensity = objectData.cameraMovementIntensity;
-            }
-        }
 
-        if (backgroundImage != null && objectData.backgroundSprite != null)
-            backgroundImage.sprite = objectData.backgroundSprite;
+            if (backgroundImage != null && objectData.backgroundSprite != null)
+            {
+                backgroundImage.sprite = objectData.backgroundSprite;
+            }
+
+            cameraMoveIntensity = objectData.cameraMovementIntensity;
+        }
 
         Vector3 currentPos = levelParentAnchor.position;
         levelParentAnchor.position = new Vector3(currentPos.x, currentPos.y, 0f);
@@ -287,7 +289,7 @@ public class MaskEraser : MonoBehaviour
             return;
         }
 
-        // --- 3. DYNAMICALLY CREATE FRESH BASE CLEAN OBJECT ---
+        // 3. Base Clean Object Create Karein
         GameObject cleanObj = new GameObject("Base_Clean_Object");
         cleanObj.transform.SetParent(levelParentAnchor, false);
         cleanObj.transform.localPosition = Vector3.zero;
@@ -298,73 +300,77 @@ public class MaskEraser : MonoBehaviour
 
         if (objectData.cleanSprite != null)
         {
-            baseCleanSR.sprite = objectData.cleanSprite; // Selected ObjectData (Trophy/Football) ki clean image
-            baseCleanSR.sortingOrder = 0; // Sab se peeche base image
+            baseCleanSR.sprite = objectData.cleanSprite;
+            baseCleanSR.sortingOrder = 0;
             baseCleanSR.maskInteraction = SpriteMaskInteraction.None;
             baseCleanSR.material = new Material(Shader.Find("Sprites/Default"));
             baseCleanSR.enabled = true;
             cleanObj.SetActive(true);
-            Debug.Log($"<color=green>[MaskEraser] Loaded NEW Clean Sprite: {objectData.cleanSprite.name}</color>");
         }
 
-        // --- 4. DYNAMICALLY CREATE FRESH DIRTY LAYERS ---
-        if (objectData.dirtyLayers != null && objectData.dirtyLayers.Length > 0)
+        // 4. Step-Based Dynamic Setup
+        // 4. Step-Based Dynamic Setup
+        if (objectData.cleaningSteps != null && objectData.cleaningSteps.Count > 0)
         {
-            int totalLayers = objectData.dirtyLayers.Length;
-            for (int i = 0; i < totalLayers; i++)
+            int totalSteps = objectData.cleaningSteps.Count;
+            stepGameObjects.Clear(); // Step objects tracking list
+
+            for (int i = 0; i < totalSteps; i++)
             {
-                if (objectData.dirtyLayers[i] == null) continue;
+                CleaningStep step = objectData.cleaningSteps[i];
+                if (step == null) continue;
 
-                GameObject dirtyObj = new GameObject("Dirty_Layer_" + i);
-                dirtyObj.transform.SetParent(levelParentAnchor, false);
-                dirtyObj.transform.localPosition = Vector3.zero;
-                dirtyObj.transform.localRotation = Quaternion.identity;
-                dirtyObj.transform.localScale = Vector3.one;
+                GameObject stepObj = new GameObject($"Step_{i}_{step.stepName}");
+                stepObj.transform.SetParent(levelParentAnchor, false);
+                stepObj.transform.localPosition = Vector3.zero;
+                stepObj.transform.localRotation = Quaternion.identity;
+                stepObj.transform.localScale = Vector3.one;
 
-                SpriteRenderer sr = dirtyObj.AddComponent<SpriteRenderer>();
-                sr.sprite = objectData.dirtyLayers[i];
-                sr.sortingOrder = (totalLayers + 5) - i;
+                stepGameObjects.Add(stepObj); // Index 0, 1, 2 tracking
 
-                layersList.Add(sr);
-
-                ToolData assignedTool = null;
-                if (objectData.requiredTools != null && i < objectData.requiredTools.Length)
-                    assignedTool = objectData.requiredTools[i];
-
-                CleaningLayer cleaningLayerComponent = dirtyObj.AddComponent<CleaningLayer>();
-                cleaningLayerComponent.requiredTool = assignedTool;
-
-                layerRequiredTools.Add(assignedTool);
-
-                // Layer 0 ko hide karein agar Mud Chunks ka Prefab maujood hai
-                if (i == 0 && objectData.scraperChunksPrefab != null)
+                switch (step.stepType)
                 {
-                    sr.enabled = false;
+                    case CleaningStepType.PixelEraser:
+                        SpriteRenderer sr = stepObj.AddComponent<SpriteRenderer>();
+                        sr.sprite = step.dirtySprite;
+                        sr.sortingOrder = (totalSteps + 5) - i;
+                        layersList.Add(sr); // Index match (e.g. Index 1 for Step 1)
+                        break;
+
+                    case CleaningStepType.ChunkScraper:
+                        if (step.stepPrefab != null)
+                        {
+                            GameObject instantiatedChunks = Instantiate(step.stepPrefab, stepObj.transform);
+                            instantiatedChunks.transform.localPosition = Vector3.zero;
+                            instantiatedChunks.transform.localRotation = Quaternion.identity;
+                            instantiatedChunks.transform.localScale = Vector3.one;
+
+                            MudChunk[] allChunks = instantiatedChunks.GetComponentsInChildren<MudChunk>(true);
+                            totalScraperChunks = allChunks.Length;
+                            remainingScraperChunks = totalScraperChunks;
+                        }
+                        layersList.Add(null); // Placeholder taake index out-of-sync na ho
+                        break;
+
+                    case CleaningStepType.GlueApply:
+                        if (step.stepPrefab != null)
+                        {
+                            GameObject instantiatedGlue = Instantiate(step.stepPrefab, stepObj.transform);
+                            instantiatedGlue.transform.localPosition = Vector3.zero;
+                            instantiatedGlue.transform.localRotation = Quaternion.identity;
+                            instantiatedGlue.transform.localScale = Vector3.one;
+                        }
+                        layersList.Add(null); // Placeholder taake index out-of-sync na ho
+                        break;
                 }
 
-                // --- FIXED LOGIC: Sirf Step 0 (Top Layer) aur Step 1 (Underneath Layer) active honge ---
-                if (i == 0 || i == 1)
-                {
-                    dirtyObj.SetActive(true);
-                }
-                else
-                {
-                    dirtyObj.SetActive(false); // Baaki Layer 2, 3, 4, etc. START MEIN HIDE RAHENGI
-                }
+                CleaningLayer cleaningLayerComponent = stepObj.AddComponent<CleaningLayer>();
+                cleaningLayerComponent.requiredTool = step.requiredTool;
+                layerRequiredTools.Add(step.requiredTool);
+
+                // Sirf pehli 2 layers active rahengi
+                stepObj.SetActive(i == 0 || i == 1);
             }
-        }
-
-        // --- 5. CHUNKS PREFAB SPAWN ---
-        if (objectData.scraperChunksPrefab != null)
-        {
-            GameObject instantiatedChunks = Instantiate(objectData.scraperChunksPrefab, levelParentAnchor);
-            instantiatedChunks.transform.localPosition = Vector3.zero;
-            instantiatedChunks.transform.localRotation = Quaternion.identity;
-            instantiatedChunks.transform.localScale = Vector3.one;
-
-            MudChunk[] allChunks = instantiatedChunks.GetComponentsInChildren<MudChunk>(true);
-            totalScraperChunks = allChunks.Length;
-            remainingScraperChunks = totalScraperChunks;
         }
     }
 
@@ -716,26 +722,11 @@ public class MaskEraser : MonoBehaviour
     {
         if (currentLayer >= layersList.Count) return;
 
-        // --- ONLY CHANGE: 2 Layers at a time Active (Current Layer + Next Layer) ---
-        for (int i = 0; i < layersList.Count; i++)
-        {
-            if (layersList[i] != null)
-            {
-                // Sirf current layer (jis par erasing honi hai) aur uske bilkul neeche wali next layer active rahegi
-                if (i == currentLayer || i == currentLayer + 1)
-                {
-                    layersList[i].gameObject.SetActive(true);
-                }
-                else
-                {
-                    // Baaki sab layers hide rahengi
-                    layersList[i].gameObject.SetActive(false);
-                }
-            }
-        }
+        // Chunk / Glue step par SpriteRenderer null hoga, isliye texture slicing skip karein
+        if (layersList[currentLayer] == null) return;
 
         // =========================================================================
-        //  AAPKA PURANA CODE (NO CHANGES AT ALL BELOW THIS POINT)
+        // AAPKA ORIGINAL CODE (NO CHANGES AT ALL BELOW THIS POINT)
         // =========================================================================
         Sprite originalSprite = layersList[currentLayer].sprite;
         Texture2D sheetTexture = originalSprite.texture;
@@ -825,67 +816,82 @@ public class MaskEraser : MonoBehaviour
 
     void UpdateProgress()
     {
-        if (gameCompleted || layerFinishedWaitingRelease || layersList.Count == 0) return;
+        // Safety Check: Agar game finish ho chuki hai ya step list empty hai
+        if (gameCompleted || layerFinishedWaitingRelease || objectData == null || objectData.cleaningSteps == null || objectData.cleaningSteps.Count == 0) return;
+        if (currentLayer >= objectData.cleaningSteps.Count) return;
 
-        isScraperActive = (currentToolData != null && (currentToolData.toolType == ToolType.Scraper || currentToolData.name.Contains("Scraper")));
+        CleaningStep currentStep = objectData.cleaningSteps[currentLayer];
 
         float percent = 0f;
         bool isLayerFullyCleaned = false;
 
-        if (isScraperActive)
+        // --- STEP TYPE KE MUTAABIQ LOGIC SWITCH ---
+        switch (currentStep.stepType)
         {
-            //  AGAR TOTAL CHUNKS ZERO HAIN, TO INSANE 100% SE BACHNE KE LIYE RE-COUNT KAREIN
-            if (totalScraperChunks <= 0)
-            {
-                if (levelParentAnchor != null)
+            case CleaningStepType.ChunkScraper:
+                // AGAR TOTAL CHUNKS ZERO HAIN, TO RE-COUNT KAREIN (Aapki Original Safety Logic)
+                if (totalScraperChunks <= 0)
                 {
-                    MudChunk[] allChunks = levelParentAnchor.GetComponentsInChildren<MudChunk>(true);
-                    totalScraperChunks = allChunks.Length;
-                    remainingScraperChunks = totalScraperChunks;
+                    if (levelParentAnchor != null)
+                    {
+                        MudChunk[] allChunks = levelParentAnchor.GetComponentsInChildren<MudChunk>(true);
+                        totalScraperChunks = allChunks.Length;
+                        remainingScraperChunks = totalScraperChunks;
+                    }
                 }
-            }
 
-            if (totalScraperChunks == 0) totalScraperChunks = 1;
+                if (totalScraperChunks == 0) totalScraperChunks = 1;
 
-            int removedChunks = totalScraperChunks - remainingScraperChunks;
-            percent = ((float)removedChunks / totalScraperChunks) * 100f;
+                int removedChunks = totalScraperChunks - remainingScraperChunks;
+                percent = ((float)removedChunks / totalScraperChunks) * 100f;
 
-            // FORCE CHECK: Jab tak aakhri chunk baqi hai, percent 100% nahi ho sakta!
-            if (remainingScraperChunks > 0 && percent >= 99f)
-            {
-                percent = 99f;
-            }
+                // FORCE CHECK: Jab tak aakhri chunk baqi hai, percent 100% nahi ho sakta!
+                if (remainingScraperChunks > 0 && percent >= 99f)
+                {
+                    percent = 99f;
+                }
 
-            isLayerFullyCleaned = (remainingScraperChunks <= 0);
-        }
-        else
-        {
-            //  Normal tools ke liye pixels count karein
-            Color[] pixels = texture.GetPixels();
-            int currentOpaque = 0;
-            foreach (Color c in pixels)
-            {
-                if (c.a > 0.25f) currentOpaque++;
-            }
+                isLayerFullyCleaned = (remainingScraperChunks <= 0);
+                break;
 
-            if (totalOpaquePixels == 0) totalOpaquePixels = 1;
-            int removed = totalOpaquePixels - currentOpaque;
-            percent = ((float)removed / totalOpaquePixels) * 100f;
+            case CleaningStepType.PixelEraser:
+                // Normal tools ke liye pixels count karein (Aapki Original Logic)
+                if (texture != null)
+                {
+                    Color[] pixels = texture.GetPixels();
+                    int currentOpaque = 0;
+                    foreach (Color c in pixels)
+                    {
+                        if (c.a > 0.25f) currentOpaque++;
+                    }
 
-            isLayerFullyCleaned = (percent >= cleaningThreshold);
+                    if (totalOpaquePixels == 0) totalOpaquePixels = 1;
+                    int removed = totalOpaquePixels - currentOpaque;
+                    percent = ((float)removed / totalOpaquePixels) * 100f;
+
+                    // Aapka original script-level cleaningThreshold variable hi istemal hoga
+                    isLayerFullyCleaned = (percent >= cleaningThreshold);
+                }
+                break;
+
+            case CleaningStepType.GlueApply:
+                // Future Glue application completion logic (Aap yahan bad mein add kar sakte hain)
+                break;
         }
 
         float visualPercent = percent;
         if (visualPercent > 100f) visualPercent = 100f;
 
-        //  UI UPDATE: Sirf tabhi 100% dikhaye jab such mein complete ho
+        // UI UPDATE (Aapka Original UI System)
         targetFill = visualPercent / 100f;
-        progressFill.fillAmount = targetFill; // Direct fill amount assign karke test karein lerp ke bajaye
+        progressFill.fillAmount = targetFill;
         percentText.text = Mathf.RoundToInt(visualPercent) + "%";
 
+        // LAYER COMPLETION LOGIC
         if (isLayerFullyCleaned)
         {
             Debug.Log("LAYER TARGET ACHIEVED COMPLETELY!");
+
             if (!isLayerClearSoundPlayed)
             {
                 if (AudioManager.Instance != null && AudioManager.Instance.layerClearSFX != null)
@@ -900,7 +906,7 @@ public class MaskEraser : MonoBehaviour
 
             ClearRemainingLayer();
 
-            if (currentLayer >= layersList.Count - 1)
+            if (currentLayer >= objectData.cleaningSteps.Count - 1)
             {
                 CompleteGame();
             }
@@ -912,44 +918,65 @@ public class MaskEraser : MonoBehaviour
     }
     public void ScraperChunkDestroyed()
     {
-        if (remainingScraperChunks > 0)
+        remainingScraperChunks--;
+        if (remainingScraperChunks < 0)
         {
-            remainingScraperChunks--;
-
-            // Progress bar aur text UI ko automatic refresh karne ke liye function call
-            UpdateProgress();
+            remainingScraperChunks = 0;
         }
+
+        // Chunk kam hone par instant progress calculation update karein
+        UpdateProgress();
     }
 
     void ClearRemainingLayer()
     {
-        // Agar Scraper tool chal raha hai, to bache-kuche mitti ke chunks ko clean kar dein
-        if (isScraperActive)
+        // 1. Current Step Check (Step-based logic + Fallback isScraperActive check)
+        bool isChunkStep = false;
+        if (objectData != null && objectData.cleaningSteps != null && currentLayer < objectData.cleaningSteps.Count)
+        {
+            CleaningStep currentStep = objectData.cleaningSteps[currentLayer];
+            if (currentStep != null && currentStep.stepType == CleaningStepType.ChunkScraper)
+            {
+                isChunkStep = true;
+            }
+        }
+
+        // 2. AGAR SCRAPER / CHUNK STEP HAI: Saare remaining MudChunks ko hide karein
+        if (isChunkStep || isScraperActive)
         {
             remainingScraperChunks = 0;
-            // Level anchor ke andar search karke saare active MudChunks ko clear karein
             if (levelParentAnchor != null)
             {
                 MudChunk[] remainingList = levelParentAnchor.GetComponentsInChildren<MudChunk>(true);
                 foreach (MudChunk chunk in remainingList)
                 {
-                    if (chunk.gameObject.activeSelf) chunk.gameObject.SetActive(false);
+                    if (chunk != null && chunk.gameObject.activeSelf)
+                    {
+                        chunk.gameObject.SetActive(false);
+                    }
                 }
             }
         }
         else
         {
-            // Purani texture clear karne wali logic (Brush vagaira ke liye)
-            Color[] pixels = texture.GetPixels();
-            for (int i = 0; i < pixels.Length; i++) pixels[i].a = 0f;
-            texture.SetPixels(pixels);
-            texture.Apply(false);
+            // 3. AGAR PIXEL / TEXTURE ERASER STEP HAI (Texture Null Safety Guard ke saath)
+            if (texture != null)
+            {
+                Color[] pixels = texture.GetPixels();
+                for (int i = 0; i < pixels.Length; i++)
+                {
+                    pixels[i].a = 0f;
+                }
+                texture.SetPixels(pixels);
+                texture.Apply(false);
+            }
         }
 
+        // 4. UI KO FORCE 100% KAREIN
         targetFill = 1f;
         currentFill = 1f;
-        progressFill.fillAmount = 1f;
-        percentText.text = "100%";
+        if (progressFill != null) progressFill.fillAmount = 1f;
+        if (percentText != null) percentText.text = "100%";
     }
 
     IEnumerator TransitionToNextLayerRoutine()
@@ -974,25 +1001,39 @@ public class MaskEraser : MonoBehaviour
             yield return null;
         }
 
-        // Purani finish hone wali layer ko hide karein
-        if (currentLayer < layersList.Count && layersList[currentLayer] != null)
+        // 1. Purani complete hone wali layer ko hide karein
+        if (stepGameObjects != null && currentLayer < stepGameObjects.Count && stepGameObjects[currentLayer] != null)
         {
-            layersList[currentLayer].gameObject.SetActive(false);
+            stepGameObjects[currentLayer].SetActive(false);
         }
 
         currentLayer++;
 
-        // Nayi layer par aate hi PrepareLayer() execute hoga jo Layer 1 aur Layer 2 ko active kar dega!
-
-        if (currentLayer >= layersList.Count)
+        // 2. Game Finish Check
+        if (currentLayer >= objectData.cleaningSteps.Count)
         {
             CompleteGame();
             isTransitioningTool = false;
             yield break;
         }
 
+        // 3. Nayi layer ko active karein
+        if (stepGameObjects != null)
+        {
+            if (currentLayer < stepGameObjects.Count && stepGameObjects[currentLayer] != null)
+                stepGameObjects[currentLayer].SetActive(true);
+
+            if (currentLayer + 1 < stepGameObjects.Count && stepGameObjects[currentLayer + 1] != null)
+                stepGameObjects[currentLayer + 1].SetActive(true);
+        }
+
         PrepareLayer();
-        ToolData nextTool = layerRequiredTools[currentLayer];
+
+        ToolData nextTool = null;
+        if (layerRequiredTools != null && currentLayer < layerRequiredTools.Count)
+        {
+            nextTool = layerRequiredTools[currentLayer];
+        }
 
         SelectTool(nextTool, true);
         targetCameraSize = (nextTool != null && nextTool.cameraZoomSize > 0.1f) ? nextTool.cameraZoomSize : defaultCameraSize;
@@ -1046,18 +1087,21 @@ public class MaskEraser : MonoBehaviour
         if (upcomingToolUIImage != null) upcomingToolUIImage.gameObject.SetActive(false);
         UpdateUpcomingIconsPanel(false);
 
-        // Level complete hone par variant aur pause panel ko permanent hide karein
+        // Variant aur pause panel ko hide karein
         if (variantMainPanel != null) variantMainPanel.SetActive(false);
         if (pauseButton != null) pauseButton.SetActive(false);
 
-        // GAMEPLAY COIN BAR: Jab tak win panel delayed chal raha hai, tab tak isko hide rakhein
-        if (gameplayCoinPanel != null) gameplayCoinPanel.SetActive(true);
-
-        StartCoroutine(ShowDelayedUIAndCoinsRoutine());
-        if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
-        if (celebrationSound != null && AudioManager.Instance != null)
+        // =========================================================================
+        // FIX 1: COIN BAR KO ACTIVE KAREIN AUR SLIDE-IN ANIMATION TRIGGER KAREIN
+        // =========================================================================
+        if (gameplayCoinPanel != null)
         {
-            AudioManager.Instance.PlaySFX(celebrationSound);
+            gameplayCoinPanel.SetActive(true);
+            gameplayCoinPanel.transform.SetAsLastSibling(); // Top layer par laayein
+
+            // Agar aapki script mein side slide animation hai toh trigger karein:
+            if (topUISlideCoroutine != null) StopCoroutine(topUISlideCoroutine);
+            topUISlideCoroutine = StartCoroutine(SlideSideUIRoutine(false));
         }
 
         // --- DYNAMIC WIN PANEL ICON ASSIGNMENT ---
@@ -1076,7 +1120,30 @@ public class MaskEraser : MonoBehaviour
                 winPanelIconImage.sprite = completedLevelSprite;
             }
         }
+
+        if (celebrationSound != null && AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(celebrationSound);
+        }
+
+        // =========================================================================
+        // FIX 2: COIN SEQUENCE START KAREIN (Progress bar ko baad mein hide hone dein)
+        // =========================================================================
+        if (CoinManager.Instance != null)
+        {
+            CoinManager.Instance.StartCoroutine(
+                CoinManager.Instance.PlayCoinSequenceRoutine(gameplayCoinPanel, levelCompletePanel, levelCompleteDelay)
+            );
+        }
+        else
+        {
+            StartCoroutine(ShowDelayedUIAndCoinsRoutine());
+        }
+
+        // Progress bar ko sab se aakhir mein hide karein taake spawn point position break na ho
+        if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
     }
+
 
     void SnapToolUI()
     {
@@ -1264,34 +1331,51 @@ public class MaskEraser : MonoBehaviour
     }
     IEnumerator ShowDelayedUIAndCoinsRoutine()
     {
+        Debug.Log("<color=yellow>1. ShowDelayedUIAndCoinsRoutine Start Hua!</color>");
+
         yield return new WaitForSeconds(levelCompleteDelay);
 
-        if (levelCompletePanel != null)
-        {
-            levelCompletePanel.SetActive(true);
-        }
-        else
-        {
-            Debug.LogError("MaskEraser: levelCompletePanel reference missing in Inspector!");
-        }
-
-        // --- COIN BAR RE-ACTIVATION WITH SCRIPT'S SLIDE ANIMATION ---
+        // 1. PEHLE COIN BAR SLIDE-IN KAREIN
         if (gameplayCoinPanel != null)
         {
             gameplayCoinPanel.SetActive(true);
-            gameplayCoinPanel.transform.SetAsLastSibling(); // UI Layer par sabse aage laane ke liye
+            gameplayCoinPanel.transform.SetAsLastSibling();
 
-            // Aapki script mein pehle se bani hui Slide Animation trigger karein
             if (topUISlideCoroutine != null) StopCoroutine(topUISlideCoroutine);
-            topUISlideCoroutine = StartCoroutine(SlideSideUIRoutine(false)); // 'false' ka matlab Slide-In (Andar aana)
+            topUISlideCoroutine = StartCoroutine(SlideSideUIRoutine(false));
+            Debug.Log("<color=yellow>2. Coin Bar Slide-In Started</color>");
         }
 
+        // Coin Bar ko screen par aane ka time dein
+        yield return new WaitForSeconds(0.4f);
+
+        // 2. COIN ANIMATION TRIGGER KAREIN
         if (CoinManager.Instance != null)
         {
+            Debug.Log("<color=green>3. TriggerCoinSwoopAnimation Call Ho Raha Hai!</color>");
             CoinManager.Instance.TriggerCoinSwoopAnimation(20);
         }
+        else
+        {
+            Debug.LogError("CoinManager.Instance NULL hai! Check karein Scene mein CoinManager exist karta hai ya nahi.");
+        }
 
-        UpdateGameplayCoinsUI();
+        // Coins fly hone ka wait karein
+        yield return new WaitForSeconds(1.2f);
+
+        // 3. WIN PANEL SHOW KAREIN
+        if (levelCompletePanel != null)
+        {
+            levelCompletePanel.SetActive(true);
+            Debug.Log("<color=yellow>4. Level Complete Panel Active Hua!</color>");
+        }
+
+        // 4. AAKHIR MEIN GAME CONTROLLER KO NOTIFY KAREIN
+        if (GameStepController.Instance != null)
+        {
+            Debug.Log("<color=yellow>5. GameStepController Notified!</color>");
+            GameStepController.Instance.OnStepFinishedFromMinigame();
+        }
     }
     Transform GetToolTransformToAnimate()
     {

@@ -20,6 +20,9 @@ public class CleaningObjectData : ScriptableObject
     public float customCameraZoomSize = 5.0f;
     public bool enableYAxisMovement = false;
 
+    [Header("Dynamic Cleaning Sub-Steps")]
+    public System.Collections.Generic.List<CleaningStep> cleaningSteps = new System.Collections.Generic.List<CleaningStep>();
+
     [Header("Layer Transform Overrides (Optional)")]
     [Tooltip("Agar aap kisi specific layer ki position badalna chahte hain, to yahan vector offset dein. (Element 0 = Layer 1)")]
     public Vector3[] customLayerOffsets;

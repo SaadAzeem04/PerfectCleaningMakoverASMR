@@ -11,9 +11,9 @@ public class CoinManager : MonoBehaviour
     public TMP_Text globalCoinText; // Home screen ya level complete screen ka coin text
 
     [Header("Animation Settings")]
-    public GameObject coinPrefab; // Ek chota UI Coin ka prefab jisme Image component ho
-    public Transform coinSpawnPoint; // Jahan se coin nikalna shuru honge (e.g., Claim Button)
-    public Transform coinTargetPoint; // Jahan coins ne swoop hoke jana hai (Top-Left Coin Icon)
+    public GameObject coinPrefab;     // Ek chota UI Coin ka prefab jisme Image component ho
+    public Transform coinSpawnPoint;  // Jahan se coin nikalna shuru honge (e.g., Claim Button ya Center)
+    public Transform coinTargetPoint; // Jahan coins ne swoop hoke jana hai (Top Coin Icon Bar)
 
     private int currentCoins;
 
@@ -31,19 +31,16 @@ public class CoinManager : MonoBehaviour
         }
 
         // =========================================================================
-        // NAYI LOGIC: Pehli Baar Download Karne Par 100 Coins Dena!
+        // PEHLI BAAR DOWNLOAD PAR 100 COINS DENA
         // =========================================================================
         if (!PlayerPrefs.HasKey("TotalCoins"))
         {
-            // Agar player naya hai (kabhi coins save nahi hue), to 100 coins do
             PlayerPrefs.SetInt("TotalCoins", 100);
             PlayerPrefs.Save();
             Debug.Log("New Player! Initially 100 Coins de diye gaye hain.");
         }
 
-        // Coins data load karna PlayerPrefs se (Ab yeh 0 ke bajaye 100 uthayega!)
-        currentCoins = PlayerPrefs.GetInt("TotalCoins", 0);
-        // =========================================================================
+        currentCoins = PlayerPrefs.GetInt("TotalCoins", 100);
     }
 
     void Start()
@@ -68,14 +65,60 @@ public class CoinManager : MonoBehaviour
         UpdateCoinUI();
     }
 
+    // =========================================================================
+    // NAYA SEQUENCE ROUTINE: WIN PANEL -> COIN BAR -> COIN SWOOP -> NEXT STEP
+    // =========================================================================
+    public IEnumerator PlayCoinSequenceRoutine(GameObject coinPanelUI, GameObject winPanelUI, float delayBeforeStart)
+    {
+        yield return new WaitForSeconds(delayBeforeStart);
+
+        // 1. PEHLE WIN PANEL / LEVEL COMPLETE WINDOW SHOW KAREIN
+        if (winPanelUI != null)
+        {
+            winPanelUI.SetActive(true);
+        }
+
+        // Win Panel slide / open hone ka waqt
+        yield return new WaitForSeconds(0.4f);
+
+        // 2. COIN BAR SHOW & BRING TO FRONT
+        if (coinPanelUI != null)
+        {
+            coinPanelUI.SetActive(true);
+            coinPanelUI.transform.SetAsLastSibling();
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        // 3. TRIGGER SWOOP ANIMATION (Window khulne ke BAAD)
+        TriggerCoinSwoopAnimation(20);
+
+        // Coins ud kar bar mein jaane ka time
+        yield return new WaitForSeconds(1.2f);
+
+        // 4. NOTIFY GAME STEP CONTROLLER
+        if (GameStepController.Instance != null)
+        {
+            GameStepController.Instance.OnStepFinishedFromMinigame();
+        }
+    }
+
     // Visual Swoop/Fly Animation Function
     public void TriggerCoinSwoopAnimation(int totalCoinsToAdd)
     {
-        // Agar pehle se animation chal rahi hai toh ruk jao taake double coins add na hon
         if (isAnimating) return;
 
-        if (coinPrefab == null || coinSpawnPoint == null || coinTargetPoint == null)
+        // Safety Null Checks
+        if (coinPrefab == null)
         {
+            Debug.LogWarning("CoinManager: coinPrefab Inspector mein missing hai! Direct Coins add kar rahe hain.");
+            AddCoins(totalCoinsToAdd);
+            return;
+        }
+
+        if (coinSpawnPoint == null || coinTargetPoint == null)
+        {
+            Debug.LogWarning("CoinManager: coinSpawnPoint ya coinTargetPoint Missing hai! Direct Coins add kar rahe hain.");
             AddCoins(totalCoinsToAdd);
             return;
         }
@@ -85,14 +128,20 @@ public class CoinManager : MonoBehaviour
 
     private IEnumerator AnimateCoinsRoutine(int totalCoinsToAdd)
     {
-        isAnimating = true; // Animation shuru ho gayi, lock laga diya
+        isAnimating = true;
 
         int coinVisualCount = 8;
         RectTransform targetRect = coinTargetPoint.GetComponent<RectTransform>();
+        Transform parentCanvas = (targetRect != null) ? targetRect.parent : coinSpawnPoint.parent;
+
+        Vector3 spawnPos = (coinSpawnPoint != null && coinSpawnPoint.gameObject.activeInHierarchy)
+                            ? coinSpawnPoint.position
+                            : new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
 
         for (int i = 0; i < coinVisualCount; i++)
         {
-            GameObject spawnedCoin = Instantiate(coinPrefab, coinSpawnPoint.position, Quaternion.identity, coinSpawnPoint.parent);
+            GameObject spawnedCoin = Instantiate(coinPrefab, spawnPos, Quaternion.identity, parentCanvas);
+            spawnedCoin.transform.SetAsLastSibling();
 
             RectTransform coinRect = spawnedCoin.GetComponent<RectTransform>();
             if (coinRect != null)
@@ -108,24 +157,20 @@ public class CoinManager : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
 
-        // Exact fix value add hogi jab loop khatam ho jaye
         AddCoins(totalCoinsToAdd);
-
-        // Thora sa stay karwaen ge taake animation smooth end ho jaye
         yield return new WaitForSeconds(0.5f);
 
-        isAnimating = false; // Lock khol diya agle level ke liye
+        isAnimating = false;
     }
 
     private IEnumerator MoveCoinToTargetUI(GameObject coin, RectTransform targetRect, Vector3 offset)
     {
         float time = 0f;
-        float duration = 0.5f; // Coin udne ka waqt
+        float duration = 0.5f;
 
         RectTransform coinRect = coin.GetComponent<RectTransform>();
         Vector3 startScreenPos = coin.transform.position;
 
-        // Shuruat mein thoda phelna
         if (coinRect != null)
         {
             coinRect.anchoredPosition += (Vector2)offset;
@@ -136,10 +181,10 @@ public class CoinManager : MonoBehaviour
             time += Time.deltaTime;
             float t = time / duration;
 
-            // Smooth curve movement
+            // Smooth curve movement (Ease In Out)
             t = t * t * (3f - 2f * t);
 
-            if (coin != null)
+            if (coin != null && targetRect != null)
             {
                 coin.transform.position = Vector3.Lerp(startScreenPos, targetRect.position, t);
             }
