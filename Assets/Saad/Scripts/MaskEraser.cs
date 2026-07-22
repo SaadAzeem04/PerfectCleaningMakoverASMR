@@ -141,6 +141,9 @@ public class MaskEraser : MonoBehaviour
     Texture2D texture;
     int totalOpaquePixels = 0;
 
+    private Texture2D nextTexture;
+    private Color[] nextOriginalPixels;
+
     float targetFill;
     private bool isLayerClearSoundPlayed = false;
     float currentFill;
@@ -308,6 +311,7 @@ public class MaskEraser : MonoBehaviour
         }
 
         // --- 4. DYNAMICALLY CREATE FRESH DIRTY LAYERS ---
+        // --- 4. DYNAMICALLY CREATE FRESH DIRTY LAYERS ---
         if (objectData.dirtyLayers != null && objectData.dirtyLayers.Length > 0)
         {
             int totalLayers = objectData.dirtyLayers.Length;
@@ -342,14 +346,14 @@ public class MaskEraser : MonoBehaviour
                     sr.enabled = false;
                 }
 
-                // --- FIXED LOGIC: Sirf Step 0 (Top Layer) aur Step 1 (Underneath Layer) active honge ---
-                if (i == 0 || i == 1)
+                // --- FIX: Sirf Pehli Layer (Index 0) Active Rahegi, Baaki Sab Upcoming Layers Inactive Rahengi ---
+                if (i == 0)
                 {
                     dirtyObj.SetActive(true);
                 }
                 else
                 {
-                    dirtyObj.SetActive(false); // Baaki Layer 2, 3, 4, etc. START MEIN HIDE RAHENGI
+                    dirtyObj.SetActive(false); // Upcoming layers pehle se visible nahi hongi
                 }
             }
         }
@@ -464,7 +468,10 @@ public class MaskEraser : MonoBehaviour
         if (Input.GetMouseButton(0) && currentToolData != null && toolFollower.CanClean)
         {
             Vector3 world;
-            if (eraseAnchor != null) world = eraseAnchor.position;
+            if (eraseAnchor != null)
+            {
+                world = eraseAnchor.position;
+            }
             else
             {
                 float cameraDistance = Mathf.Abs(Camera.main.transform.position.z);
@@ -472,6 +479,8 @@ public class MaskEraser : MonoBehaviour
             }
 
             world.z = 0;
+
+            // --- Line 478 (AB AB KOI ERROR NAHI AAYEGA) ---
             bool isOverLayer = EraseAtWorldPosition(world);
             bool shouldPlay = currentToolData.soundOnlyOnHit ? isOverLayer : true;
 
@@ -716,27 +725,22 @@ public class MaskEraser : MonoBehaviour
     {
         if (currentLayer >= layersList.Count) return;
 
-        // --- ONLY CHANGE: 2 Layers at a time Active (Current Layer + Next Layer) ---
+        // --- FIX: Current layer ko active karein aur upcoming layers ko hide rakhein ---
         for (int i = 0; i < layersList.Count; i++)
         {
             if (layersList[i] != null)
             {
-                // Sirf current layer (jis par erasing honi hai) aur uske bilkul neeche wali next layer active rahegi
-                if (i == currentLayer || i == currentLayer + 1)
+                if (i == currentLayer)
                 {
                     layersList[i].gameObject.SetActive(true);
                 }
-                else
+                else if (i > currentLayer)
                 {
-                    // Baaki sab layers hide rahengi
-                    layersList[i].gameObject.SetActive(false);
+                    layersList[i].gameObject.SetActive(false); // Agli layers hide rahengi
                 }
             }
         }
 
-        // =========================================================================
-        //  AAPKA PURANA CODE (NO CHANGES AT ALL BELOW THIS POINT)
-        // =========================================================================
         Sprite originalSprite = layersList[currentLayer].sprite;
         Texture2D sheetTexture = originalSprite.texture;
 
@@ -757,7 +761,9 @@ public class MaskEraser : MonoBehaviour
         texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
         texture.SetPixels(slicePixels);
         texture.Apply();
+
         Vector2 exactPivot = new Vector2(originalSprite.pivot.x / width, originalSprite.pivot.y / height);
+
         layersList[currentLayer].sprite = Sprite.Create(
             texture,
             new Rect(0, 0, width, height),
@@ -767,22 +773,24 @@ public class MaskEraser : MonoBehaviour
             SpriteMeshType.FullRect
         );
     }
-
-    public bool EraseAtWorldPosition(Vector3 world)
+    public bool EraseAtWorldPosition(Vector3 worldPos, float radius = 0.5f)
     {
-        // ================================================================
-        //  ISOLATED SCRAPER BYPASS RULE (BILKUL TOP PAR)
-        // ================================================================
-        if (currentToolData != null && (currentToolData.toolType == ToolType.Scraper || currentToolData.name.Contains("Scraper")))
+        if (currentLayer >= layersList.Count || layersList[currentLayer] == null) return false;
+
+        // Safety Check: Agli layer agar exist karti hai aur Active nahi hai toh active kar dein
+        int nextLayerIndex = currentLayer + 1;
+        if (nextLayerIndex < layersList.Count && layersList[nextLayerIndex] != null)
         {
-            // Scraper ke liye pixel manipulation skip karein aur true return kar dein
-            return true;
+            if (!layersList[nextLayerIndex].gameObject.activeSelf)
+            {
+                layersList[nextLayerIndex].gameObject.SetActive(true);
+            }
         }
 
-        // --- Baki Saari Purani Logic Bilkul Same Rahegi (Brush/Water ke liye) ---
-        if (currentLayer >= layersList.Count) return false;
-        Vector3 local = layersList[currentLayer].transform.InverseTransformPoint(world);
         SpriteRenderer sr = layersList[currentLayer];
+        if (sr == null || sr.sprite == null || texture == null) return false;
+
+        Vector3 local = sr.transform.InverseTransformPoint(worldPos);
 
         float width = sr.sprite.bounds.size.x;
         float height = sr.sprite.bounds.size.y;
@@ -790,10 +798,11 @@ public class MaskEraser : MonoBehaviour
         float yp = (local.y + height / 2) / height;
         int x = Mathf.RoundToInt(xp * texture.width);
         int y = Mathf.RoundToInt(yp * texture.height);
-        int size = currentToolData.brushSize;
+        int size = currentToolData != null ? currentToolData.brushSize : 15;
 
         float brushHardness = 0.1f;
         bool actualCleaningDone = false;
+
         for (int i = -size; i < size; i++)
         {
             for (int j = -size; j < size; j++)
@@ -808,8 +817,11 @@ public class MaskEraser : MonoBehaviour
                     {
                         Color c = texture.GetPixel(px, py);
                         if (c.a <= 0.05f) continue;
+
                         float alphaReduction = Mathf.Clamp01(1f - (distance / size));
                         alphaReduction = Mathf.Pow(alphaReduction, brushHardness);
+
+                        // Top layer pixel ko erase karein (peche wali layer naturally reveal ho gi)
                         c.a -= alphaReduction * eraserIntensityMultiplier;
                         if (c.a < 0f) c.a = 0f;
 
@@ -820,9 +832,9 @@ public class MaskEraser : MonoBehaviour
                 }
             }
         }
+
         return actualCleaningDone;
     }
-
     void UpdateProgress()
     {
         if (gameCompleted || layerFinishedWaitingRelease || layersList.Count == 0) return;
@@ -989,6 +1001,10 @@ public class MaskEraser : MonoBehaviour
             CompleteGame();
             isTransitioningTool = false;
             yield break;
+        }
+        if (layersList[currentLayer] != null)
+        {
+            layersList[currentLayer].gameObject.SetActive(true);
         }
 
         PrepareLayer();
