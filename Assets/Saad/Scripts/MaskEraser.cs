@@ -1051,7 +1051,7 @@ public class MaskEraser : MonoBehaviour
         if (pauseButton != null) pauseButton.SetActive(false);
 
         // GAMEPLAY COIN BAR: Jab tak win panel delayed chal raha hai, tab tak isko hide rakhein
-        if (gameplayCoinPanel != null) gameplayCoinPanel.SetActive(false);
+        if (gameplayCoinPanel != null) gameplayCoinPanel.SetActive(true);
 
         StartCoroutine(ShowDelayedUIAndCoinsRoutine());
         if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
@@ -1257,16 +1257,15 @@ public class MaskEraser : MonoBehaviour
 
         SetupToolVariantsPanel(tool);
     }
-
-    public void GoToHome()
+   public void GoToHome()
     {
         PlayerPrefs.Save();
         SceneManager.LoadScene("HomeScene");
     }
-
     IEnumerator ShowDelayedUIAndCoinsRoutine()
     {
         yield return new WaitForSeconds(levelCompleteDelay);
+
         if (levelCompletePanel != null)
         {
             levelCompletePanel.SetActive(true);
@@ -1276,10 +1275,15 @@ public class MaskEraser : MonoBehaviour
             Debug.LogError("MaskEraser: levelCompletePanel reference missing in Inspector!");
         }
 
-        // COIN BAR RE-ACTIVATION: Level Complete screen aate hi coin counter wapas ON ho jayega
+        // --- COIN BAR RE-ACTIVATION WITH SCRIPT'S SLIDE ANIMATION ---
         if (gameplayCoinPanel != null)
         {
             gameplayCoinPanel.SetActive(true);
+            gameplayCoinPanel.transform.SetAsLastSibling(); // UI Layer par sabse aage laane ke liye
+
+            // Aapki script mein pehle se bani hui Slide Animation trigger karein
+            if (topUISlideCoroutine != null) StopCoroutine(topUISlideCoroutine);
+            topUISlideCoroutine = StartCoroutine(SlideSideUIRoutine(false)); // 'false' ka matlab Slide-In (Andar aana)
         }
 
         if (CoinManager.Instance != null)
@@ -1289,13 +1293,13 @@ public class MaskEraser : MonoBehaviour
 
         UpdateGameplayCoinsUI();
     }
-
     Transform GetToolTransformToAnimate()
     {
         if (toolFollower == null) return null;
         return toolFollower.transform.childCount > 0 ?
             toolFollower.transform.GetChild(0) : toolFollower.transform;
     }
+
 
     // MaskEraser.cs ke andar is function ko public banayein:
     
