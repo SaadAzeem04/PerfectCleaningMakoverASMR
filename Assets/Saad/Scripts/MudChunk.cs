@@ -91,7 +91,7 @@ public class MudChunk : MonoBehaviour
         }
 
         rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.gravityScale = 2.5f;
+        rb.gravityScale = 3.5f;
 
         // Bouncing force & rotation while falling
         rb.linearVelocity = new Vector2(Random.Range(-3f, 3f), Random.Range(2f, 4f));

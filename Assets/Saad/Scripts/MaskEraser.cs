@@ -60,6 +60,7 @@ public class MaskEraser : MonoBehaviour
 
     private Coroutine panelAnimCoroutine;
 
+    private GameObject activeCelebrationInstance;
     // NAYA VARIABLE: Pehle se active variant ko track karne ke liye
     private ToolVariant currentEquippedVariant;
 
@@ -410,11 +411,11 @@ public class MaskEraser : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                ToggleGameplayUI(true);  // Sab hide ho jayega
+                ToggleGameplayUI(true);  // Press par sab hide ho jayega
             }
             else if (Input.GetMouseButtonUp(0))
             {
-                ToggleGameplayUI(false); // Sab wapas show ho jayega
+                ToggleGameplayUI(false); // Touch chorne par sab show ho jayega
             }
         }
 
@@ -550,14 +551,18 @@ public class MaskEraser : MonoBehaviour
     // UNIFIED FUNCTION: Controls Slide Animations for Side Panels
     public void ToggleGameplayUI(bool hide)
     {
-        // 1. Variant Panel (Existing Logic)
+        // 1. Variant Panel (Smart Check)
         if (currentToolData != null && currentToolData.hasVariants && currentToolData.toolVariants.Count > 0 && variantMainPanel != null)
         {
             if (panelAnimCoroutine != null) StopCoroutine(panelAnimCoroutine);
-            panelAnimCoroutine = StartCoroutine(AnimateVariantPanelVideoStyle(!hide));
+
+            // Agar touch chora gaya hai (!hide) lekin layer abhi complete hui hai (!layerFinishedWaitingRelease), 
+            // toh variant panel ko WAPAS MAT DIKHAO.
+            bool shouldShowVariant = !hide && !layerFinishedWaitingRelease;
+            panelAnimCoroutine = StartCoroutine(AnimateVariantPanelVideoStyle(shouldShowVariant));
         }
 
-        // 2. Pause Button & Coin Bar (Slide + Scale Animation)
+        // 2. Pause Button & Coin Bar (Yeh HAR BAAR normal slide-in/out honge!)
         if (topUISlideCoroutine != null) StopCoroutine(topUISlideCoroutine);
         topUISlideCoroutine = StartCoroutine(SlideSideUIRoutine(hide));
     }
@@ -583,7 +588,7 @@ public class MaskEraser : MonoBehaviour
             isBasePosSaved = true;
         }
 
-        float duration = 0.25f; // Animation duration
+        float duration = 0.5f; // Animation duration
         float time = 0f;
 
         // Start Positions & Scales
@@ -905,6 +910,10 @@ public class MaskEraser : MonoBehaviour
             StopToolEffects();
 
             ClearRemainingLayer();
+            if (variantMainPanel != null)
+            {
+                variantMainPanel.SetActive(false);
+            }
 
             if (currentLayer >= objectData.cleaningSteps.Count - 1)
             {
@@ -1080,7 +1089,10 @@ public class MaskEraser : MonoBehaviour
         progressFill.fillAmount = 1f;
         targetCameraSize = levelCompleteZoomSize;
 
-        if (celebrationPrefab != null) Instantiate(celebrationPrefab, Vector3.zero, Quaternion.identity);
+        if (celebrationPrefab != null && activeCelebrationInstance == null)
+        {
+            activeCelebrationInstance = Instantiate(celebrationPrefab, Vector3.zero, Quaternion.identity);
+        }
         if (toolFollower != null) toolFollower.gameObject.SetActive(false);
         if (previousToolUIImage != null) previousToolUIImage.gameObject.SetActive(false);
         if (currentToolUIImage != null) currentToolUIImage.gameObject.SetActive(false);
@@ -1326,6 +1338,10 @@ public class MaskEraser : MonoBehaviour
     }
    public void GoToHome()
     {
+        if (activeCelebrationInstance != null)
+        {
+            Destroy(activeCelebrationInstance);
+        }
         PlayerPrefs.Save();
         SceneManager.LoadScene("HomeScene");
     }
@@ -1507,7 +1523,7 @@ public class MaskEraser : MonoBehaviour
         Vector3 targetScale = show ? Vector3.one : new Vector3(0.5f, 0f, 1f);
 
         float time = 0f;
-        float duration = 0.2f; // Quick and smooth response for cleaning stop/start
+        float duration = 0.6f; // Quick and smooth response for cleaning stop/start
 
         while (time < duration)
         {

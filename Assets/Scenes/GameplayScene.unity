@@ -1163,7 +1163,7 @@ MonoBehaviour:
   levelCompleteDelay: 3
   levelCompleteZoomSize: 5
   brushHardness: 0.51
-  eraserIntensityMultiplier: 0.5
+  eraserIntensityMultiplier: 0.8
   cleaningThreshold: 75
   cameraTransitionIntensity: 3
   cameraMoveIntensity: 0

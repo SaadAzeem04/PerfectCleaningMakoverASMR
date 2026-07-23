@@ -22,8 +22,8 @@ MonoBehaviour:
   cleaningSpeed: 1
   brushSize: 73
   movementType: 0
-  scrubSpeed: 20
-  scrubAmount: 0.4
+  scrubSpeed: -5
+  scrubAmount: 0
   rotationSpeed: 10
   rotationAmount: 15
   useParticles: 1
