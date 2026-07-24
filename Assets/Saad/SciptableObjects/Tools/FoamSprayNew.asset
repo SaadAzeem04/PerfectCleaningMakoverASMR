@@ -12,15 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
   m_Name: FoamSprayNew
   m_EditorClassIdentifier: 
-  hasVariants: 0
-  toolVariants: []
+  hasVariants: 1
+  toolVariants:
+  - variantName: FoamSpray0
+    toolSprite: {fileID: 7501495690245410524, guid: 33dd7ccf7ef6d75408488081484984b0, type: 3}
+    iconSprite: {fileID: -2407437494450665231, guid: 1276ef5b6839b3143bb8328cb77b6c21, type: 3}
+    coinPrice: 0
+    brushSize: 70
+  - variantName: FoamSpray1
+    toolSprite: {fileID: 7501495690245410524, guid: 33dd7ccf7ef6d75408488081484984b0, type: 3}
+    iconSprite: {fileID: -2407437494450665231, guid: 1276ef5b6839b3143bb8328cb77b6c21, type: 3}
+    coinPrice: 10
+    brushSize: 75
+  - variantName: FoamSpray2
+    toolSprite: {fileID: 7501495690245410524, guid: 33dd7ccf7ef6d75408488081484984b0, type: 3}
+    iconSprite: {fileID: -2407437494450665231, guid: 1276ef5b6839b3143bb8328cb77b6c21, type: 3}
+    coinPrice: 15
+    brushSize: 80
   toolName: Foam Spray
   cameraZoomSize: 6
   toolType: 2
   toolSprite: {fileID: 7501495690245410524, guid: c695af7728d69654496d8ba79846c3f0, type: 3}
   soundOnlyOnHit: 0
   cleaningSpeed: 1
-  brushSize: 73
+  brushSize: 70
   movementType: 0
   scrubSpeed: 15
   scrubAmount: 0.4

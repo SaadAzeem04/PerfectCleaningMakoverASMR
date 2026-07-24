@@ -27,7 +27,7 @@ MonoBehaviour:
   - variantName: waterspray04
     toolSprite: {fileID: 1755050588376245985, guid: 7375f16d19076f74ea0af73eb178c3a1, type: 3}
     iconSprite: {fileID: -3749877127376000549, guid: 79ec6ef540c2933449d37af08f680e8f, type: 3}
-    coinPrice: 50
+    coinPrice: 20
     brushSize: 80
   toolName: Water Spray
   cameraZoomSize: 6
@@ -35,7 +35,7 @@ MonoBehaviour:
   toolSprite: {fileID: 2658037071850787674, guid: 08b6498c92215844e8ec18c9dde6a0ce, type: 3}
   soundOnlyOnHit: 0
   cleaningSpeed: 1
-  brushSize: 75
+  brushSize: 70
   movementType: 0
   scrubSpeed: 15
   scrubAmount: 0.4

@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b3b812e2aacbd478ca7e4faba98cae, type: 3}
+  m_Name: FootballTrophy
+  m_EditorClassIdentifier: 
+  objectName: 
+  backgroundSprite: {fileID: -6695950386315148514, guid: 03d4af384e270df4ca2f34c56bd05a3f, type: 3}
+  cleanSprite: {fileID: 7028616704906629411, guid: bf933aab02618ae4ab577ddf6f3d4a8e, type: 3}
+  levelBackgroundSprite: {fileID: -6695950386315148514, guid: 1f86324ee28e37f48b0755c01f16384d, type: 3}
+  levelPositionOffset: {x: 0, y: 0, z: 0}
+  dirtyLayers: []
+  requiredTools: []
+  scraperChunksPrefab: {fileID: 0}
+  cameraMovementIntensity: 1
+  customCameraZoomSize: 5
+  enableYAxisMovement: 0
+  cleaningSteps:
+  - stepName: Scraper
+    stepType: 1
+    requiredTool: {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
+    dirtySprite: {fileID: 0}
+    stepPrefab: {fileID: 0}
+  - stepName: Scraper
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
+    dirtySprite: {fileID: 0}
+    stepPrefab: {fileID: 0}
+  customLayerOffsets: []
+  customLayerScales: []
+  levelCompleteIcon: {fileID: 0}

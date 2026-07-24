@@ -32,7 +32,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
   - {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
   scraperChunksPrefab: {fileID: 6922760847136583357, guid: cae197a9bc7ae004fa4ffdc338a32d0c, type: 3}
-  cameraMovementIntensity: 0.3
+  cameraMovementIntensity: 0.1
   customCameraZoomSize: 5
   enableYAxisMovement: 1
   cleaningSteps:

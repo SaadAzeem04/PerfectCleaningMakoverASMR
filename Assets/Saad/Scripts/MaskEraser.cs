@@ -1068,7 +1068,7 @@ public class MaskEraser : MonoBehaviour
             time += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, time / durationIn);
 
-            Vector3 currentRestTarget = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.2f, camZ));
+            Vector3 currentRestTarget = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.3f, camZ));
             currentRestTarget.z = 0f;
             Vector3 currentRightStart = currentRestTarget + Vector3.right * 15f;
 
@@ -1076,7 +1076,7 @@ public class MaskEraser : MonoBehaviour
             yield return null;
         }
 
-        Vector3 finalRestTarget = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.2f, camZ));
+        Vector3 finalRestTarget = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.3f, camZ));
         finalRestTarget.z = 0f;
         toolFollower.transform.position = finalRestTarget;
 
@@ -1644,7 +1644,7 @@ public class MaskEraser : MonoBehaviour
         if (toolFollower != null && Camera.main != null)
         {
             toolFollower.gameObject.SetActive(true);
-            Vector3 restTarget = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.2f, 10f));
+            Vector3 restTarget = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.3f, 10f));
             restTarget.z = 0f;
 
             Vector3 startPos = restTarget + Vector3.right * 15f;

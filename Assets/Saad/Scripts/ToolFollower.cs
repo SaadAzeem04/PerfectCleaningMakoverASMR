@@ -11,9 +11,15 @@ public class ToolFollower : MonoBehaviour
     private bool canFollow;
     private Camera cam;
 
+    //  ADDED: Tool Collider Reference
+    private Collider2D toolCollider;
+
     void Awake()
     {
         cam = Camera.main;
+
+        //  ADDED: Automatic Collider detection (Self ya Child objects se)
+        toolCollider = GetComponentInChildren<Collider2D>();
 
         if (toolSprite != null)
         {
@@ -25,7 +31,10 @@ public class ToolFollower : MonoBehaviour
     void Update()
     {
         if (PauseManager.IsGamePaused || !toolSprite.enabled)
+        {
+            UpdateColliderState(false);
             return;
+        }
 
         bool touchStarted = false;
         bool touchPressing = false;
@@ -60,6 +69,7 @@ public class ToolFollower : MonoBehaviour
         if (touchPressing && EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(pointerId))
         {
             CanClean = false;
+            UpdateColliderState(false);
             return; // Agar ungli UI button par hai to tool move nahi hoga
         }
 
@@ -72,6 +82,7 @@ public class ToolFollower : MonoBehaviour
             }
             else
             {
+                UpdateColliderState(false);
                 return; // Jab tak pehla touch na ho, tool spawn point par hi ruka rahe
             }
         }
@@ -80,6 +91,7 @@ public class ToolFollower : MonoBehaviour
         if (!touchPressing)
         {
             CanClean = false;
+            UpdateColliderState(false);
             return;
         }
 
@@ -96,6 +108,18 @@ public class ToolFollower : MonoBehaviour
         transform.position = world;
 
         CanClean = true;
+
+        //  ADDED: Sirf tab Collider ON hoga jab player actively touch & clean kar raha ho
+        UpdateColliderState(true);
+    }
+
+    //  ADDED: Helper method for safe collider toggle
+    private void UpdateColliderState(bool state)
+    {
+        if (toolCollider != null && toolCollider.enabled != state)
+        {
+            toolCollider.enabled = state;
+        }
     }
 
     public void SetTool(ToolData tool)
@@ -116,6 +140,9 @@ public class ToolFollower : MonoBehaviour
 
         canFollow = false;
         CanClean = false;
+
+        //  ADDED: Double check collider is OFF when new tool is loaded
+        UpdateColliderState(false);
     }
 
     public void HideTool()
@@ -123,5 +150,8 @@ public class ToolFollower : MonoBehaviour
         toolSprite.enabled = false;
         canFollow = false;
         CanClean = false;
+
+        // ADDED: Collider OFF when tool hidden
+        UpdateColliderState(false);
     }
 }

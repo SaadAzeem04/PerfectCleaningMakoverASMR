@@ -19,7 +19,7 @@ MonoBehaviour:
   toolType: 1
   toolSprite: {fileID: 7027418982996482608, guid: eba627467a769904b9f22ffe2ec6da9c, type: 3}
   soundOnlyOnHit: 1
-  cleaningSpeed: 1
+  cleaningSpeed: 5
   brushSize: 73
   movementType: 0
   scrubSpeed: 0

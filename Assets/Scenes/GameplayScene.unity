@@ -1157,15 +1157,15 @@ MonoBehaviour:
   upcomingToolUIImage: {fileID: 630304111}
   backgroundRenderer: {fileID: 985113920}
   activeToolScale: 1
-  inactiveToolScale: 0.7
+  inactiveToolScale: 0.5
   toolSpacing: 100
   upcomingIcons: []
   levelCompleteDelay: 3
   levelCompleteZoomSize: 5
-  brushHardness: 0.51
+  brushHardness: 0.7
   eraserIntensityMultiplier: 0.8
-  cleaningThreshold: 75
-  cameraTransitionIntensity: 3
+  cleaningThreshold: 50
+  cameraTransitionIntensity: 2
   cameraMoveIntensity: 0
   defaultCameraSize: 5
   completedLevelSprite: {fileID: 6336155520827525835, guid: 9131f4c79346add4ba946e722e67d539, type: 3}
@@ -1825,7 +1825,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 50
+  m_Spacing: 60
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -4623,7 +4623,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.013289809, y: 0.033224568}
+  m_Offset: {x: 0.01, y: 0.54}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -4633,7 +4633,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.3089298, y: 0.74749327}
+  m_Size: {x: 0.18, y: 0.5}
   m_EdgeRadius: 0
 --- !u!4 &1397027116
 Transform:
