@@ -12,15 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10b3b812e2aacbd478ca7e4faba98cae, type: 3}
   m_Name: FootballTrophy
   m_EditorClassIdentifier: 
-  objectName: 
+  objectName: Football_Trophy
   backgroundSprite: {fileID: -6695950386315148514, guid: 03d4af384e270df4ca2f34c56bd05a3f, type: 3}
   cleanSprite: {fileID: 7028616704906629411, guid: bf933aab02618ae4ab577ddf6f3d4a8e, type: 3}
-  levelBackgroundSprite: {fileID: -6695950386315148514, guid: 1f86324ee28e37f48b0755c01f16384d, type: 3}
+  levelBackgroundSprite: {fileID: -6695950386315148514, guid: 03d4af384e270df4ca2f34c56bd05a3f, type: 3}
   levelPositionOffset: {x: 0, y: 0, z: 0}
-  dirtyLayers: []
-  requiredTools: []
-  scraperChunksPrefab: {fileID: 0}
-  cameraMovementIntensity: 1
+  dirtyLayers:
+  - {fileID: -855298285791758126, guid: 6d82134cf58242548bcedf09f1cff943, type: 3}
+  - {fileID: 6937817954938267909, guid: 0709f2c67e6c7774e92590ca27189681, type: 3}
+  - {fileID: -6470460504253458178, guid: c74315b0da78b1b4c9084db258e399dc, type: 3}
+  - {fileID: -4178046375966092550, guid: a09d6a08514349d47b194a1bed7d61b3, type: 3}
+  - {fileID: 4130640169021434097, guid: 0f2ec6c98c1833f4abed9444f8e4905c, type: 3}
+  - {fileID: 3465286685962602723, guid: 8b3ad91b17503a14090a6aeffd399834, type: 3}
+  requiredTools:
+  - {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
+  - {fileID: 11400000, guid: bdab883a2eb5d4a42952bc8c56c2acdb, type: 2}
+  - {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
+  - {fileID: 11400000, guid: bbc0dc95d91ed5b4d9fe24396025dfff, type: 2}
+  - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+  - {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
+  scraperChunksPrefab: {fileID: 6922760847136583357, guid: 4deff5d503a112b40a0edd4be17cf33d, type: 3}
+  cameraMovementIntensity: 0.1
   customCameraZoomSize: 5
   enableYAxisMovement: 0
   cleaningSteps:
@@ -28,12 +40,32 @@ MonoBehaviour:
     stepType: 1
     requiredTool: {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
     dirtySprite: {fileID: 0}
-    stepPrefab: {fileID: 0}
-  - stepName: Scraper
+    stepPrefab: {fileID: 6922760847136583357, guid: 4deff5d503a112b40a0edd4be17cf33d, type: 3}
+  - stepName: Scrubbing Brush
     stepType: 0
-    requiredTool: {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
-    dirtySprite: {fileID: 0}
+    requiredTool: {fileID: 11400000, guid: bdab883a2eb5d4a42952bc8c56c2acdb, type: 2}
+    dirtySprite: {fileID: 6937817954938267909, guid: 0709f2c67e6c7774e92590ca27189681, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: Surf Spray
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
+    dirtySprite: {fileID: -6470460504253458178, guid: c74315b0da78b1b4c9084db258e399dc, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: Bamboo Eco Scrubber
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: bbc0dc95d91ed5b4d9fe24396025dfff, type: 2}
+    dirtySprite: {fileID: -4178046375966092550, guid: a09d6a08514349d47b194a1bed7d61b3, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: Water_spry
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+    dirtySprite: {fileID: 4130640169021434097, guid: 0f2ec6c98c1833f4abed9444f8e4905c, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: Microfiber Towel
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
+    dirtySprite: {fileID: 3465286685962602723, guid: 8b3ad91b17503a14090a6aeffd399834, type: 3}
     stepPrefab: {fileID: 0}
   customLayerOffsets: []
   customLayerScales: []
-  levelCompleteIcon: {fileID: 0}
+  levelCompleteIcon: {fileID: 7028616704906629411, guid: bf933aab02618ae4ab577ddf6f3d4a8e, type: 3}

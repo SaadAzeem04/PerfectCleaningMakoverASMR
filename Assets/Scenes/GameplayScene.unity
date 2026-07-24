@@ -1162,9 +1162,9 @@ MonoBehaviour:
   upcomingIcons: []
   levelCompleteDelay: 3
   levelCompleteZoomSize: 5
-  brushHardness: 0.7
-  eraserIntensityMultiplier: 0.8
-  cleaningThreshold: 50
+  brushHardness: 0.6
+  eraserIntensityMultiplier: 0.6
+  cleaningThreshold: 85
   cameraTransitionIntensity: 2
   cameraMoveIntensity: 0
   defaultCameraSize: 5
@@ -2857,7 +2857,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.0142, y: -0.0029, z: 0}
-  m_LocalScale: {x: 0.65601623, y: 0.7795101, z: 1.3303108}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

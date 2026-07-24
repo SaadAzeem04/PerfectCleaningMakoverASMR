@@ -40,6 +40,10 @@ public class MaskEraser : MonoBehaviour
     public GameObject levelCompletePanel;
     public Image backgroundImage;
 
+    private Vector3 lastEraseWorldPos;
+
+    private bool hasLastErasePos = false;
+
     [Tooltip("Gameplay me jo Pause Button hai use yahan drag karein")]
     public GameObject pauseButton;
 
@@ -472,10 +476,18 @@ public class MaskEraser : MonoBehaviour
         }
 
         if (currentLayer >= layersList.Count) return;
+        if (Input.GetMouseButtonDown(0))
+        {
+            hasLastErasePos = false; // Fresh click par trace reset
+        }
+
         if (Input.GetMouseButton(0) && currentToolData != null && toolFollower.CanClean)
         {
             Vector3 world;
-            if (eraseAnchor != null) world = eraseAnchor.position;
+            if (eraseAnchor != null)
+            {
+                world = eraseAnchor.position;
+            }
             else
             {
                 float cameraDistance = Mathf.Abs(Camera.main.transform.position.z);
@@ -483,10 +495,52 @@ public class MaskEraser : MonoBehaviour
             }
 
             world.z = 0;
-            bool isOverLayer = EraseAtWorldPosition(world);
-            bool shouldPlay = currentToolData.soundOnlyOnHit ? isOverLayer : true;
+            bool isOverLayer = false;
 
+            if (!hasLastErasePos)
+            {
+                // Pehli dafa direct ek dot clean karein
+                isOverLayer = EraseAtWorldPosition(world);
+                lastEraseWorldPos = world;
+                hasLastErasePos = true;
+            }
+            else
+            {
+                float distance = Vector3.Distance(lastEraseWorldPos, world);
+
+                // Step size ko 0.1f se 0.15f ke darmiyan rakhein performance ke liye
+                float stepSize = 0.12f;
+
+                if (distance > stepSize)
+                {
+                    // Maximum steps limit set ki taake lag na ho (Max 10 steps per frame)
+                    int steps = Mathf.Min(Mathf.CeilToInt(distance / stepSize), 10);
+
+                    // i = 1 se start kar rahe hain kyunki i = 0 (lastEraseWorldPos) pehle hi clean ho chuka hai
+                    for (int i = 1; i <= steps; i++)
+                    {
+                        Vector3 interpolatedPos = Vector3.Lerp(lastEraseWorldPos, world, (float)i / steps);
+                        if (EraseAtWorldPosition(interpolatedPos))
+                        {
+                            isOverLayer = true;
+                        }
+                    }
+                }
+                else
+                {
+                    isOverLayer = EraseAtWorldPosition(world);
+                }
+
+                lastEraseWorldPos = world;
+            }
+
+            bool shouldPlay = currentToolData.soundOnlyOnHit ? isOverLayer : true;
             if (shouldPlay) effectGraceTimer = 0.15f;
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            hasLastErasePos = false; // Release par reset
         }
 
         if (effectGraceTimer > 0)
