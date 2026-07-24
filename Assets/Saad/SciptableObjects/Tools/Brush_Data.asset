@@ -15,7 +15,7 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: Brush
-  cameraZoomSize: 5
+  cameraZoomSize: 5.5
   toolType: 1
   toolSprite: {fileID: 7027418982996482608, guid: eba627467a769904b9f22ffe2ec6da9c, type: 3}
   soundOnlyOnHit: 1

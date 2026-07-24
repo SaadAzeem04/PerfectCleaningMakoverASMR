@@ -16,6 +16,7 @@ MonoBehaviour:
   backgroundSprite: {fileID: -6695950386315148514, guid: 1f86324ee28e37f48b0755c01f16384d, type: 3}
   cleanSprite: {fileID: 7336298474659753992, guid: 7d21c91a7b16b274da3d63c52bd569b0, type: 3}
   levelBackgroundSprite: {fileID: -6695950386315148514, guid: 1f86324ee28e37f48b0755c01f16384d, type: 3}
+  levelPositionOffset: {x: 0, y: 0, z: 0}
   dirtyLayers:
   - {fileID: -3164809056393425246, guid: 432e8c5b3d867d3489b495f2b88a6f4c, type: 3}
   - {fileID: -5225540622116197949, guid: fe3e3c7bf01d50740a74c1cd9e78a0fd, type: 3}
@@ -30,10 +31,41 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3236f9ae4fb7b644489111eff4adbc6f, type: 2}
   - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
   - {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
-  scraperChunksPrefab: {fileID: 6037789412787076512, guid: f4dfa7d0d33e48d4bbbd0dfcf54fa7a8, type: 3}
+  scraperChunksPrefab: {fileID: 6922760847136583357, guid: cae197a9bc7ae004fa4ffdc338a32d0c, type: 3}
   cameraMovementIntensity: 0.3
   customCameraZoomSize: 5
   enableYAxisMovement: 1
+  cleaningSteps:
+  - stepName: scraper
+    stepType: 1
+    requiredTool: {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
+    dirtySprite: {fileID: 0}
+    stepPrefab: {fileID: 6922760847136583357, guid: cae197a9bc7ae004fa4ffdc338a32d0c, type: 3}
+  - stepName: Water Spray
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+    dirtySprite: {fileID: -5225540622116197949, guid: fe3e3c7bf01d50740a74c1cd9e78a0fd, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: Foam Spray
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
+    dirtySprite: {fileID: 8793915729297761979, guid: 377cf5be49ca99a408a3c3ad48db5823, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: Hand Scrub
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 3236f9ae4fb7b644489111eff4adbc6f, type: 2}
+    dirtySprite: {fileID: 2750298860172458669, guid: 22c892d68ca775e45a4de34f764b21c6, type: 3}
+    stepPrefab: {fileID: 4239962889867389876, guid: a21fb3d228982644faa12736e7b6466a, type: 3}
+  - stepName: Water Spray
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+    dirtySprite: {fileID: -2276259661975475453, guid: b995563bc0f360f41b2035d32a36b183, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: towel
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
+    dirtySprite: {fileID: 141893073332109768, guid: b6cac06851be8a64a8a26dd9eccd7958, type: 3}
+    stepPrefab: {fileID: 0}
   customLayerOffsets: []
   customLayerScales: []
   levelCompleteIcon: {fileID: 7336298474659753992, guid: 7d21c91a7b16b274da3d63c52bd569b0, type: 3}

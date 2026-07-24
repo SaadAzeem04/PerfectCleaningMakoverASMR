@@ -15,7 +15,8 @@ public class ToolVariant
     public string variantName;    // e.g., "Brown Brush", "Pink Brush"
     public Sprite toolSprite;     // Jo screen par tool safai karega (Actual Tool Sprite)
     public Sprite iconSprite;     // Jo niche button me chota icon dikhega (UI Icon)
-    public int coinPrice;         // 0 likhenge to "Free" likha aayega
+    public int coinPrice;
+    public float brushSize = 30f;// 0 likhenge to "Free" likha aayega
 }
 
 [CreateAssetMenu(

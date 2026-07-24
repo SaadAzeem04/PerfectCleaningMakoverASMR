@@ -280,8 +280,12 @@ public class MaskEraser : MonoBehaviour
             cameraMoveIntensity = objectData.cameraMovementIntensity;
         }
 
-        Vector3 currentPos = levelParentAnchor.position;
-        levelParentAnchor.position = new Vector3(currentPos.x, currentPos.y, 0f);
+        if (objectData != null && levelParentAnchor != null)
+        {
+            // ScriptableObject se position offset apply karein
+            levelParentAnchor.localPosition = objectData.levelPositionOffset;
+            levelParentAnchor.rotation = Quaternion.identity;
+        }
         levelParentAnchor.rotation = Quaternion.identity;
 
         if (objectData == null)
@@ -1450,7 +1454,7 @@ public class MaskEraser : MonoBehaviour
 
     void SetupToolVariantsPanel(ToolData tool)
     {
-        // 1. INSTANT CLEANUP: Purani sari variant images/buttons panel se destroy karein
+        // 1. INSTANT CLEANUP
         if (variantButtonsContainer != null)
         {
             foreach (Transform child in variantButtonsContainer)
@@ -1460,8 +1464,7 @@ public class MaskEraser : MonoBehaviour
         }
         spawnedVariantButtons.Clear();
 
-        // 2. Agar tool ke variants nahi hain, to panel hide karein
-        // Updated (Fixed Code):
+        // 2. Hide panel if no variants
         if (tool == null || !tool.hasVariants || tool.toolVariants.Count == 0)
         {
             if (variantMainPanel != null)
@@ -1483,21 +1486,22 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // 4. PLAYER SAVED SKIN APPLY: Check karein agar player ne koi skin pehle se equip ki hai
+        // =========================================================================
+        // 4. ALWAYS FORCE ORIGINAL (INDEX 0) VARIANT ON PLAY / STEP START
+        // =========================================================================
         if (tool.toolVariants.Count > 0)
         {
-            string equippedVariantName = PlayerPrefs.GetString(tool.name + "_Equipped", tool.toolVariants[0].variantName);
-            ToolVariant targetVariant = tool.toolVariants.Find(v => v.variantName == equippedVariantName);
+            ToolVariant originalVariant = tool.toolVariants[0]; // Hamesha Original Variant (Index 0)
 
-            if (targetVariant == null)
-            {
-                targetVariant = tool.toolVariants[0];
-            }
+            // PlayerPrefs mein hamesha Original ko as 'Equipped' save karein taake UI "Equipped" show kare
+            PlayerPrefs.SetString(tool.name + "_Equipped", originalVariant.variantName);
+            PlayerPrefs.Save();
 
-            ApplyVariantSkin(tool, targetVariant, false);
+            // Original Variant skin apply karein
+            ApplyVariantSkin(tool, originalVariant, false);
         }
 
-        // 5. Panel Animation Start Karein (Zero scale se smooth pop-up)
+        // 5. Panel Animation Start Karein
         if (variantMainPanel != null)
         {
             variantMainPanel.transform.localScale = new Vector3(0.5f, 0f, 1f);
@@ -1554,6 +1558,15 @@ public class MaskEraser : MonoBehaviour
 
         currentEquippedVariant = variant;
 
+        //  BRUSH SIZE APPLY (Type Casting Added):
+        if (tool != null && variant.brushSize > 0)
+        {
+            // (int) se float value int mein convert ho jayegi aur error khatam ho jayega
+            tool.brushSize = (int)variant.brushSize;
+            Debug.Log("Brush size updated to: " + tool.brushSize);
+        }
+
+        // Visual animation / Sprite replacement
         if (animate)
         {
             StartCoroutine(AnimateVariantSkinRoutine(variant));
@@ -1567,6 +1580,7 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
+        // UI Buttons Update
         foreach (ToolVariantButton btn in spawnedVariantButtons)
         {
             if (btn != null) btn.UpdateUI();

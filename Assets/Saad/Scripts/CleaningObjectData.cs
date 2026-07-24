@@ -10,6 +10,10 @@ public class CleaningObjectData : ScriptableObject
     [Header("Background Settings")]
     public Sprite levelBackgroundSprite; // Level ka dynamic background sprite
 
+    [Header("Dynamic Positioning Settings")]
+    [Tooltip("Is object/level ke liye layers container ki Y/X position offset")]
+    public Vector3 levelPositionOffset = Vector3.zero; // Default (0,0,0)
+
     public Sprite[] dirtyLayers;
     // NAYA: Har layer ke samne uska tool assign karne ke liye array
     public ToolData[] requiredTools;

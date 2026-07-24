@@ -17,22 +17,25 @@ MonoBehaviour:
   - variantName: WetBrush
     toolSprite: {fileID: -1165259615240445614, guid: f63b4a39e8db07b43b68af4d86c47df1, type: 3}
     iconSprite: {fileID: -5986452673002578869, guid: 49b17bbc107bee34da09cb94054d6c06, type: 3}
-    coinPrice: 10
+    coinPrice: 0
+    brushSize: 70
   - variantName: WetBrush01
     toolSprite: {fileID: -1165259615240445614, guid: f63b4a39e8db07b43b68af4d86c47df1, type: 3}
     iconSprite: {fileID: -5986452673002578869, guid: 49b17bbc107bee34da09cb94054d6c06, type: 3}
     coinPrice: 20
+    brushSize: 75
   - variantName: WetBrush02
     toolSprite: {fileID: -1165259615240445614, guid: f63b4a39e8db07b43b68af4d86c47df1, type: 3}
     iconSprite: {fileID: 21300000, guid: 3cdb78e5dc8482b43baacfc820541863, type: 3}
     coinPrice: 10
+    brushSize: 80
   toolName: WetBrush
-  cameraZoomSize: 5
+  cameraZoomSize: 4.5
   toolType: 3
   toolSprite: {fileID: 3492953786835675030, guid: 246ec4f6d1418d146a4216737a92ba92, type: 3}
   soundOnlyOnHit: 1
   cleaningSpeed: 1
-  brushSize: 73
+  brushSize: 80
   movementType: 3
   scrubSpeed: 20
   scrubAmount: 10

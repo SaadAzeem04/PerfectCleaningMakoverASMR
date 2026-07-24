@@ -66,6 +66,30 @@ public class CoinManager : MonoBehaviour
     }
 
     // =========================================================================
+    // NAYE ADDED FUNCTIONS: SHOP / VARIANT PURCHASE KE LIYE (BINA ANIMATION)
+    // =========================================================================
+
+    // Check karein ke coins poore hain ya nahi
+    public bool HasEnoughCoins(int amount)
+    {
+        return currentCoins >= amount;
+    }
+
+    // Direct, quiet coin subtraction without triggering any animations
+    public bool DeductCoins(int amount)
+    {
+        if (currentCoins >= amount)
+        {
+            currentCoins -= amount;
+            PlayerPrefs.SetInt("TotalCoins", currentCoins);
+            PlayerPrefs.Save();
+            UpdateCoinUI();
+            return true;
+        }
+        return false;
+    }
+
+    // =========================================================================
     // NAYA SEQUENCE ROUTINE: WIN PANEL -> COIN BAR -> COIN SWOOP -> NEXT STEP
     // =========================================================================
     public IEnumerator PlayCoinSequenceRoutine(GameObject coinPanelUI, GameObject winPanelUI, float delayBeforeStart)

@@ -15,7 +15,7 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: HandScrub
-  cameraZoomSize: 5
+  cameraZoomSize: 5.5
   toolType: 1
   toolSprite: {fileID: 2930683130730212668, guid: f01f3cbd1a3477249a79baee704d9153, type: 3}
   soundOnlyOnHit: 1

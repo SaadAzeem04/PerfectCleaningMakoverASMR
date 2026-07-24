@@ -68,41 +68,42 @@ public class ToolVariantButton : MonoBehaviour
         }
         else
         {
-            int currentCoins = PlayerPrefs.GetInt("Coins", 0);
-            if (currentCoins >= currentVariant.coinPrice)
+            // FIX: CoinManager ke DeductCoins system se integrate kiya hai
+            if (CoinManager.Instance != null)
             {
-                currentCoins -= currentVariant.coinPrice;
-                PlayerPrefs.SetInt("Coins", currentCoins);
-                PlayerPrefs.SetInt(parentTool.name + "_" + currentVariant.variantName, 1); // Unlock save
-                PlayerPrefs.Save();
-
-                // =========================================================================
-                //  100% EXACT MATCH WITH YOUR COIN MANAGER (From MaskEraser.cs Line 446):
-                // =========================================================================
-                if (CoinManager.Instance != null)
+                if (CoinManager.Instance.HasEnoughCoins(currentVariant.coinPrice))
                 {
-                    // Minus me value dene se coins katenge aur Swoop animation chalegi!
-                    CoinManager.Instance.TriggerCoinSwoopAnimation(-currentVariant.coinPrice);
+                    // Direct Quiet Deduct (Bina kisi Flying Swoop Animation ke)
+                    CoinManager.Instance.DeductCoins(currentVariant.coinPrice);
+
+                    // Unlock Save
+                    PlayerPrefs.SetInt(parentTool.name + "_" + currentVariant.variantName, 1);
+                    PlayerPrefs.Save();
+
+                    EquipThisSkin();
                 }
                 else
                 {
-                    // Backup Updater: Agar Instance na mile to direct UI text badal do
-                    TMP_Text[] allTexts = FindObjectsOfType<TMP_Text>();
-                    foreach (TMP_Text txt in allTexts)
-                    {
-                        if (txt.gameObject.name.ToLower().Contains("coin"))
-                        {
-                            txt.text = currentCoins.ToString();
-                        }
-                    }
+                    Debug.Log("Not enough coins!");
                 }
-                // =========================================================================
-
-                EquipThisSkin();
             }
             else
             {
-                Debug.Log("Not enough coins!");
+                // Fallback: Agar CoinManager missing ho tab bhi coins cut ho jayein
+                int currentCoins = PlayerPrefs.GetInt("TotalCoins", 100);
+                if (currentCoins >= currentVariant.coinPrice)
+                {
+                    currentCoins -= currentVariant.coinPrice;
+                    PlayerPrefs.SetInt("TotalCoins", currentCoins);
+                    PlayerPrefs.SetInt(parentTool.name + "_" + currentVariant.variantName, 1);
+                    PlayerPrefs.Save();
+
+                    EquipThisSkin();
+                }
+                else
+                {
+                    Debug.Log("Not enough coins!");
+                }
             }
         }
     }

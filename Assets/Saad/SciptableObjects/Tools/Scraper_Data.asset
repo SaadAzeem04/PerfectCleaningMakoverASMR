@@ -15,7 +15,7 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: Scraper
-  cameraZoomSize: 5
+  cameraZoomSize: 5.5
   toolType: 0
   toolSprite: {fileID: -7260706826572596083, guid: 05a26877cb3d7484e9f708887d54a9b7, type: 3}
   soundOnlyOnHit: 1

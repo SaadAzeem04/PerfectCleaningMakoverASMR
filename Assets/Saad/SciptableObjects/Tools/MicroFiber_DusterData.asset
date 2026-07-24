@@ -15,7 +15,7 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: 
-  cameraZoomSize: 5
+  cameraZoomSize: 5.5
   toolType: 1
   toolSprite: {fileID: -1674507125856555730, guid: 195b8029fcef37140a9b6f5a1f68546f, type: 3}
   soundOnlyOnHit: 1

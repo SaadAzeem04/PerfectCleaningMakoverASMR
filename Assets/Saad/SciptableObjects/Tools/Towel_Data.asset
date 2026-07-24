@@ -15,7 +15,7 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: Towel
-  cameraZoomSize: 5
+  cameraZoomSize: 5.5
   toolType: 5
   toolSprite: {fileID: -5849621657009932580, guid: 2eb08fd6d26594a4fbc7a22c986537e2, type: 3}
   soundOnlyOnHit: 1
