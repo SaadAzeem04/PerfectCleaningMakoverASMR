@@ -250,7 +250,6 @@ public class MaskEraser : MonoBehaviour
 
     void SetupGenericLevel()
     {
-
         if (levelParentAnchor == null)
         {
             Debug.LogError("MaskEraser: Please assign Level Parent Anchor!");
@@ -286,11 +285,9 @@ public class MaskEraser : MonoBehaviour
 
         if (objectData != null && levelParentAnchor != null)
         {
-            // ScriptableObject se position offset apply karein
             levelParentAnchor.localPosition = objectData.levelPositionOffset;
             levelParentAnchor.rotation = Quaternion.identity;
         }
-        levelParentAnchor.rotation = Quaternion.identity;
 
         if (objectData == null)
         {
@@ -298,7 +295,7 @@ public class MaskEraser : MonoBehaviour
             return;
         }
 
-        // 3. Base Clean Object Create Karein
+        // 3. Base Clean Object Setup (Sabse Niche)
         GameObject cleanObj = new GameObject("Base_Clean_Object");
         cleanObj.transform.SetParent(levelParentAnchor, false);
         cleanObj.transform.localPosition = Vector3.zero;
@@ -310,19 +307,20 @@ public class MaskEraser : MonoBehaviour
         if (objectData.cleanSprite != null)
         {
             baseCleanSR.sprite = objectData.cleanSprite;
+
+            // Clean base sabse peechhe/niche rahegi (Sorting Order = 0)
             baseCleanSR.sortingOrder = 0;
-            baseCleanSR.maskInteraction = SpriteMaskInteraction.None;
             baseCleanSR.material = new Material(Shader.Find("Sprites/Default"));
-            baseCleanSR.enabled = true;
+
+            // EDIT 1: Base clean object ko ALWAYS Active rakhein taake aakhiri layer ke neeche se ye reveal ho sake
             cleanObj.SetActive(true);
         }
 
         // 4. Step-Based Dynamic Setup
-        // 4. Step-Based Dynamic Setup
         if (objectData.cleaningSteps != null && objectData.cleaningSteps.Count > 0)
         {
             int totalSteps = objectData.cleaningSteps.Count;
-            stepGameObjects.Clear(); // Step objects tracking list
+            stepGameObjects.Clear();
 
             for (int i = 0; i < totalSteps; i++)
             {
@@ -335,15 +333,20 @@ public class MaskEraser : MonoBehaviour
                 stepObj.transform.localRotation = Quaternion.identity;
                 stepObj.transform.localScale = Vector3.one;
 
-                stepGameObjects.Add(stepObj); // Index 0, 1, 2 tracking
+                stepGameObjects.Add(stepObj);
 
                 switch (step.stepType)
                 {
                     case CleaningStepType.PixelEraser:
                         SpriteRenderer sr = stepObj.AddComponent<SpriteRenderer>();
                         sr.sprite = step.dirtySprite;
-                        sr.sortingOrder = (totalSteps + 5) - i;
-                        layersList.Add(sr); // Index match (e.g. Index 1 for Step 1)
+
+                        // EDIT 2: Sorting Order Hierarchy Fix
+                        // Pehli step (i=0) sabse uper (e.g. 10 + 3 = 13), Dusri (12), Teesri (11)... Base (0)
+                        sr.sortingOrder = 10 + (totalSteps - i);
+
+                        sr.maskInteraction = SpriteMaskInteraction.None;
+                        layersList.Add(sr);
                         break;
 
                     case CleaningStepType.ChunkScraper:
@@ -358,7 +361,7 @@ public class MaskEraser : MonoBehaviour
                             totalScraperChunks = allChunks.Length;
                             remainingScraperChunks = totalScraperChunks;
                         }
-                        layersList.Add(null); // Placeholder taake index out-of-sync na ho
+                        layersList.Add(null);
                         break;
 
                     case CleaningStepType.GlueApply:
@@ -369,7 +372,7 @@ public class MaskEraser : MonoBehaviour
                             instantiatedGlue.transform.localRotation = Quaternion.identity;
                             instantiatedGlue.transform.localScale = Vector3.one;
                         }
-                        layersList.Add(null); // Placeholder taake index out-of-sync na ho
+                        layersList.Add(null);
                         break;
                 }
 
@@ -377,12 +380,11 @@ public class MaskEraser : MonoBehaviour
                 cleaningLayerComponent.requiredTool = step.requiredTool;
                 layerRequiredTools.Add(step.requiredTool);
 
-                // Sirf pehli 2 layers active rahengi
-                stepObj.SetActive(i == 0 || i == 1);
+                // EDIT 3: Sabhi steps Active rahenge taake har layer ke peeche uski agli layer stacked rahe
+                stepObj.SetActive(true);
             }
         }
     }
-
     void Update()
     {
         if (scraperTriggerEdge != null && currentToolData != null)
@@ -1068,10 +1070,13 @@ public class MaskEraser : MonoBehaviour
             yield return null;
         }
 
-        // 1. Purani complete hone wali layer ko hide karein
-        if (stepGameObjects != null && currentLayer < stepGameObjects.Count && stepGameObjects[currentLayer] != null)
+        // 1. Purani layer hide karein
+        if (stepGameObjects != null && currentLayer < stepGameObjects.Count)
         {
-            stepGameObjects[currentLayer].SetActive(false);
+            if (stepGameObjects[currentLayer] != null)
+            {
+                stepGameObjects[currentLayer].SetActive(false); // Finished layer layer removed
+            }
         }
 
         currentLayer++;
@@ -1084,14 +1089,16 @@ public class MaskEraser : MonoBehaviour
             yield break;
         }
 
-        // 3. Nayi layer ko active karein
-        if (stepGameObjects != null)
+        // 3. Nayi layer active karein aur SpriteMaskInteraction set karein
+        if (stepGameObjects != null && currentLayer < stepGameObjects.Count && stepGameObjects[currentLayer] != null)
         {
-            if (currentLayer < stepGameObjects.Count && stepGameObjects[currentLayer] != null)
-                stepGameObjects[currentLayer].SetActive(true);
+            stepGameObjects[currentLayer].SetActive(true);
 
-            if (currentLayer + 1 < stepGameObjects.Count && stepGameObjects[currentLayer + 1] != null)
-                stepGameObjects[currentLayer + 1].SetActive(true);
+            SpriteRenderer currentSR = stepGameObjects[currentLayer].GetComponent<SpriteRenderer>();
+            if (currentSR != null)
+            {
+                currentSR.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+            }
         }
 
         PrepareLayer();
