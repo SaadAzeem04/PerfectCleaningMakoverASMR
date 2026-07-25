@@ -1084,14 +1084,18 @@ public class MaskEraser : MonoBehaviour
             yield break;
         }
 
-        // 3. Nayi layer ko active karein
+        // 3. EDIT HERE: Guarantee karein ke SIRF 2 active layers hongi (Current & Next)
         if (stepGameObjects != null)
         {
-            if (currentLayer < stepGameObjects.Count && stepGameObjects[currentLayer] != null)
-                stepGameObjects[currentLayer].SetActive(true);
-
-            if (currentLayer + 1 < stepGameObjects.Count && stepGameObjects[currentLayer + 1] != null)
-                stepGameObjects[currentLayer + 1].SetActive(true);
+            for (int i = 0; i < stepGameObjects.Count; i++)
+            {
+                if (stepGameObjects[i] != null)
+                {
+                    // Sirf tab true hoga jab layer 'current' ho ya 'current + 1' ho
+                    bool shouldBeActive = (i == currentLayer || i == currentLayer + 1);
+                    stepGameObjects[i].SetActive(shouldBeActive);
+                }
+            }
         }
 
         PrepareLayer();
@@ -1305,9 +1309,11 @@ public class MaskEraser : MonoBehaviour
             positionsSaved = true;
         }
 
+        // --- PREVIOUS TOOL UI FIX ---
         if (previousToolUIImage != null)
         {
-            if (currentLayer > 0 && layersList[currentLayer - 1] != null)
+            // Direct layerRequiredTools se verify karein, layersList ke null hone se faraq nahi parega
+            if (currentLayer > 0 && currentLayer - 1 < layerRequiredTools.Count)
             {
                 ToolData prevTool = layerRequiredTools[currentLayer - 1];
                 if (prevTool != null && prevTool.panelIcon != null)
@@ -1315,21 +1321,29 @@ public class MaskEraser : MonoBehaviour
                     previousToolUIImage.sprite = prevTool.panelIcon;
                     previousToolUIImage.gameObject.SetActive(true);
                 }
-                else previousToolUIImage.gameObject.SetActive(false);
+                else
+                {
+                    previousToolUIImage.gameObject.SetActive(false);
+                }
             }
-            else previousToolUIImage.gameObject.SetActive(false);
+            else
+            {
+                previousToolUIImage.gameObject.SetActive(false);
+            }
         }
 
+        // --- CURRENT TOOL UI ---
         if (currentToolUIImage != null && currentToolData != null && currentToolData.panelIcon != null)
         {
             currentToolUIImage.sprite = currentToolData.panelIcon;
             currentToolUIImage.gameObject.SetActive(true);
         }
 
+        // --- UPCOMING TOOL UI FIX ---
         if (upcomingToolUIImage != null)
         {
             int nextLayerIndex = currentLayer + 1;
-            if (nextLayerIndex < layersList.Count && layersList[nextLayerIndex] != null)
+            if (nextLayerIndex < layerRequiredTools.Count)
             {
                 ToolData nextTool = layerRequiredTools[nextLayerIndex];
                 if (nextTool != null && nextTool.panelIcon != null)
@@ -1337,9 +1351,15 @@ public class MaskEraser : MonoBehaviour
                     upcomingToolUIImage.sprite = nextTool.panelIcon;
                     upcomingToolUIImage.gameObject.SetActive(true);
                 }
-                else upcomingToolUIImage.gameObject.SetActive(false);
+                else
+                {
+                    upcomingToolUIImage.gameObject.SetActive(false);
+                }
             }
-            else upcomingToolUIImage.gameObject.SetActive(false);
+            else
+            {
+                upcomingToolUIImage.gameObject.SetActive(false);
+            }
         }
 
         if (animate) StartCoroutine(SlideToolUI());
