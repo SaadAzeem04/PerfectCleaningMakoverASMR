@@ -17,9 +17,8 @@ public class MaskEraser : MonoBehaviour
     public ToolFollower toolFollower;
     public TMP_Text percentText;
     public Image progressFill;
-    //public AudioSource audioSource;
 
-    //  TOOL ANIMATION VARIABLES
+    // TOOL ANIMATION VARIABLES
     private Vector3 originalToolLocalPos;
     private Quaternion originalToolRotation;
     private bool isToolPosSaved = false;
@@ -29,7 +28,6 @@ public class MaskEraser : MonoBehaviour
     public Transform eraseAnchor;
     public GameObject currentParticle;
 
-    // Naya private reference list taake dono active particles control ho sakein
     private List<GameObject> activeParticlesList = new List<GameObject>();
 
     [Header("Celebration")]
@@ -41,31 +39,23 @@ public class MaskEraser : MonoBehaviour
     public Image backgroundImage;
 
     private Vector3 lastEraseWorldPos;
-
     private bool hasLastErasePos = false;
 
     [Tooltip("Gameplay me jo Pause Button hai use yahan drag karein")]
     public GameObject pauseButton;
 
     [Header("Coin UI Settings")]
-    [Tooltip("Gameplay ke dauran jo Coin UI bar dikhana hai use yahan drag karein")]
     public GameObject gameplayCoinPanel;
-    [Tooltip("Coin bar ke andar ka Text Mesh Pro (TMP_Text) component yahan drag karein")]
     public TMP_Text gameplayCoinText;
 
     [Header("--- Ref Video Tool Variant UI ---")]
     public GameObject variantMainPanel;
-    // Niche wala poora UI Dabba
     public Transform variantButtonsContainer;
-    // Jahan 3 buttons lagenge (Horizontal Layout Group)
     public GameObject variantButtonPrefab;
-    // Button ka Prefab
     private List<ToolVariantButton> spawnedVariantButtons = new List<ToolVariantButton>();
 
     private Coroutine panelAnimCoroutine;
-
     private GameObject activeCelebrationInstance;
-    // NAYA VARIABLE: Pehle se active variant ko track karne ke liye
     private ToolVariant currentEquippedVariant;
 
     [Header("Tool UI Panel")]
@@ -74,57 +64,42 @@ public class MaskEraser : MonoBehaviour
     public Image upcomingToolUIImage;
 
     [Header("Background Reference")]
-    public SpriteRenderer backgroundRenderer; // Inspector mein BG wale GameObject ka SpriteRenderer drag karein
+    public SpriteRenderer backgroundRenderer;
 
     [Header("Tool UI Sizes & Spacing")]
     public float activeToolScale = 2f;
     public float inactiveToolScale = 1.5f;
-    // Yeh line add karein:
     public float toolSpacing = 100f;
 
     [Header("Upcoming Objects Panel")]
     public Image[] upcomingIcons;
 
     [Header("End Game Settings")]
-    [Tooltip("Level complete hone par window kitni der baad aaye")]
     public float levelCompleteDelay = 3.0f;
-    // Window aane mein delay
-    [Tooltip("Sari layers clean hone ke baad camera ka zoom size kya ho")]
     public float levelCompleteZoomSize = 4.5f;
-    // Thora zoom karne ke liye (kam value = zoom in, zyada = zoom out)
 
     [Header("Eraser Smoothness Settings")]
     [Range(0.01f, 1.0f)]
-    [Tooltip("Kam value se edges soft aur smooth honge. Zyada se sharp honge.")]
     public float brushHardness = 0.15f;
     [Range(0.01f, 1.0f)]
-    [Tooltip("Kam value se mitti dheere aur smoothly saaf hogi (Intensity kam hogi).")]
     public float eraserIntensityMultiplier = 0.1f;
 
     [Header("Level Completion Settings")]
     [Range(0f, 100f)]
-    [Tooltip("Kitne percent mitti saaf hone par level complete mana jaye (e.g., 95% ya 98%)")]
     public float cleaningThreshold = 95f;
 
     [Header("Camera Settings")]
-    [Tooltip("Camera zoom hone ki speed/intensity. Default 4 hai, jitna zyada karenge utna fast zoom hoga.")]
     public float cameraTransitionIntensity = 3f;
 
     [Header("Camera Parallax Settings")]
     public float cameraMoveIntensity = 0.2f;
 
     [Header("Camera Zoom Settings")]
-    [Tooltip("Default camera size jab koi tool active na ho ya game start ho.")]
     public float defaultCameraSize = 5f;
 
     [Header("Level Completed UI Settings")]
-    [Tooltip("Is level ke khatam hone par jo ALAG ya SHINY photo dikhani hai.")]
     public Sprite completedLevelSprite;
-    //  Har level ki special win photo ke liye
-
-    [SerializeField] private UnityEngine.UI.Image levelCompleteIconImage; // Hierarchy se LevelCompleteIconImage drag karein
-
-    [Tooltip("Completed Window ke andar wala UI Image dabba jahan photo dikhegi.")]
+    [SerializeField] private UnityEngine.UI.Image levelCompleteIconImage;
     public UnityEngine.UI.Image winPanelIconImage;
     public GameObject progressBarMainPanel;
 
@@ -138,7 +113,6 @@ public class MaskEraser : MonoBehaviour
     public SmoothUIAnimate coinCounterAnim;
 
     private List<GameObject> stepGameObjects = new List<GameObject>();
-
 
     // Runtime Generated Layers
     private List<SpriteRenderer> layersList = new List<SpriteRenderer>();
@@ -165,22 +139,15 @@ public class MaskEraser : MonoBehaviour
     float targetCameraSize = 5f;
     float effectGraceTimer = 0f;
 
-
     public GameObject scraperTriggerEdge;
+
     void Start()
     {
         PlayerPrefs.SetInt("Coins", 100);
         PlayerPrefs.Save();
 
-        // Gameplay UI panels ko default par active karna start me
-        if (gameplayCoinPanel != null)
-        {
-            gameplayCoinPanel.SetActive(true);
-        }
-        if (pauseButton != null)
-        {
-            pauseButton.SetActive(true);
-        }
+        if (gameplayCoinPanel != null) gameplayCoinPanel.SetActive(true);
+        if (pauseButton != null) pauseButton.SetActive(true);
         UpdateGameplayCoinsUI();
 
         if (AudioManager.Instance != null && AudioManager.Instance.gameSceneMusic != null)
@@ -189,28 +156,24 @@ public class MaskEraser : MonoBehaviour
         }
         if (Camera.main != null)
         {
-            defaultCameraSize = Camera.main.orthographic ?
-                Camera.main.orthographicSize : Camera.main.fieldOfView;
+            defaultCameraSize = Camera.main.orthographic ? Camera.main.orthographicSize : Camera.main.fieldOfView;
             targetCameraSize = defaultCameraSize;
         }
 
-        // --- DYNAMIC DATA FETCH WITH FALLBACK ---
         if (LevelManager.SelectedObject != null)
         {
             objectData = LevelManager.SelectedObject;
         }
 
-        // Safety Check: Agar LevelManager se Data nahi aaya to Inspector wala fallback chalega
         if (objectData == null)
         {
-            Debug.LogWarning("MaskEraser: SelectedObject was NULL! Please assign a default objectData in Inspector or select a level from HomeScene.");
+            Debug.LogWarning("MaskEraser: SelectedObject was NULL!");
             return;
         }
 
-        // Purani Generated Layers saaf karein
         ClearOldGeneratedLayers();
-
         SetupGenericLevel();
+
         if (layersList.Count > 0)
         {
             PrepareLayer();
@@ -235,7 +198,6 @@ public class MaskEraser : MonoBehaviour
 
         if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
 
-        // Tools animate kar ke screen par laane ke liye
         StartCoroutine(AnimateFirstToolOnStartup());
     }
 
@@ -250,14 +212,8 @@ public class MaskEraser : MonoBehaviour
 
     void SetupGenericLevel()
     {
+        if (levelParentAnchor == null) return;
 
-        if (levelParentAnchor == null)
-        {
-            Debug.LogError("MaskEraser: Please assign Level Parent Anchor!");
-            return;
-        }
-
-        // 1. Purane sabhi generated objects clear karein
         for (int i = levelParentAnchor.childCount - 1; i >= 0; i--)
         {
             DestroyImmediate(levelParentAnchor.GetChild(i).gameObject);
@@ -266,39 +222,15 @@ public class MaskEraser : MonoBehaviour
         layersList.Clear();
         layerRequiredTools.Clear();
 
-        // 2. Background setup
-        if (objectData != null)
-        {
-            if (backgroundRenderer != null && objectData.levelBackgroundSprite != null)
-            {
-                backgroundRenderer.sprite = objectData.levelBackgroundSprite;
-                backgroundRenderer.sortingOrder = -10;
-                backgroundRenderer.gameObject.SetActive(true);
-            }
-
-            if (backgroundImage != null && objectData.backgroundSprite != null)
-            {
-                backgroundImage.sprite = objectData.backgroundSprite;
-            }
-
-            cameraMoveIntensity = objectData.cameraMovementIntensity;
-        }
-
         if (objectData != null && levelParentAnchor != null)
         {
-            // ScriptableObject se position offset apply karein
             levelParentAnchor.localPosition = objectData.levelPositionOffset;
             levelParentAnchor.rotation = Quaternion.identity;
         }
-        levelParentAnchor.rotation = Quaternion.identity;
 
-        if (objectData == null)
-        {
-            Debug.LogError("MaskEraser: ObjectData is missing!");
-            return;
-        }
+        if (objectData == null) return;
 
-        // 3. Base Clean Object Create Karein
+        // 1. BASE CLEAN OBJECT (Sabse Peeche - Order 0)
         GameObject cleanObj = new GameObject("Base_Clean_Object");
         cleanObj.transform.SetParent(levelParentAnchor, false);
         cleanObj.transform.localPosition = Vector3.zero;
@@ -306,23 +238,19 @@ public class MaskEraser : MonoBehaviour
         cleanObj.transform.localScale = Vector3.one;
 
         SpriteRenderer baseCleanSR = cleanObj.AddComponent<SpriteRenderer>();
-
         if (objectData.cleanSprite != null)
         {
             baseCleanSR.sprite = objectData.cleanSprite;
-            baseCleanSR.sortingOrder = 0;
+            baseCleanSR.sortingOrder = 0; // Sabse bottom
             baseCleanSR.maskInteraction = SpriteMaskInteraction.None;
-            baseCleanSR.material = new Material(Shader.Find("Sprites/Default"));
             baseCleanSR.enabled = true;
-            cleanObj.SetActive(true);
         }
 
-        // 4. Step-Based Dynamic Setup
-        // 4. Step-Based Dynamic Setup
+        // 2. STEPS SETUP WITH SPRITE MASK LOGIC
         if (objectData.cleaningSteps != null && objectData.cleaningSteps.Count > 0)
         {
             int totalSteps = objectData.cleaningSteps.Count;
-            stepGameObjects.Clear(); // Step objects tracking list
+            stepGameObjects.Clear();
 
             for (int i = 0; i < totalSteps; i++)
             {
@@ -335,15 +263,31 @@ public class MaskEraser : MonoBehaviour
                 stepObj.transform.localRotation = Quaternion.identity;
                 stepObj.transform.localScale = Vector3.one;
 
-                stepGameObjects.Add(stepObj); // Index 0, 1, 2 tracking
+                stepGameObjects.Add(stepObj);
 
                 switch (step.stepType)
                 {
                     case CleaningStepType.PixelEraser:
                         SpriteRenderer sr = stepObj.AddComponent<SpriteRenderer>();
                         sr.sprite = step.dirtySprite;
-                        sr.sortingOrder = (totalSteps + 5) - i;
-                        layersList.Add(sr); // Index match (e.g. Index 1 for Step 1)
+
+                        // Order Stacking: Higher Order = Top Layer
+                        sr.sortingOrder = (totalSteps - i) * 10;
+
+                        // SOLUTION 2 SPRITE MASK SETTINGS:
+                        // Step 0 Normal Dikhayga. 
+                        // Lower steps (i > 0) sirf tab dikhenge jab Mask unko reveal karega!
+                        if (i == 0)
+                        {
+                            sr.maskInteraction = SpriteMaskInteraction.None;
+                        }
+                        else
+                        {
+                            // Niche ki dirty layers mask ke through visible hongi
+                            sr.maskInteraction = SpriteMaskInteraction.None;
+                        }
+
+                        layersList.Add(sr);
                         break;
 
                     case CleaningStepType.ChunkScraper:
@@ -353,12 +297,8 @@ public class MaskEraser : MonoBehaviour
                             instantiatedChunks.transform.localPosition = Vector3.zero;
                             instantiatedChunks.transform.localRotation = Quaternion.identity;
                             instantiatedChunks.transform.localScale = Vector3.one;
-
-                            MudChunk[] allChunks = instantiatedChunks.GetComponentsInChildren<MudChunk>(true);
-                            totalScraperChunks = allChunks.Length;
-                            remainingScraperChunks = totalScraperChunks;
                         }
-                        layersList.Add(null); // Placeholder taake index out-of-sync na ho
+                        layersList.Add(null);
                         break;
 
                     case CleaningStepType.GlueApply:
@@ -369,7 +309,7 @@ public class MaskEraser : MonoBehaviour
                             instantiatedGlue.transform.localRotation = Quaternion.identity;
                             instantiatedGlue.transform.localScale = Vector3.one;
                         }
-                        layersList.Add(null); // Placeholder taake index out-of-sync na ho
+                        layersList.Add(null);
                         break;
                 }
 
@@ -377,8 +317,8 @@ public class MaskEraser : MonoBehaviour
                 cleaningLayerComponent.requiredTool = step.requiredTool;
                 layerRequiredTools.Add(step.requiredTool);
 
-                // Sirf pehli 2 layers active rahengi
-                stepObj.SetActive(i == 0 || i == 1);
+                // SOLUTION 2 FIX: Tamam layers active hongi taake background depth properly render ho
+                stepObj.SetActive(true);
             }
         }
     }
@@ -396,7 +336,6 @@ public class MaskEraser : MonoBehaviour
             return;
         }
 
-        // BUG FIX: Jab tak mouse ya finger UI/Buttons ke upar hai, follower ko stop rakhein
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
             StopToolEffects();
@@ -414,16 +353,15 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // UNIFIED LOGIC: Touch down/up par panels ko hide aur show karna
         if (!gameCompleted && !isTransitioningTool)
         {
             if (Input.GetMouseButtonDown(0))
             {
-                ToggleGameplayUI(true);  // Press par sab hide ho jayega
+                ToggleGameplayUI(true);
             }
             else if (Input.GetMouseButtonUp(0))
             {
-                ToggleGameplayUI(false); // Touch chorne par sab show ho jayega
+                ToggleGameplayUI(false);
             }
         }
 
@@ -435,7 +373,6 @@ public class MaskEraser : MonoBehaviour
                 Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, targetCameraSize, Time.deltaTime * cameraTransitionIntensity);
         }
 
-        // Camera Intensity setup (Dynamic from ObjectData or Fallback)
         float currentIntensity = (objectData != null && objectData.cameraMovementIntensity > 0)
             ? objectData.cameraMovementIntensity
             : cameraMoveIntensity;
@@ -451,7 +388,6 @@ public class MaskEraser : MonoBehaviour
                 (currentMousePos.y - screenCenter.y) / screenCenter.y
             );
 
-            // --- Y-AXIS OPTIONAL MOVEMENT CHECK ---
             float targetY = (objectData != null && objectData.enableYAxisMovement)
                 ? mouseOffset.y * currentIntensity
                 : 0f;
@@ -478,7 +414,7 @@ public class MaskEraser : MonoBehaviour
         if (currentLayer >= layersList.Count) return;
         if (Input.GetMouseButtonDown(0))
         {
-            hasLastErasePos = false; // Fresh click par trace reset
+            hasLastErasePos = false;
         }
 
         if (Input.GetMouseButton(0) && currentToolData != null && toolFollower.CanClean)
@@ -499,7 +435,6 @@ public class MaskEraser : MonoBehaviour
 
             if (!hasLastErasePos)
             {
-                // Pehli dafa direct ek dot clean karein
                 isOverLayer = EraseAtWorldPosition(world);
                 lastEraseWorldPos = world;
                 hasLastErasePos = true;
@@ -507,16 +442,11 @@ public class MaskEraser : MonoBehaviour
             else
             {
                 float distance = Vector3.Distance(lastEraseWorldPos, world);
-
-                // Step size ko 0.1f se 0.15f ke darmiyan rakhein performance ke liye
                 float stepSize = 0.12f;
 
                 if (distance > stepSize)
                 {
-                    // Maximum steps limit set ki taake lag na ho (Max 10 steps per frame)
                     int steps = Mathf.Min(Mathf.CeilToInt(distance / stepSize), 10);
-
-                    // i = 1 se start kar rahe hain kyunki i = 0 (lastEraseWorldPos) pehle hi clean ho chuka hai
                     for (int i = 1; i <= steps; i++)
                     {
                         Vector3 interpolatedPos = Vector3.Lerp(lastEraseWorldPos, world, (float)i / steps);
@@ -540,7 +470,7 @@ public class MaskEraser : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            hasLastErasePos = false; // Release par reset
+            hasLastErasePos = false;
         }
 
         if (effectGraceTimer > 0)
@@ -576,7 +506,6 @@ public class MaskEraser : MonoBehaviour
 
         if (objectData != null && objectData.scraperChunksPrefab != null)
         {
-            // Agar list mein layers hain, toh pehli layer (Index 0) ko hamesha band rakho
             if (layersList != null && layersList.Count > 0 && layersList[0] != null)
             {
                 if (layersList[0].gameObject.activeSelf)
@@ -585,7 +514,6 @@ public class MaskEraser : MonoBehaviour
                 }
             }
 
-            // Backup Check: Agar Hierarchy mein direct child pada hai bina list ke, use bhi band karo
             if (levelParentAnchor != null)
             {
                 Transform oldLayer = levelParentAnchor.Find("Dirty_Layer_0");
@@ -597,7 +525,6 @@ public class MaskEraser : MonoBehaviour
         }
     }
 
-    // UNIFIED FUNCTION: Teeno panels ko hide/show karne ke liye ek single controller
     [Header("Slide UI Animations")]
     private Coroutine topUISlideCoroutine;
     private Vector2 pauseBasePos;
@@ -606,21 +533,15 @@ public class MaskEraser : MonoBehaviour
     private Vector3 coinBaseScale = Vector3.one;
     private bool isBasePosSaved = false;
 
-    // UNIFIED FUNCTION: Controls Slide Animations for Side Panels
     public void ToggleGameplayUI(bool hide)
     {
-        // 1. Variant Panel (Smart Check)
         if (currentToolData != null && currentToolData.hasVariants && currentToolData.toolVariants.Count > 0 && variantMainPanel != null)
         {
             if (panelAnimCoroutine != null) StopCoroutine(panelAnimCoroutine);
-
-            // Agar touch chora gaya hai (!hide) lekin layer abhi complete hui hai (!layerFinishedWaitingRelease), 
-            // toh variant panel ko WAPAS MAT DIKHAO.
             bool shouldShowVariant = !hide && !layerFinishedWaitingRelease;
             panelAnimCoroutine = StartCoroutine(AnimateVariantPanelVideoStyle(shouldShowVariant));
         }
 
-        // 2. Pause Button & Coin Bar (Yeh HAR BAAR normal slide-in/out honge!)
         if (topUISlideCoroutine != null) StopCoroutine(topUISlideCoroutine);
         topUISlideCoroutine = StartCoroutine(SlideSideUIRoutine(hide));
     }
@@ -630,7 +551,6 @@ public class MaskEraser : MonoBehaviour
         RectTransform pauseRect = pauseButton != null ? pauseButton.GetComponent<RectTransform>() : null;
         RectTransform coinRect = gameplayCoinPanel != null ? gameplayCoinPanel.GetComponent<RectTransform>() : null;
 
-        // Pehli dafa Original Positions aur Scales safe store karein
         if (!isBasePosSaved)
         {
             if (pauseRect != null)
@@ -646,19 +566,15 @@ public class MaskEraser : MonoBehaviour
             isBasePosSaved = true;
         }
 
-        float duration = 0.5f; // Animation duration
+        float duration = 0.5f;
         float time = 0f;
 
-        // Start Positions & Scales
         Vector2 pauseStartPos = pauseRect != null ? pauseRect.anchoredPosition : Vector2.zero;
         Vector2 coinStartPos = coinRect != null ? coinRect.anchoredPosition : Vector2.zero;
 
         Vector3 pauseStartScale = pauseRect != null ? pauseRect.localScale : Vector3.one;
         Vector3 coinStartScale = coinRect != null ? coinRect.localScale : Vector3.one;
 
-        // Target Positions & Scales:
-        // Hide = True  -> Position Outside (+350 / -350) & Scale = ZERO (Small to disappear)
-        // Hide = False -> Position Original Base & Scale = FULL (Base Scale)
         Vector2 pauseTargetPos = hide ? new Vector2(pauseBasePos.x + 350f, pauseBasePos.y) : pauseBasePos;
         Vector2 coinTargetPos = hide ? new Vector2(coinBasePos.x - 350f, coinBasePos.y) : coinBasePos;
 
@@ -669,16 +585,14 @@ public class MaskEraser : MonoBehaviour
         {
             time += Time.deltaTime;
             float t = time / duration;
-            float smoothT = t * t * (3f - 2f * t); // Smooth interpolation
+            float smoothT = t * t * (3f - 2f * t);
 
-            // Position Lerp (Slide)
             if (pauseRect != null)
                 pauseRect.anchoredPosition = Vector2.Lerp(pauseStartPos, pauseTargetPos, smoothT);
 
             if (coinRect != null)
                 coinRect.anchoredPosition = Vector2.Lerp(coinStartPos, coinTargetPos, smoothT);
 
-            // Scale Lerp (Small to Full / Full to Small)
             if (pauseRect != null)
                 pauseRect.localScale = Vector3.Lerp(pauseStartScale, pauseTargetScale, smoothT);
 
@@ -688,7 +602,6 @@ public class MaskEraser : MonoBehaviour
             yield return null;
         }
 
-        // Direct Exact Targets Lock
         if (pauseRect != null)
         {
             pauseRect.anchoredPosition = pauseTargetPos;
@@ -700,6 +613,7 @@ public class MaskEraser : MonoBehaviour
             coinRect.localScale = coinTargetScale;
         }
     }
+
     void PlayToolEffects()
     {
         AnimateTool();
@@ -784,13 +698,8 @@ public class MaskEraser : MonoBehaviour
     void PrepareLayer()
     {
         if (currentLayer >= layersList.Count) return;
-
-        // Chunk / Glue step par SpriteRenderer null hoga, isliye texture slicing skip karein
         if (layersList[currentLayer] == null) return;
 
-        // =========================================================================
-        // AAPKA ORIGINAL CODE (NO CHANGES AT ALL BELOW THIS POINT)
-        // =========================================================================
         Sprite originalSprite = layersList[currentLayer].sprite;
         Texture2D sheetTexture = originalSprite.texture;
 
@@ -824,16 +733,11 @@ public class MaskEraser : MonoBehaviour
 
     public bool EraseAtWorldPosition(Vector3 world)
     {
-        // ================================================================
-        //  ISOLATED SCRAPER BYPASS RULE (BILKUL TOP PAR)
-        // ================================================================
         if (currentToolData != null && (currentToolData.toolType == ToolType.Scraper || currentToolData.name.Contains("Scraper")))
         {
-            // Scraper ke liye pixel manipulation skip karein aur true return kar dein
             return true;
         }
 
-        // --- Baki Saari Purani Logic Bilkul Same Rahegi (Brush/Water ke liye) ---
         if (currentLayer >= layersList.Count) return false;
         Vector3 local = layersList[currentLayer].transform.InverseTransformPoint(world);
         SpriteRenderer sr = layersList[currentLayer];
@@ -879,7 +783,6 @@ public class MaskEraser : MonoBehaviour
 
     void UpdateProgress()
     {
-        // Safety Check: Agar game finish ho chuki hai ya step list empty hai
         if (gameCompleted || layerFinishedWaitingRelease || objectData == null || objectData.cleaningSteps == null || objectData.cleaningSteps.Count == 0) return;
         if (currentLayer >= objectData.cleaningSteps.Count) return;
 
@@ -888,11 +791,9 @@ public class MaskEraser : MonoBehaviour
         float percent = 0f;
         bool isLayerFullyCleaned = false;
 
-        // --- STEP TYPE KE MUTAABIQ LOGIC SWITCH ---
         switch (currentStep.stepType)
         {
             case CleaningStepType.ChunkScraper:
-                // AGAR TOTAL CHUNKS ZERO HAIN, TO RE-COUNT KAREIN (Aapki Original Safety Logic)
                 if (totalScraperChunks <= 0)
                 {
                     if (levelParentAnchor != null)
@@ -908,7 +809,6 @@ public class MaskEraser : MonoBehaviour
                 int removedChunks = totalScraperChunks - remainingScraperChunks;
                 percent = ((float)removedChunks / totalScraperChunks) * 100f;
 
-                // FORCE CHECK: Jab tak aakhri chunk baqi hai, percent 100% nahi ho sakta!
                 if (remainingScraperChunks > 0 && percent >= 99f)
                 {
                     percent = 99f;
@@ -918,7 +818,6 @@ public class MaskEraser : MonoBehaviour
                 break;
 
             case CleaningStepType.PixelEraser:
-                // Normal tools ke liye pixels count karein (Aapki Original Logic)
                 if (texture != null)
                 {
                     Color[] pixels = texture.GetPixels();
@@ -932,29 +831,23 @@ public class MaskEraser : MonoBehaviour
                     int removed = totalOpaquePixels - currentOpaque;
                     percent = ((float)removed / totalOpaquePixels) * 100f;
 
-                    // Aapka original script-level cleaningThreshold variable hi istemal hoga
                     isLayerFullyCleaned = (percent >= cleaningThreshold);
                 }
                 break;
 
             case CleaningStepType.GlueApply:
-                // Future Glue application completion logic (Aap yahan bad mein add kar sakte hain)
                 break;
         }
 
         float visualPercent = percent;
         if (visualPercent > 100f) visualPercent = 100f;
 
-        // UI UPDATE (Aapka Original UI System)
         targetFill = visualPercent / 100f;
         progressFill.fillAmount = targetFill;
         percentText.text = Mathf.RoundToInt(visualPercent) + "%";
 
-        // LAYER COMPLETION LOGIC
         if (isLayerFullyCleaned)
         {
-            Debug.Log("LAYER TARGET ACHIEVED COMPLETELY!");
-
             if (!isLayerClearSoundPlayed)
             {
                 if (AudioManager.Instance != null && AudioManager.Instance.layerClearSFX != null)
@@ -983,6 +876,7 @@ public class MaskEraser : MonoBehaviour
             }
         }
     }
+
     public void ScraperChunkDestroyed()
     {
         remainingScraperChunks--;
@@ -991,13 +885,11 @@ public class MaskEraser : MonoBehaviour
             remainingScraperChunks = 0;
         }
 
-        // Chunk kam hone par instant progress calculation update karein
         UpdateProgress();
     }
 
     void ClearRemainingLayer()
     {
-        // 1. Current Step Check (Step-based logic + Fallback isScraperActive check)
         bool isChunkStep = false;
         if (objectData != null && objectData.cleaningSteps != null && currentLayer < objectData.cleaningSteps.Count)
         {
@@ -1008,7 +900,6 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // 2. AGAR SCRAPER / CHUNK STEP HAI: Saare remaining MudChunks ko hide karein
         if (isChunkStep || isScraperActive)
         {
             remainingScraperChunks = 0;
@@ -1026,7 +917,6 @@ public class MaskEraser : MonoBehaviour
         }
         else
         {
-            // 3. AGAR PIXEL / TEXTURE ERASER STEP HAI (Texture Null Safety Guard ke saath)
             if (texture != null)
             {
                 Color[] pixels = texture.GetPixels();
@@ -1039,7 +929,6 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // 4. UI KO FORCE 100% KAREIN
         targetFill = 1f;
         currentFill = 1f;
         if (progressFill != null) progressFill.fillAmount = 1f;
@@ -1068,7 +957,7 @@ public class MaskEraser : MonoBehaviour
             yield return null;
         }
 
-        // 1. Purani complete hone wali layer ko hide karein
+        // Purani layer ko hide karein (complete step ko disable karna)
         if (stepGameObjects != null && currentLayer < stepGameObjects.Count && stepGameObjects[currentLayer] != null)
         {
             stepGameObjects[currentLayer].SetActive(false);
@@ -1076,7 +965,6 @@ public class MaskEraser : MonoBehaviour
 
         currentLayer++;
 
-        // 2. Game Finish Check
         if (currentLayer >= objectData.cleaningSteps.Count)
         {
             CompleteGame();
@@ -1084,14 +972,14 @@ public class MaskEraser : MonoBehaviour
             yield break;
         }
 
-        // 3. EDIT HERE: Guarantee karein ke SIRF 2 active layers hongi (Current & Next)
+        // FIX: Current Layer AUR uske Bilkul Niche Wali Layer (currentLayer + 1) dono active hongi.
+        // Is se erasing ke waqt Direct Clean Base reveal nahi hogi, balki Agli Layer hi dikhegi!
         if (stepGameObjects != null)
         {
             for (int i = 0; i < stepGameObjects.Count; i++)
             {
                 if (stepGameObjects[i] != null)
                 {
-                    // Sirf tab true hoga jab layer 'current' ho ya 'current + 1' ho
                     bool shouldBeActive = (i == currentLayer || i == currentLayer + 1);
                     stepGameObjects[i].SetActive(shouldBeActive);
                 }
@@ -1145,7 +1033,6 @@ public class MaskEraser : MonoBehaviour
 
     void CompleteGame()
     {
-        Debug.Log("CompleteGame() START HUA HAI!");
         gameCompleted = true;
         percentText.text = "100%";
         progressFill.fillAmount = 1f;
@@ -1161,24 +1048,18 @@ public class MaskEraser : MonoBehaviour
         if (upcomingToolUIImage != null) upcomingToolUIImage.gameObject.SetActive(false);
         UpdateUpcomingIconsPanel(false);
 
-        // Variant aur pause panel ko hide karein
         if (variantMainPanel != null) variantMainPanel.SetActive(false);
         if (pauseButton != null) pauseButton.SetActive(false);
 
-        // =========================================================================
-        // FIX 1: COIN BAR KO ACTIVE KAREIN AUR SLIDE-IN ANIMATION TRIGGER KAREIN
-        // =========================================================================
         if (gameplayCoinPanel != null)
         {
             gameplayCoinPanel.SetActive(true);
-            gameplayCoinPanel.transform.SetAsLastSibling(); // Top layer par laayein
+            gameplayCoinPanel.transform.SetAsLastSibling();
 
-            // Agar aapki script mein side slide animation hai toh trigger karein:
             if (topUISlideCoroutine != null) StopCoroutine(topUISlideCoroutine);
             topUISlideCoroutine = StartCoroutine(SlideSideUIRoutine(false));
         }
 
-        // --- DYNAMIC WIN PANEL ICON ASSIGNMENT ---
         if (winPanelIconImage != null)
         {
             if (objectData != null && objectData.levelCompleteIcon != null)
@@ -1200,9 +1081,6 @@ public class MaskEraser : MonoBehaviour
             AudioManager.Instance.PlaySFX(celebrationSound);
         }
 
-        // =========================================================================
-        // FIX 2: COIN SEQUENCE START KAREIN (Progress bar ko baad mein hide hone dein)
-        // =========================================================================
         if (CoinManager.Instance != null)
         {
             CoinManager.Instance.StartCoroutine(
@@ -1214,34 +1092,37 @@ public class MaskEraser : MonoBehaviour
             StartCoroutine(ShowDelayedUIAndCoinsRoutine());
         }
 
-        // Progress bar ko sab se aakhir mein hide karein taake spawn point position break na ho
         if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
     }
-
 
     void SnapToolUI()
     {
         if (previousToolUIImage != null)
         {
             previousToolUIImage.rectTransform.anchoredPosition = prevPos;
-            previousToolUIImage.transform.localScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f); SetImageAlpha(previousToolUIImage, 0.6f);
+            previousToolUIImage.transform.localScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
+            SetImageAlpha(previousToolUIImage, 0.6f);
         }
         if (currentToolUIImage != null)
         {
             currentToolUIImage.rectTransform.anchoredPosition = currPos;
-            currentToolUIImage.transform.localScale = new Vector3(activeToolScale, activeToolScale, 1f); SetImageAlpha(currentToolUIImage, 1f);
+            currentToolUIImage.transform.localScale = new Vector3(activeToolScale, activeToolScale, 1f);
+            SetImageAlpha(currentToolUIImage, 1f);
         }
         if (upcomingToolUIImage != null)
         {
             upcomingToolUIImage.rectTransform.anchoredPosition = upPos;
-            upcomingToolUIImage.transform.localScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f); SetImageAlpha(upcomingToolUIImage, 0.6f);
+            upcomingToolUIImage.transform.localScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
+            SetImageAlpha(upcomingToolUIImage, 0.6f);
         }
     }
 
     void SetImageAlpha(Image img, float alpha)
     {
         if (img == null) return;
-        Color c = img.color; c.a = alpha; img.color = c;
+        Color c = img.color;
+        c.a = alpha;
+        img.color = c;
     }
 
     IEnumerator SlideToolUI()
@@ -1309,10 +1190,8 @@ public class MaskEraser : MonoBehaviour
             positionsSaved = true;
         }
 
-        // --- PREVIOUS TOOL UI FIX ---
         if (previousToolUIImage != null)
         {
-            // Direct layerRequiredTools se verify karein, layersList ke null hone se faraq nahi parega
             if (currentLayer > 0 && currentLayer - 1 < layerRequiredTools.Count)
             {
                 ToolData prevTool = layerRequiredTools[currentLayer - 1];
@@ -1332,14 +1211,12 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // --- CURRENT TOOL UI ---
         if (currentToolUIImage != null && currentToolData != null && currentToolData.panelIcon != null)
         {
             currentToolUIImage.sprite = currentToolData.panelIcon;
             currentToolUIImage.gameObject.SetActive(true);
         }
 
-        // --- UPCOMING TOOL UI FIX ---
         if (upcomingToolUIImage != null)
         {
             int nextLayerIndex = currentLayer + 1;
@@ -1369,8 +1246,10 @@ public class MaskEraser : MonoBehaviour
     IEnumerator AnimateUIPopup(Image img, float delay)
     {
         if (img == null || !img.gameObject.activeSelf) yield break;
-        img.transform.localScale = Vector3.zero; yield return new WaitForSeconds(delay);
-        float time = 0; float duration = 0.3f;
+        img.transform.localScale = Vector3.zero;
+        yield return new WaitForSeconds(delay);
+        float time = 0;
+        float duration = 0.3f;
         while (time < duration)
         {
             time += Time.deltaTime;
@@ -1392,7 +1271,8 @@ public class MaskEraser : MonoBehaviour
             if (layerIndex < layersList.Count && layersList[layerIndex] != null)
             {
                 upcomingIcons[i].gameObject.SetActive(true);
-                upcomingIcons[i].sprite = layersList[layerIndex].sprite; if (animate)
+                upcomingIcons[i].sprite = layersList[layerIndex].sprite;
+                if (animate)
                 {
                     StartCoroutine(AnimateUIPopup(upcomingIcons[i], delay));
                     delay += 0.1f;
@@ -1414,7 +1294,8 @@ public class MaskEraser : MonoBehaviour
 
         SetupToolVariantsPanel(tool);
     }
-   public void GoToHome()
+
+    public void GoToHome()
     {
         if (activeCelebrationInstance != null)
         {
@@ -1423,13 +1304,11 @@ public class MaskEraser : MonoBehaviour
         PlayerPrefs.Save();
         SceneManager.LoadScene("HomeScene");
     }
+
     IEnumerator ShowDelayedUIAndCoinsRoutine()
     {
-        Debug.Log("<color=yellow>1. ShowDelayedUIAndCoinsRoutine Start Hua!</color>");
-
         yield return new WaitForSeconds(levelCompleteDelay);
 
-        // 1. PEHLE COIN BAR SLIDE-IN KAREIN
         if (gameplayCoinPanel != null)
         {
             gameplayCoinPanel.SetActive(true);
@@ -1437,50 +1316,33 @@ public class MaskEraser : MonoBehaviour
 
             if (topUISlideCoroutine != null) StopCoroutine(topUISlideCoroutine);
             topUISlideCoroutine = StartCoroutine(SlideSideUIRoutine(false));
-            Debug.Log("<color=yellow>2. Coin Bar Slide-In Started</color>");
         }
 
-        // Coin Bar ko screen par aane ka time dein
         yield return new WaitForSeconds(0.4f);
 
-        // 2. COIN ANIMATION TRIGGER KAREIN
         if (CoinManager.Instance != null)
         {
-            Debug.Log("<color=green>3. TriggerCoinSwoopAnimation Call Ho Raha Hai!</color>");
             CoinManager.Instance.TriggerCoinSwoopAnimation(20);
         }
-        else
-        {
-            Debug.LogError("CoinManager.Instance NULL hai! Check karein Scene mein CoinManager exist karta hai ya nahi.");
-        }
 
-        // Coins fly hone ka wait karein
         yield return new WaitForSeconds(1.2f);
 
-        // 3. WIN PANEL SHOW KAREIN
         if (levelCompletePanel != null)
         {
             levelCompletePanel.SetActive(true);
-            Debug.Log("<color=yellow>4. Level Complete Panel Active Hua!</color>");
         }
 
-        // 4. AAKHIR MEIN GAME CONTROLLER KO NOTIFY KAREIN
         if (GameStepController.Instance != null)
         {
-            Debug.Log("<color=yellow>5. GameStepController Notified!</color>");
             GameStepController.Instance.OnStepFinishedFromMinigame();
         }
     }
+
     Transform GetToolTransformToAnimate()
     {
         if (toolFollower == null) return null;
-        return toolFollower.transform.childCount > 0 ?
-            toolFollower.transform.GetChild(0) : toolFollower.transform;
+        return toolFollower.transform.childCount > 0 ? toolFollower.transform.GetChild(0) : toolFollower.transform;
     }
-
-
-    // MaskEraser.cs ke andar is function ko public banayein:
-    
 
     void AnimateTool()
     {
@@ -1528,7 +1390,6 @@ public class MaskEraser : MonoBehaviour
 
     void SetupToolVariantsPanel(ToolData tool)
     {
-        // 1. INSTANT CLEANUP
         if (variantButtonsContainer != null)
         {
             foreach (Transform child in variantButtonsContainer)
@@ -1538,7 +1399,6 @@ public class MaskEraser : MonoBehaviour
         }
         spawnedVariantButtons.Clear();
 
-        // 2. Hide panel if no variants
         if (tool == null || !tool.hasVariants || tool.toolVariants.Count == 0)
         {
             if (variantMainPanel != null)
@@ -1548,7 +1408,6 @@ public class MaskEraser : MonoBehaviour
             return;
         }
 
-        // 3. Naye Tool ke Variant Buttons Spawn Karein
         foreach (ToolVariant varData in tool.toolVariants)
         {
             GameObject btnObj = Instantiate(variantButtonPrefab, variantButtonsContainer);
@@ -1560,22 +1419,14 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // =========================================================================
-        // 4. ALWAYS FORCE ORIGINAL (INDEX 0) VARIANT ON PLAY / STEP START
-        // =========================================================================
         if (tool.toolVariants.Count > 0)
         {
-            ToolVariant originalVariant = tool.toolVariants[0]; // Hamesha Original Variant (Index 0)
-
-            // PlayerPrefs mein hamesha Original ko as 'Equipped' save karein taake UI "Equipped" show kare
+            ToolVariant originalVariant = tool.toolVariants[0];
             PlayerPrefs.SetString(tool.name + "_Equipped", originalVariant.variantName);
             PlayerPrefs.Save();
-
-            // Original Variant skin apply karein
             ApplyVariantSkin(tool, originalVariant, false);
         }
 
-        // 5. Panel Animation Start Karein
         if (variantMainPanel != null)
         {
             variantMainPanel.transform.localScale = new Vector3(0.5f, 0f, 1f);
@@ -1585,13 +1436,10 @@ public class MaskEraser : MonoBehaviour
         }
     }
 
-    // Variant Panel Pop-up / Hide Coroutine
-    // Variant Panel Pop-up / Hide Coroutine (Fixed without unwanted delays during gameplay)
     private IEnumerator AnimateVariantPanelVideoStyle(bool show)
     {
         if (variantMainPanel == null) yield break;
 
-        // Agar show kar rahe hain to panel ko turant Active karein
         if (show)
         {
             variantMainPanel.SetActive(true);
@@ -1601,7 +1449,7 @@ public class MaskEraser : MonoBehaviour
         Vector3 targetScale = show ? Vector3.one : new Vector3(0.5f, 0f, 1f);
 
         float time = 0f;
-        float duration = 0.6f; // Quick and smooth response for cleaning stop/start
+        float duration = 0.6f;
 
         while (time < duration)
         {
@@ -1614,33 +1462,28 @@ public class MaskEraser : MonoBehaviour
 
         variantMainPanel.transform.localScale = targetScale;
 
-        // Agar hide hua hai to animation khatam hone par SetActive(false) karein
         if (!show)
         {
             variantMainPanel.SetActive(false);
         }
     }
+
     public void ApplyVariantSkin(ToolData tool, ToolVariant variant, bool animate = false)
     {
         if (toolFollower == null || variant == null) return;
 
         if (animate && variant == currentEquippedVariant)
         {
-            Debug.Log("Variant is already equipped. Animation skipped.");
             return;
         }
 
         currentEquippedVariant = variant;
 
-        //  BRUSH SIZE APPLY (Type Casting Added):
         if (tool != null && variant.brushSize > 0)
         {
-            // (int) se float value int mein convert ho jayegi aur error khatam ho jayega
             tool.brushSize = (int)variant.brushSize;
-            Debug.Log("Brush size updated to: " + tool.brushSize);
         }
 
-        // Visual animation / Sprite replacement
         if (animate)
         {
             StartCoroutine(AnimateVariantSkinRoutine(variant));
@@ -1654,14 +1497,12 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // UI Buttons Update
         foreach (ToolVariantButton btn in spawnedVariantButtons)
         {
             if (btn != null) btn.UpdateUI();
         }
     }
 
-    // Variant Skin Change Animation Coroutine
     private IEnumerator AnimateVariantSkinRoutine(ToolVariant variant)
     {
         if (toolFollower == null) yield break;
@@ -1672,7 +1513,6 @@ public class MaskEraser : MonoBehaviour
         float time = 0;
         float durationOut = 0.3f;
 
-        // Tool screen se bahar jayega
         while (time < durationOut)
         {
             time += Time.deltaTime;
@@ -1681,14 +1521,12 @@ public class MaskEraser : MonoBehaviour
             yield return null;
         }
 
-        // Sprite update
         SpriteRenderer toolSR = toolFollower.GetComponentInChildren<SpriteRenderer>();
         if (toolSR != null && variant.toolSprite != null)
         {
             toolSR.sprite = variant.toolSprite;
         }
 
-        // Tool screen par wapas aayega
         float camZ = Mathf.Abs(Camera.main.transform.position.z);
         Vector3 bottomScreenTarget = new Vector3(Screen.width / 2f, Screen.height * 0.3f, camZ);
         Vector3 restTarget = Camera.main.ScreenToWorldPoint(bottomScreenTarget);
@@ -1750,7 +1588,6 @@ public class MaskEraser : MonoBehaviour
     {
         if (levelParentAnchor == null) return;
 
-        // Purani mitti ke chunks, dynamic layers aur base object ko remove karein
         foreach (Transform child in levelParentAnchor)
         {
             if (child.gameObject.name.Contains("Dirty_Layer") ||
@@ -1761,22 +1598,19 @@ public class MaskEraser : MonoBehaviour
             }
         }
     }
+
     public void InitializeCleaningObject(CleaningObjectData newObjectData)
     {
         if (newObjectData == null) return;
 
-        // 1. Data replace karein
         objectData = newObjectData;
         LevelManager.SelectedObject = newObjectData;
 
-        // 2. Clear old generated objects/layers
         ClearOldGeneratedLayers();
 
-        // 3. Reset level states
         currentLayer = 0;
         gameCompleted = false;
 
-        // 4. Fresh level setup
         SetupGenericLevel();
 
         if (layersList.Count > 0)
@@ -1785,5 +1619,4 @@ public class MaskEraser : MonoBehaviour
             SelectTool(layerRequiredTools[currentLayer], false);
         }
     }
-
 }
