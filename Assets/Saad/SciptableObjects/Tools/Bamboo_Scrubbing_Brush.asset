@@ -15,7 +15,7 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: Bamboo_Scrubbing_Brush
-  cameraZoomSize: 5.5
+  cameraZoomSize: 6
   toolType: 1
   toolSprite: {fileID: 6876266443201971334, guid: 0b279aa6a0bb439489986b0354da98a5, type: 3}
   soundOnlyOnHit: 1

@@ -30,7 +30,7 @@ MonoBehaviour:
     coinPrice: 10
     brushSize: 80
   toolName: WetBrush
-  cameraZoomSize: 5.5
+  cameraZoomSize: 6
   toolType: 3
   toolSprite: {fileID: 3492953786835675030, guid: 246ec4f6d1418d146a4216737a92ba92, type: 3}
   soundOnlyOnHit: 1

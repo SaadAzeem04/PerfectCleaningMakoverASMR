@@ -30,7 +30,7 @@ MonoBehaviour:
     coinPrice: 20
     brushSize: 80
   toolName: Air Gun
-  cameraZoomSize: 6
+  cameraZoomSize: 7
   toolType: 4
   toolSprite: {fileID: -3578833689271012316, guid: a02fdb516b4408a4ba25b37802147f4b, type: 3}
   soundOnlyOnHit: 0

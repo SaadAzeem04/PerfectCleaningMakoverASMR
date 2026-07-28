@@ -16,7 +16,7 @@ public class CoinManager : MonoBehaviour
     public Transform coinTargetPoint; // Jahan coins ne swoop hoke jana hai (Top Coin Icon Bar)
 
     private int currentCoins;
-
+    private bool hasClaimed3X = false; // Check karne ke liye ke 3X ek baar claim hua ya nahi
     void Awake()
     {
         if (Instance == null)
@@ -94,6 +94,7 @@ public class CoinManager : MonoBehaviour
     // =========================================================================
     public IEnumerator PlayCoinSequenceRoutine(GameObject coinPanelUI, GameObject winPanelUI, float delayBeforeStart)
     {
+        hasClaimed3X = false;
         yield return new WaitForSeconds(delayBeforeStart);
 
         // 1. PEHLE WIN PANEL / LEVEL COMPLETE WINDOW SHOW KAREIN
@@ -219,5 +220,32 @@ public class CoinManager : MonoBehaviour
         {
             Destroy(coin);
         }
+    }
+     // 1. Unity Inspector Button OnClick ke liye (Bagair kisi box/parameter ke)
+    public void Claim3XCoins()
+    {
+        Claim3XCoinsWithAmount(20);
+    }
+
+    // 2. Code ya Custom Amount ke liye
+    public void Claim3XCoinsWithAmount(int baseAmount)
+    {
+        // Agar pehle se claim ho chuka hai toh further execute nahi hoga
+        if (hasClaimed3X)
+        {
+            Debug.LogWarning("3X Reward pehle hi claim ho chuka hai!");
+            return;
+        }
+
+        // Safety: Agar inspector ya code se 0/negative value aaye toh default 20 set ho jaye
+        if (baseAmount <= 0) baseAmount = 20;
+
+        hasClaimed3X = true;
+        int extraCoins = baseAmount * 2; // Extra 40 coins (Total 60 = 3X)
+
+        // Safety reset taake animation trigger ho sake
+        isAnimating = false;
+
+        TriggerCoinSwoopAnimation(extraCoins);
     }
 }

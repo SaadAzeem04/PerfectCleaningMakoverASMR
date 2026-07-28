@@ -30,12 +30,15 @@ MonoBehaviour:
     coinPrice: 15
     brushSize: 80
   toolName: Foam Spray
-  cameraZoomSize: 6
+  cameraZoomSize: 7
   toolType: 2
   toolSprite: {fileID: 7501495690245410524, guid: c695af7728d69654496d8ba79846c3f0, type: 3}
   soundOnlyOnHit: 0
   cleaningSpeed: 1
   brushSize: 70
+  brushShape: {fileID: 0}
+  brushWidthScale: 1
+  brushHeightScale: 1
   movementType: 0
   scrubSpeed: 15
   scrubAmount: 0.4

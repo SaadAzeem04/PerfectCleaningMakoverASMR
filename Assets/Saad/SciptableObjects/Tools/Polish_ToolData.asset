@@ -15,7 +15,7 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: Polish
-  cameraZoomSize: 5.5
+  cameraZoomSize: 6
   toolType: 1
   toolSprite: {fileID: 6195466542164776890, guid: 255973561c2e1bf48965194d15be29d6, type: 3}
   soundOnlyOnHit: 1

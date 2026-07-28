@@ -14,6 +14,9 @@ public class CleaningStep
     public CleaningStepType stepType;
     public ToolData requiredTool;
 
+    [Header("Camera Permission")]
+    public bool allowCameraMovement = true;
+
     [Header("Step Assets")]
     public Sprite dirtySprite;       // Pixel Eraser logic ke liye Texture Sprite
     public GameObject stepPrefab;    // Chunk Scraper / Glue ke liye Prefab

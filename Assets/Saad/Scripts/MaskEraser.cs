@@ -138,6 +138,8 @@ public class MaskEraser : MonoBehaviour
 
     public GameObject scraperTriggerEdge;
 
+    private bool isThresholdReached = false;
+
     void Start()
     {
         PlayerPrefs.SetInt("Coins", 100);
@@ -151,10 +153,12 @@ public class MaskEraser : MonoBehaviour
         {
             AudioManager.Instance.PlayMusic(AudioManager.Instance.gameSceneMusic);
         }
+
         if (Camera.main != null)
         {
             defaultCameraSize = Camera.main.orthographic ?
                 Camera.main.orthographicSize : Camera.main.fieldOfView;
+
             targetCameraSize = defaultCameraSize;
         }
 
@@ -177,14 +181,8 @@ public class MaskEraser : MonoBehaviour
             PrepareLayer();
             SelectTool(layerRequiredTools[currentLayer], false);
 
-            if (layerRequiredTools[currentLayer] != null && layerRequiredTools[currentLayer].cameraZoomSize > 0.1f)
-            {
-                targetCameraSize = layerRequiredTools[currentLayer].cameraZoomSize;
-            }
-            else
-            {
-                targetCameraSize = defaultCameraSize;
-            }
+            // Target size ko filhal Default par hi rakhein taake camera zoom-in na ho pehle frame par
+            targetCameraSize = defaultCameraSize;
         }
 
         UpdateUpcomingIconsPanel(true);
@@ -394,34 +392,55 @@ public class MaskEraser : MonoBehaviour
                                  layersList.Count > 0 &&
                                  Input.GetMouseButton(0);
 
-            bool isCameraMovementActive = (objectData != null)
-                ? (objectData.cameraMovementIntensity > 0)
-                : (cameraMoveIntensity > 0);
+            // Current Step Se Sirf Allow Camera Movement (Permission) Check Kar Rahe Hain:
+            CleaningStep currentStep = (objectData != null && objectData.cleaningSteps != null && currentLayer < objectData.cleaningSteps.Count)
+                ? objectData.cleaningSteps[currentLayer]
+                : null;
+
+            bool isCameraMovementActive = (currentStep != null) && currentStep.allowCameraMovement;
 
             if (canMoveCamera && isCameraMovementActive)
             {
-                float currentIntensity = (objectData != null && objectData.cameraMovementIntensity > 0)
-                    ? objectData.cameraMovementIntensity
-                    : cameraMoveIntensity;
-
-                bool enableYAxis = (objectData != null) ? objectData.enableYAxisMovement : true;
-
                 float mouseXOffset = ((Input.mousePosition.x / Screen.width) - 0.5f) * 2f;
                 float mouseYOffset = ((Input.mousePosition.y / Screen.height) - 0.5f) * 2f;
 
-                float targetX = mouseXOffset * currentIntensity;
-                float targetY = enableYAxis ? (mouseYOffset * currentIntensity * 1.5f) : 0f;
+                // Script ki apni intensity aur boosted Y-axis limit:
+                float targetX = mouseXOffset * cameraMoveIntensity;
+                float targetY = mouseYOffset * cameraMoveIntensity * 2.5f;
 
                 targetCameraPos = new Vector3(targetX, targetY, initialCamZ);
             }
 
             if (!float.IsInfinity(targetCameraPos.x) && !float.IsNaN(targetCameraPos.x))
             {
-                Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, targetCameraPos, Time.deltaTime * 0.5f);
+                Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, targetCameraPos, Time.deltaTime * 1f);
             }
         }
 
         if (gameCompleted || isTransitioningTool || layersList.Count == 0) return;
+
+        // YAHAN FADE OUT & TOUCH RELEASE KI NAYI LOGIC AAYEGI:
+        if (isThresholdReached)
+        {
+            // Jab tak player ne mouse/touch dabaya hua hai, erasing hoti rahegi.
+            // Jaise hi touch chhodega (!Input.GetMouseButton(0)), transition start hoga:
+            if (!Input.GetMouseButton(0))
+            {
+                isThresholdReached = false;
+                effectGraceTimer = 0f;
+                StopToolEffects();
+
+                ClearRemainingLayer();
+
+                if (variantMainPanel != null)
+                {
+                    variantMainPanel.SetActive(false);
+                }
+
+                StartCoroutine(TransitionToNextLayerRoutine());
+                return;
+            }
+        }
 
         if (layerFinishedWaitingRelease)
         {
@@ -928,11 +947,7 @@ public class MaskEraser : MonoBehaviour
                 break;
 
             case CleaningStepType.GlueApply:
-                // =========================================================
                 // TODO: GLUE PROGRESS LOGIC PLACEHOLDER
-                // Jab aap dobara Glue ki application logic likhein, toh
-                // progress/completion yahan calculate kar ke isLayerFullyCleaned set karein.
-                // =========================================================
                 break;
         }
 
@@ -945,7 +960,7 @@ public class MaskEraser : MonoBehaviour
 
         if (isLayerFullyCleaned)
         {
-            Debug.Log("LAYER TARGET ACHIEVED COMPLETELY!");
+            Debug.Log("LAYER TARGET ACHIEVED!");
 
             if (!isLayerClearSoundPlayed)
             {
@@ -956,23 +971,8 @@ public class MaskEraser : MonoBehaviour
                 isLayerClearSoundPlayed = true;
             }
 
-            effectGraceTimer = 0f;
-            StopToolEffects();
-
-            ClearRemainingLayer();
-            if (variantMainPanel != null)
-            {
-                variantMainPanel.SetActive(false);
-            }
-
-            if (currentLayer >= objectData.cleaningSteps.Count - 1)
-            {
-                CompleteGame();
-            }
-            else
-            {
-                layerFinishedWaitingRelease = true;
-            }
+            // Sirf flag true hoga, baqi ka saara kaam touch release hone par Update() karega
+            isThresholdReached = true;
         }
     }
 
@@ -1015,7 +1015,7 @@ public class MaskEraser : MonoBehaviour
             }
         }
         else
-        {
+       /* {
             if (texture != null)
             {
                 Color[] pixels = texture.GetPixels();
@@ -1026,7 +1026,7 @@ public class MaskEraser : MonoBehaviour
                 texture.SetPixels(pixels);
                 texture.Apply(false);
             }
-        }
+        }*/
 
         targetFill = 1f;
         currentFill = 1f;
@@ -1041,26 +1041,46 @@ public class MaskEraser : MonoBehaviour
 
         targetCameraSize = defaultCameraSize;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.07f);
 
         Vector3 startPos = toolFollower.transform.position;
         Vector3 leftTarget = startPos + Vector3.left * 15f;
 
+        SpriteRenderer currentLayerSR = (stepGameObjects != null && currentLayer < stepGameObjects.Count && stepGameObjects[currentLayer] != null)
+            ? stepGameObjects[currentLayer].GetComponentInChildren<SpriteRenderer>()
+            : null;
+
+        Color originalColor = currentLayerSR != null ? currentLayerSR.color : Color.white;
+
         float time = 0;
-        float durationOut = 0.5f;
+        float durationOut = 0.6f; // Fast and smooth fade-out duration
+
         while (time < durationOut)
         {
             time += Time.deltaTime;
             float t = time / durationOut;
+
+            // Tool screen se bahar slide hoga
             toolFollower.transform.position = Vector3.Lerp(startPos, leftTarget, t * t);
+
+            // SAATH HI Layer fade-out (alpha -> 0) hogi:
+            if (currentLayerSR != null)
+            {
+                Color c = originalColor;
+                c.a = Mathf.Lerp(originalColor.a, 0f, t);
+                currentLayerSR.color = c;
+            }
+
             yield return null;
         }
 
         if (stepGameObjects != null && currentLayer < stepGameObjects.Count && stepGameObjects[currentLayer] != null)
         {
             stepGameObjects[currentLayer].SetActive(false);
+            if (currentLayerSR != null) currentLayerSR.color = originalColor;
         }
 
+        // ... (is ke aage aap ka baqi transition ka standard code chalega) ...
         currentLayer++;
 
         if (currentLayer >= objectData.cleaningSteps.Count)
@@ -1669,6 +1689,12 @@ public class MaskEraser : MonoBehaviour
             if (currentToolData != null)
             {
                 SetupToolVariantsPanel(currentToolData);
+
+                // TOOL SLIDE-IN HO WEKT CAMERA ZOOM TARGET SET KAREIN
+                if (currentToolData.cameraZoomSize > 0.1f)
+                {
+                    targetCameraSize = currentToolData.cameraZoomSize;
+                }
             }
 
             float time = 0f;

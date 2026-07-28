@@ -15,12 +15,15 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: Scraper
-  cameraZoomSize: 5.5
+  cameraZoomSize: 6
   toolType: 0
   toolSprite: {fileID: -7260706826572596083, guid: 05a26877cb3d7484e9f708887d54a9b7, type: 3}
   soundOnlyOnHit: 1
   cleaningSpeed: 1
   brushSize: 73
+  brushShape: {fileID: 0}
+  brushWidthScale: 1
+  brushHeightScale: 1
   movementType: 3
   scrubSpeed: 20
   scrubAmount: 10

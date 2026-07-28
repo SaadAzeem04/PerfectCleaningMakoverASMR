@@ -30,7 +30,7 @@ MonoBehaviour:
     coinPrice: 20
     brushSize: 80
   toolName: Water Spray
-  cameraZoomSize: 6
+  cameraZoomSize: 7
   toolType: 4
   toolSprite: {fileID: 2658037071850787674, guid: 08b6498c92215844e8ec18c9dde6a0ce, type: 3}
   soundOnlyOnHit: 0
