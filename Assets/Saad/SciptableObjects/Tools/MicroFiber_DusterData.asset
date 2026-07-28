@@ -14,13 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasVariants: 0
   toolVariants: []
-  toolName: 
+  toolName: 'Towel '
   cameraZoomSize: 5.5
   toolType: 1
   toolSprite: {fileID: -1674507125856555730, guid: 195b8029fcef37140a9b6f5a1f68546f, type: 3}
   soundOnlyOnHit: 1
   cleaningSpeed: 1
   brushSize: 35
+  brushShape: {fileID: 0}
+  brushWidthScale: 1
+  brushHeightScale: 1
   movementType: 3
   scrubSpeed: 15
   scrubAmount: 0.4

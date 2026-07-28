@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
+  m_Name: Polish_ToolData
+  m_EditorClassIdentifier: 
+  hasVariants: 0
+  toolVariants: []
+  toolName: Polish
+  cameraZoomSize: 5.5
+  toolType: 1
+  toolSprite: {fileID: 6195466542164776890, guid: 255973561c2e1bf48965194d15be29d6, type: 3}
+  soundOnlyOnHit: 1
+  cleaningSpeed: 5
+  brushSize: 73
+  brushShape: {fileID: 0}
+  brushWidthScale: 1
+  brushHeightScale: 1
+  movementType: 0
+  scrubSpeed: 0
+  scrubAmount: 0
+  rotationSpeed: 10
+  rotationAmount: 15
+  useParticles: 1
+  particlePrefab: {fileID: 0}
+  particleOffset: {x: 0, y: 0, z: 0}
+  useSecondParticles: 0
+  secondParticlePrefab: {fileID: 0}
+  secondParticleOffset: {x: 0, y: 0, z: 0}
+  eraseOffset: {x: 0, y: 0, z: 0}
+  toolSound: {fileID: 8300000, guid: 545649752d804564092f70c58472e47c, type: 3}
+  toolOffset: {x: 0, y: 0, z: 0}
+  panelIcon: {fileID: 6195466542164776890, guid: 255973561c2e1bf48965194d15be29d6, type: 3}

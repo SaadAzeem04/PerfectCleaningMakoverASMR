@@ -21,6 +21,9 @@ MonoBehaviour:
   soundOnlyOnHit: 1
   cleaningSpeed: 5
   brushSize: 73
+  brushShape: {fileID: 0}
+  brushWidthScale: 1
+  brushHeightScale: 1
   movementType: 0
   scrubSpeed: 0
   scrubAmount: 0
@@ -32,7 +35,7 @@ MonoBehaviour:
   useSecondParticles: 0
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
-  eraseOffset: {x: 0, y: 0.3, z: 0}
+  eraseOffset: {x: 0, y: 0, z: 0}
   toolSound: {fileID: 8300000, guid: 545649752d804564092f70c58472e47c, type: 3}
   toolOffset: {x: 0, y: 0, z: 0}
   panelIcon: {fileID: -7469049263692879614, guid: 9de01350ef0269346b5f75d5acf41f2a, type: 3}

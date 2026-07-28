@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
+  m_Name: Glue_Data
+  m_EditorClassIdentifier: 
+  hasVariants: 1
+  toolVariants: []
+  toolName: Glue_Data
+  cameraZoomSize: 6
+  toolType: 5
+  toolSprite: {fileID: -989295801627094005, guid: 5b11df839079ec24c9d2881bc07efdb2, type: 3}
+  soundOnlyOnHit: 0
+  cleaningSpeed: 1
+  brushSize: 70
+  brushShape: {fileID: 0}
+  brushWidthScale: 1
+  brushHeightScale: 1
+  movementType: 0
+  scrubSpeed: 15
+  scrubAmount: 0.4
+  rotationSpeed: 10
+  rotationAmount: 15
+  useParticles: 1
+  particlePrefab: {fileID: 0}
+  particleOffset: {x: 0, y: -0.1, z: 0}
+  useSecondParticles: 1
+  secondParticlePrefab: {fileID: 0}
+  secondParticleOffset: {x: 0, y: 0, z: 0}
+  eraseOffset: {x: 0, y: 1.5, z: 0}
+  toolSound: {fileID: 8300000, guid: e993c567098bfc04a94bc58d009efab3, type: 3}
+  toolOffset: {x: 0, y: -1, z: 0}
+  panelIcon: {fileID: -989295801627094005, guid: 5b11df839079ec24c9d2881bc07efdb2, type: 3}

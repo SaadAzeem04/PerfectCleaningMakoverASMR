@@ -7,6 +7,7 @@ public enum ToolMovementType
     Scrubbing,      // Left-Right move hone ke liye
     Spraying,       // Vibration ke liye
     Rotation
+
 }
 
 [System.Serializable]
@@ -16,7 +17,7 @@ public class ToolVariant
     public Sprite toolSprite;     // Jo screen par tool safai karega (Actual Tool Sprite)
     public Sprite iconSprite;     // Jo niche button me chota icon dikhega (UI Icon)
     public int coinPrice;
-    public float brushSize = 30f;// 0 likhenge to "Free" likha aayega
+    public float brushSize = 30f; // 0 likhenge to "Free" likha aayega
 }
 
 [CreateAssetMenu(
@@ -40,6 +41,17 @@ public class ToolData : ScriptableObject
     public float cleaningSpeed = 1f;
 
     public int brushSize = 35;
+
+    // NAYA ADDITION: Custom Brush Shape (Square, Rectangle, Dual Circle, etc.) and Dimensions
+    [Header("--- Custom Brush Shape & Tip Settings ---")]
+    [Tooltip("Brush ki custom shape PNG assign karein (Square, Rectangle, Dual Circle, etc.). Blank hone par default circle chalega.")]
+    public Texture2D brushShape;
+
+    [Tooltip("Brush Width Multiplier (X-Axis)")]
+    public float brushWidthScale = 1.0f;
+
+    [Tooltip("Brush Height Multiplier (Y-Axis)")]
+    public float brushHeightScale = 1.0f;
 
     // 2. NAYA SECTION ADD KYA HE: Tool ki Animation / Movement ke liye
     [Header("Animation & Movement Settings")]
@@ -71,7 +83,6 @@ public class ToolData : ScriptableObject
 
     [Header("UI Display Settings")]
     [Tooltip("Yeh woh picture hai jo Top Panel mein saaf aur clean nazar aayegi.")]
-    public Sprite panelIcon; //  Yeh nayi line add kar dein
+    public Sprite panelIcon; // Yeh nayi line add kar dein
 
-    
 }

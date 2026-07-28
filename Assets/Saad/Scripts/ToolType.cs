@@ -5,5 +5,6 @@ public enum ToolType
     foamspray,
     wetbrush,
     Spray,
+    Glue,
     Towel
 }

@@ -16,7 +16,7 @@ MonoBehaviour:
   backgroundSprite: {fileID: -6695950386315148514, guid: 03d4af384e270df4ca2f34c56bd05a3f, type: 3}
   cleanSprite: {fileID: 7028616704906629411, guid: bf933aab02618ae4ab577ddf6f3d4a8e, type: 3}
   levelBackgroundSprite: {fileID: -6695950386315148514, guid: 03d4af384e270df4ca2f34c56bd05a3f, type: 3}
-  levelPositionOffset: {x: 0, y: 0, z: 0}
+  levelPositionOffset: {x: 0, y: -0.2, z: 0}
   dirtyLayers:
   - {fileID: -855298285791758126, guid: 6d82134cf58242548bcedf09f1cff943, type: 3}
   - {fileID: 6937817954938267909, guid: 0709f2c67e6c7774e92590ca27189681, type: 3}
@@ -32,9 +32,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
   - {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
   scraperChunksPrefab: {fileID: 6922760847136583357, guid: 4deff5d503a112b40a0edd4be17cf33d, type: 3}
-  cameraMovementIntensity: 0.1
+  cameraMovementIntensity: 1
   customCameraZoomSize: 5
-  enableYAxisMovement: 0
+  enableYAxisMovement: 1
   cleaningSteps:
   - stepName: Scraper
     stepType: 1

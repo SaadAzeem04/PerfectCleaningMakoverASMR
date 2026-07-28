@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e81ac08d3849ce54b81fb6315a0cb56c, type: 3}
+  m_Name: Level4_Data
+  m_EditorClassIdentifier: 
+  levelID: 4
+  levelName: Purse Repair
+  levelIcon: {fileID: -247037112251525876, guid: e25c60912f1eaf14dad233d7bbf5a4c0, type: 3}
+  stepList:
+  - stepName: 'Step Name: Purse Cleaning'
+    stepType: 0
+    cleaningObjectData: {fileID: 11400000, guid: 1423677f6e8d8b24594e1572ea61e764, type: 2}
+    stepPrefab: {fileID: 0}
+  - stepName: Glue & Patch
+    stepType: 1
+    cleaningObjectData: {fileID: 11400000, guid: 1423677f6e8d8b24594e1572ea61e764, type: 2}
+    stepPrefab: {fileID: 0}

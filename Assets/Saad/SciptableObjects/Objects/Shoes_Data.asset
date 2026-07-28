@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b3b812e2aacbd478ca7e4faba98cae, type: 3}
+  m_Name: Shoes_Data
+  m_EditorClassIdentifier: 
+  objectName: Shoes
+  backgroundSprite: {fileID: -6695950386315148514, guid: 6d2638ce5a78674409187e6ea70ea782, type: 3}
+  cleanSprite: {fileID: 7336298474659753992, guid: 0011ab864b0b3d1488879dc383d06d54, type: 3}
+  levelBackgroundSprite: {fileID: -6695950386315148514, guid: 6d2638ce5a78674409187e6ea70ea782, type: 3}
+  levelPositionOffset: {x: 0, y: 0, z: 0}
+  dirtyLayers:
+  - {fileID: -3164809056393425246, guid: 0996e9be4256c6a4da8e51d34453335a, type: 3}
+  - {fileID: -5225540622116197949, guid: 6e9f8212af69e0b4b8d8272ddbdc9e55, type: 3}
+  - {fileID: 8793915729297761979, guid: f19baa9ab123a3243b4c7ea3998cb1be, type: 3}
+  - {fileID: 2750298860172458669, guid: 2d2e18e051f1b804093e1c28cbdff0d2, type: 3}
+  - {fileID: -2276259661975475453, guid: b01eee3162c929c4b95750183488e4ef, type: 3}
+  - {fileID: 141893073332109768, guid: d123b5bc4c67094408a8f98220d95559, type: 3}
+  requiredTools:
+  - {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
+  - {fileID: 11400000, guid: bdab883a2eb5d4a42952bc8c56c2acdb, type: 2}
+  - {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
+  - {fileID: 11400000, guid: bbc0dc95d91ed5b4d9fe24396025dfff, type: 2}
+  - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+  - {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
+  scraperChunksPrefab: {fileID: 6922760847136583357, guid: 42ef06bf6c99a324f854efc00ddefc7b, type: 3}
+  cameraMovementIntensity: 1
+  customCameraZoomSize: 5.5
+  enableYAxisMovement: 0
+  cleaningSteps:
+  - stepName: Scraper
+    stepType: 1
+    requiredTool: {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
+    dirtySprite: {fileID: 0}
+    stepPrefab: {fileID: 6922760847136583357, guid: 42ef06bf6c99a324f854efc00ddefc7b, type: 3}
+  - stepName: little Mud
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: bdab883a2eb5d4a42952bc8c56c2acdb, type: 2}
+    dirtySprite: {fileID: -5225540622116197949, guid: 6e9f8212af69e0b4b8d8272ddbdc9e55, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: Foam Spray
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
+    dirtySprite: {fileID: 8793915729297761979, guid: f19baa9ab123a3243b4c7ea3998cb1be, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: Wet Brush
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: bbc0dc95d91ed5b4d9fe24396025dfff, type: 2}
+    dirtySprite: {fileID: 2750298860172458669, guid: 2d2e18e051f1b804093e1c28cbdff0d2, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: Water Spray
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+    dirtySprite: {fileID: -2276259661975475453, guid: b01eee3162c929c4b95750183488e4ef, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: towel
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
+    dirtySprite: {fileID: 141893073332109768, guid: d123b5bc4c67094408a8f98220d95559, type: 3}
+    stepPrefab: {fileID: 0}
+  customLayerOffsets: []
+  customLayerScales: []
+  levelCompleteIcon: {fileID: 7336298474659753992, guid: 0011ab864b0b3d1488879dc383d06d54, type: 3}
