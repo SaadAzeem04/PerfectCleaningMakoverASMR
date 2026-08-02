@@ -61,22 +61,23 @@ public class AudioManager : MonoBehaviour
         sfxSource.PlayOneShot(clip);
     }
 
-    //  3. Looping SFX Chalane Ka Function (Jo Spray/Brush ki sound ko repeat karta hai - Line 394 & 413 fix)
+    //  3. Looping SFX Chalane Ka Function (Jo Spray/Brush ki sound ko repeat karta 
     // Bool logic ke sath updated function jo error CS1503 ko khatam karega:
+    // 3. Looping SFX Chalane Ka Function
     public void PlayLoopingSFX(AudioClip clip, bool shouldLoop)
     {
         if (toolSource == null || clip == null || !isSoundOn) return;
 
+        // Agar clip change ho raha hai, tou naya clip play karo
         if (toolSource.clip != clip)
         {
             toolSource.clip = clip;
+            toolSource.loop = shouldLoop;
+            toolSource.Play(); // Direct Play force karein jab naya clip aaye
         }
-
-        // Code se jo true/false aa raha hai, usay direct loops par apply karein
-        toolSource.loop = shouldLoop;
-
-        if (!toolSource.isPlaying)
+        else if (!toolSource.isPlaying)
         {
+            toolSource.loop = shouldLoop;
             toolSource.Play();
         }
     }

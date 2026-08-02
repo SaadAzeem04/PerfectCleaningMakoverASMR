@@ -31,6 +31,8 @@ MonoBehaviour:
     brushSize: 80
   toolName: Water Spray
   cameraZoomSize: 7
+  capSprite: {fileID: 0}
+  capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 4
   toolSprite: {fileID: 2658037071850787674, guid: 08b6498c92215844e8ec18c9dde6a0ce, type: 3}
   soundOnlyOnHit: 0
@@ -46,7 +48,7 @@ MonoBehaviour:
   rotationAmount: 15
   useParticles: 1
   particlePrefab: {fileID: 8123549400438394861, guid: f2d19221327961c43a1d0c947f558436, type: 3}
-  particleOffset: {x: 0, y: -0.1, z: 0}
+  particleOffset: {x: 0, y: 1, z: 0}
   useSecondParticles: 1
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}

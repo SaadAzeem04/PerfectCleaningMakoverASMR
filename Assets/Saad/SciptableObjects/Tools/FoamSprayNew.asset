@@ -31,11 +31,13 @@ MonoBehaviour:
     brushSize: 80
   toolName: Foam Spray
   cameraZoomSize: 7
+  capSprite: {fileID: 0}
+  capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 2
   toolSprite: {fileID: 7501495690245410524, guid: c695af7728d69654496d8ba79846c3f0, type: 3}
   soundOnlyOnHit: 0
   cleaningSpeed: 1
-  brushSize: 70
+  brushSize: 75
   brushShape: {fileID: 0}
   brushWidthScale: 1
   brushHeightScale: 1
@@ -46,7 +48,7 @@ MonoBehaviour:
   rotationAmount: 15
   useParticles: 1
   particlePrefab: {fileID: 8123549400438394861, guid: 16e9366f5442a454cb8107b8544809d8, type: 3}
-  particleOffset: {x: 0, y: 0, z: 0}
+  particleOffset: {x: 0, y: 1, z: 0}
   useSecondParticles: 1
   secondParticlePrefab: {fileID: 5068137153825672969, guid: be6792749d04e8f4e9bcbae5cb83efb9, type: 3}
   secondParticleOffset: {x: 0, y: 1.8, z: 0}

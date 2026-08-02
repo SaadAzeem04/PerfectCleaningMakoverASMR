@@ -16,6 +16,8 @@ MonoBehaviour:
   toolVariants: []
   toolName: Bamboo_Scrubbing_Brush
   cameraZoomSize: 6
+  capSprite: {fileID: 0}
+  capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 1
   toolSprite: {fileID: 6876266443201971334, guid: 0b279aa6a0bb439489986b0354da98a5, type: 3}
   soundOnlyOnHit: 1
@@ -39,3 +41,4 @@ MonoBehaviour:
   toolSound: {fileID: 8300000, guid: 545649752d804564092f70c58472e47c, type: 3}
   toolOffset: {x: 0, y: 0, z: 0}
   panelIcon: {fileID: -2354103043966879098, guid: 7a03461b2b4eaf04c835fa1c8c5dacd1, type: 3}
+  canRemove: 1

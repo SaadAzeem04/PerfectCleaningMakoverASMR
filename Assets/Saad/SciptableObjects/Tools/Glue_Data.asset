@@ -16,6 +16,8 @@ MonoBehaviour:
   toolVariants: []
   toolName: Glue_Data
   cameraZoomSize: 6
+  capSprite: {fileID: -3608418587980911214, guid: 570882fe99a292048ba5c5c9e8709998, type: 3}
+  capLocalPosition: {x: 0, y: 0.4, z: 0}
   toolType: 5
   toolSprite: {fileID: -989295801627094005, guid: 5b11df839079ec24c9d2881bc07efdb2, type: 3}
   soundOnlyOnHit: 0
@@ -35,7 +37,8 @@ MonoBehaviour:
   useSecondParticles: 1
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
-  eraseOffset: {x: 0, y: 1.5, z: 0}
-  toolSound: {fileID: 8300000, guid: e993c567098bfc04a94bc58d009efab3, type: 3}
+  eraseOffset: {x: 0, y: 0.8, z: 0}
+  toolSound: {fileID: 0}
   toolOffset: {x: 0, y: -1, z: 0}
   panelIcon: {fileID: -989295801627094005, guid: 5b11df839079ec24c9d2881bc07efdb2, type: 3}
+  canRemove: 0

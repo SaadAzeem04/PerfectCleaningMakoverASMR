@@ -34,6 +34,10 @@ public class ToolData : ScriptableObject
     public string toolName;
     public float cameraZoomSize = 5f;
 
+    [Header("Cap Settings")]
+    public Sprite capSprite; // Glue Cap ki sprite asset yahan drag karein
+    public Vector3 capLocalPosition = Vector3.zero; // Cap ki position Glue Nozzle ke upar set karne ke liye
+
     public ToolType toolType;
 
     public Sprite toolSprite;
@@ -73,6 +77,9 @@ public class ToolData : ScriptableObject
     public GameObject particlePrefab;
     public Vector3 particleOffset; // Agar pehle particle ka offset chahiye
 
+    [Header("Polish Settings")]
+    public bool isPolishTool;
+
     [Header("Naya (Second) Particle System")]
     public bool useSecondParticles;          // Kya naya particle chalana hai? (True/False)
     public GameObject secondParticlePrefab;  // Naye particle ka Prefab yahan aayega
@@ -85,4 +92,6 @@ public class ToolData : ScriptableObject
     [Tooltip("Yeh woh picture hai jo Top Panel mein saaf aur clean nazar aayegi.")]
     public Sprite panelIcon; // Yeh nayi line add kar dein
 
+    [Header("Tool Functionality")]
+    public bool canRemove = true; // Check karein agar yeh tool erase/clean kar sakta hai
 }

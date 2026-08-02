@@ -1,4 +1,4 @@
-using System.Collections;
+/*using System.Collections;
 using UnityEngine;
 
 public class GlueSequenceController : MonoBehaviour
@@ -173,4 +173,4 @@ public class GlueSequenceController : MonoBehaviour
             yield return null;
         }
     }
-}
+}*/

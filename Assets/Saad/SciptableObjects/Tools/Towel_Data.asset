@@ -31,6 +31,8 @@ MonoBehaviour:
     brushSize: 80
   toolName: Towel
   cameraZoomSize: 6
+  capSprite: {fileID: 0}
+  capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 6
   toolSprite: {fileID: -5849621657009932580, guid: 2eb08fd6d26594a4fbc7a22c986537e2, type: 3}
   soundOnlyOnHit: 1
@@ -51,6 +53,7 @@ MonoBehaviour:
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
   eraseOffset: {x: 0, y: 0, z: 0}
-  toolSound: {fileID: 8300000, guid: 18fa65ae349e0c043bb99029f9ac6ecd, type: 3}
+  toolSound: {fileID: 8300000, guid: 01d6d193522c5f24a86e2551690e5043, type: 3}
   toolOffset: {x: 0, y: 0, z: 0}
   panelIcon: {fileID: 1011511256227955051, guid: 3d624488c494c6d42b7769377af3f55b, type: 3}
+  canRemove: 1

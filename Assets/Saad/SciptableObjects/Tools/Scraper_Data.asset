@@ -16,6 +16,8 @@ MonoBehaviour:
   toolVariants: []
   toolName: Scraper
   cameraZoomSize: 6
+  capSprite: {fileID: 0}
+  capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 0
   toolSprite: {fileID: -7260706826572596083, guid: 05a26877cb3d7484e9f708887d54a9b7, type: 3}
   soundOnlyOnHit: 1
@@ -39,3 +41,4 @@ MonoBehaviour:
   toolSound: {fileID: 8300000, guid: e6e0c534751489b4fa081b5f1615df84, type: 3}
   toolOffset: {x: 0, y: 0, z: 0}
   panelIcon: {fileID: 21300000, guid: 7ab1e4418ffa407448099181d58d4906, type: 3}
+  canRemove: 1

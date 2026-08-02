@@ -17,6 +17,7 @@ public class MaskEraser : MonoBehaviour
     public ToolFollower toolFollower;
     public TMP_Text percentText;
     public Image progressFill;
+    public GameObject progressFillBg;
 
     // TOOL ANIMATION VARIABLES
     private Vector3 originalToolLocalPos;
@@ -187,6 +188,10 @@ public class MaskEraser : MonoBehaviour
 
         UpdateUpcomingIconsPanel(true);
 
+        if (progressBarMainPanel != null)
+        {
+            progressBarMainPanel.SetActive(true); // Panel ko enable karein
+        }
         percentText.text = "0%";
         progressFill.fillAmount = 0f;
         currentFill = 0f;
@@ -304,11 +309,6 @@ public class MaskEraser : MonoBehaviour
                         break;
 
                     case CleaningStepType.GlueApply:
-                        // =========================================================
-                        // TODO: GLUE LOGIC TEMPORARILY DISABLED
-                        // Jab dobara logic likhni ho toh niche wala code uncomment kar lein.
-                        // =========================================================
-                        /*
                         if (step.stepPrefab != null)
                         {
                             GameObject instantiatedGlue = Instantiate(step.stepPrefab, stepObj.transform);
@@ -316,8 +316,7 @@ public class MaskEraser : MonoBehaviour
                             instantiatedGlue.transform.localRotation = Quaternion.identity;
                             instantiatedGlue.transform.localScale = Vector3.one;
                         }
-                        */
-                        layersList.Add(null); // Index sequence maintain rakhne ke liye placeholder
+                        layersList.Add(null); // Placeholder for index alignment
                         break;
                 }
 
@@ -459,7 +458,7 @@ public class MaskEraser : MonoBehaviour
             hasLastErasePos = false;
         }
 
-        if (Input.GetMouseButton(0) && currentToolData != null && toolFollower.CanClean)
+        if (Input.GetMouseButton(0) && currentToolData != null && toolFollower.CanClean && currentToolData.canRemove)
         {
             Vector3 world;
             if (eraseAnchor != null)
@@ -962,16 +961,8 @@ public class MaskEraser : MonoBehaviour
         {
             Debug.Log("LAYER TARGET ACHIEVED!");
 
-            if (!isLayerClearSoundPlayed)
-            {
-                if (AudioManager.Instance != null && AudioManager.Instance.layerClearSFX != null)
-                {
-                    AudioManager.Instance.PlaySFX(AudioManager.Instance.layerClearSFX);
-                }
-                isLayerClearSoundPlayed = true;
-            }
-
-            // Sirf flag true hoga, baqi ka saara kaam touch release hone par Update() karega
+            // Sound block bilkul remove kar diya gaya hai!
+            // Sirf flag true hoga, baqi transition sound TransitionToNextLayerRoutine mein baje gi.
             isThresholdReached = true;
         }
     }
@@ -1033,16 +1024,43 @@ public class MaskEraser : MonoBehaviour
         if (progressFill != null) progressFill.fillAmount = 1f;
         if (percentText != null) percentText.text = "100%";
     }
-
     IEnumerator TransitionToNextLayerRoutine()
     {
         isTransitioningTool = true;
         if (toolFollower != null) toolFollower.enabled = false;
 
+        // 1. THRESHOLD REACH: FORCE VISUALS TO 100%
+        currentFill = 1f;
+        targetFill = 1f;
+        if (progressFill != null) progressFill.fillAmount = 1f;
+        if (percentText != null) percentText.text = "100%";
+
+        // 2. PLAY CLEAR SOUND AT EXACTLY 100%
+        if (!isLayerClearSoundPlayed)
+        {
+            isLayerClearSoundPlayed = true;
+
+            // SOUND CALL UNCOMMENT KARDIA GAYA HAI:
+            if (AudioManager.Instance != null && AudioManager.Instance.layerClearSFX != null)
+            {
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.layerClearSFX);
+            }
+        }
+
+        // 0.2 Seconds Pause: Taake player ko 100% aur Sound clear feel ho
+        yield return new WaitForSeconds(0.2f);
+
+        // 3. HIDE SPECIFIC UI ELEMENTS (Text, Fill & Background)
+        if (progressBarMainPanel != null) progressBarMainPanel.SetActive(true);
+        if (percentText != null) percentText.gameObject.SetActive(false);
+        if (progressFill != null) progressFill.gameObject.SetActive(false);
+        if (progressFillBg != null) progressFillBg.SetActive(false);
+
         targetCameraSize = defaultCameraSize;
 
         yield return new WaitForSeconds(0.07f);
 
+        // 4. OLD TOOL SLIDE-OUT & LAYER FADE-OUT
         Vector3 startPos = toolFollower.transform.position;
         Vector3 leftTarget = startPos + Vector3.left * 15f;
 
@@ -1053,17 +1071,16 @@ public class MaskEraser : MonoBehaviour
         Color originalColor = currentLayerSR != null ? currentLayerSR.color : Color.white;
 
         float time = 0;
-        float durationOut = 0.6f; // Fast and smooth fade-out duration
+        float durationOut = 0.6f;
 
         while (time < durationOut)
         {
             time += Time.deltaTime;
             float t = time / durationOut;
 
-            // Tool screen se bahar slide hoga
-            toolFollower.transform.position = Vector3.Lerp(startPos, leftTarget, t * t);
+            if (toolFollower != null)
+                toolFollower.transform.position = Vector3.Lerp(startPos, leftTarget, t * t);
 
-            // SAATH HI Layer fade-out (alpha -> 0) hogi:
             if (currentLayerSR != null)
             {
                 Color c = originalColor;
@@ -1080,9 +1097,9 @@ public class MaskEraser : MonoBehaviour
             if (currentLayerSR != null) currentLayerSR.color = originalColor;
         }
 
-        // ... (is ke aage aap ka baqi transition ka standard code chalega) ...
         currentLayer++;
 
+        // Game Completion Check
         if (currentLayer >= objectData.cleaningSteps.Count)
         {
             CompleteGame();
@@ -1117,12 +1134,15 @@ public class MaskEraser : MonoBehaviour
 
         isLayerClearSoundPlayed = false;
 
+        // 5. RESET VALUES TO 0% FOR NEW STEP
         currentFill = 0f;
         targetFill = 0f;
-        progressFill.fillAmount = 0f;
-        percentText.text = "0%";
+        if (progressFill != null) progressFill.fillAmount = 0f;
+        if (percentText != null) percentText.text = "0%";
 
         yield return new WaitForSeconds(0.4f);
+
+        // 6. NEW TOOL SLIDE-IN
         time = 0;
         float durationIn = 0.6f;
         while (time < durationIn)
@@ -1134,17 +1154,33 @@ public class MaskEraser : MonoBehaviour
             currentRestTarget.z = 0f;
             Vector3 currentRightStart = currentRestTarget + Vector3.right * 15f;
 
-            toolFollower.transform.position = Vector3.Lerp(currentRightStart, currentRestTarget, t);
+            if (toolFollower != null)
+                toolFollower.transform.position = Vector3.Lerp(currentRightStart, currentRestTarget, t);
+
             yield return null;
         }
 
         Vector3 finalRestTarget = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.3f, camZ));
         finalRestTarget.z = 0f;
-        toolFollower.transform.position = finalRestTarget;
+        if (toolFollower != null)
+            toolFollower.transform.position = finalRestTarget;
 
         UpdateUpcomingIconsPanel(true);
         if (toolFollower != null) toolFollower.enabled = true;
         isTransitioningTool = false;
+
+        // =========================================================
+        // 7. SHOW PROGRESS UI AGAIN (Text, Fill & Background)
+        // =========================================================
+        if (percentText != null) percentText.gameObject.SetActive(true);
+        if (progressFill != null) progressFill.gameObject.SetActive(true);
+        if (progressFillBg != null) progressFillBg.SetActive(true);
+
+        // 8. CAP ANIMATION FOR NEW TOOL
+        if (toolFollower != null)
+        {
+            toolFollower.AnimateCapOff();
+        }
     }
 
     void CompleteGame()
@@ -1210,6 +1246,7 @@ public class MaskEraser : MonoBehaviour
         }
 
         if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
+       
     }
 
     void SnapToolUI()
@@ -1413,9 +1450,18 @@ public class MaskEraser : MonoBehaviour
 
         SetupToolVariantsPanel(tool);
 
-        if (currentToolData != null && currentToolData.name.ToLower().Contains("polish"))
+        
+if (currentToolData != null && currentToolData.isPolishTool)
         {
             StartCoroutine(PlayPolishPickupAnimation());
+        }
+    }
+
+    private IEnumerator PlayPolishPickupAnimation()
+    {
+        if (PolishSequenceController.Instance != null)
+        {
+            yield return StartCoroutine(PolishSequenceController.Instance.PlayPolishSequenceRoutine(toolFollower, currentToolData));
         }
     }
 
@@ -1680,6 +1726,10 @@ public class MaskEraser : MonoBehaviour
         if (toolFollower != null && Camera.main != null)
         {
             toolFollower.gameObject.SetActive(true);
+
+            // NAYA FIX: Slide-in hone se pehle rotation zero (bilkul straight) karein
+            toolFollower.transform.rotation = Quaternion.identity;
+
             Vector3 restTarget = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.3f, 10f));
             restTarget.z = 0f;
 
@@ -1690,7 +1740,6 @@ public class MaskEraser : MonoBehaviour
             {
                 SetupToolVariantsPanel(currentToolData);
 
-                // TOOL SLIDE-IN HO WEKT CAMERA ZOOM TARGET SET KAREIN
                 if (currentToolData.cameraZoomSize > 0.1f)
                 {
                     targetCameraSize = currentToolData.cameraZoomSize;
@@ -1704,16 +1753,33 @@ public class MaskEraser : MonoBehaviour
             {
                 time += Time.deltaTime;
                 float t = Mathf.SmoothStep(0f, 1f, time / duration);
+
                 toolFollower.transform.position = Vector3.Lerp(startPos, restTarget, t);
+
+                // NAYA FIX: Slide hote waqt bhi rotation bilkul straight (0,0,0) rahegi
+                toolFollower.transform.rotation = Quaternion.identity;
+
                 yield return null;
             }
 
             toolFollower.transform.position = restTarget;
+            toolFollower.transform.rotation = Quaternion.identity; // Final rotation lock
+
+            Debug.Log(">>> STEP 2: Tool Slide Finish ho gaya! <<<");
+
+            if (toolFollower != null)
+            {
+                Debug.Log(">>> STEP 3: toolFollower valid hai, AnimateCapOff call ho raha hai... <<<");
+                toolFollower.AnimateCapOff();
+            }
+            else
+            {
+                Debug.LogError(">>> ERROR: toolFollower Reference NULL hai! <<<");
+            }
         }
 
         isTransitioningTool = false;
     }
-
     void ClearOldGeneratedLayers()
     {
         if (levelParentAnchor == null) return;
@@ -1756,10 +1822,12 @@ public class MaskEraser : MonoBehaviour
         effectGraceTimer = 0f;
         StopToolEffects();
 
-        if (variantMainPanel != null)
-        {
-            variantMainPanel.SetActive(false);
-        }
+        if (variantMainPanel != null) variantMainPanel.SetActive(false);
+
+        //  STEP COMPLETED: Progress UI aur Main Panel HIDE
+        if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
+        if (progressFill != null) progressFill.gameObject.SetActive(false);
+        if (percentText != null) percentText.gameObject.SetActive(false);
 
         if (currentLayer >= objectData.cleaningSteps.Count - 1)
         {
@@ -1769,53 +1837,5 @@ public class MaskEraser : MonoBehaviour
         {
             StartCoroutine(TransitionToNextLayerRoutine());
         }
-    }
-
-    private IEnumerator PlayPolishPickupAnimation()
-    {
-        if (toolFollower == null || polishSpotTarget == null) yield break;
-
-        toolFollower.enabled = false;
-
-        Vector3 startPos = toolFollower.transform.position;
-        Vector3 targetPos = polishSpotTarget.position;
-        targetPos.z = 0f;
-
-        float time = 0f;
-        float duration = 0.5f;
-
-        while (time < duration)
-        {
-            time += Time.deltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, time / duration);
-            toolFollower.transform.position = Vector3.Lerp(startPos, targetPos, t);
-            yield return null;
-        }
-
-        toolFollower.transform.position = targetPos;
-
-        float rubDuration = 1.2f;
-        float rubTimer = 0f;
-        Vector3 baseRubPos = targetPos;
-
-        if (currentToolData != null && currentToolData.toolSound != null && AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayLoopingSFX(currentToolData.toolSound, true);
-        }
-
-        while (rubTimer < rubDuration)
-        {
-            rubTimer += Time.deltaTime;
-            float offsetX = Mathf.Sin(rubTimer * 15f) * 0.4f;
-            toolFollower.transform.position = baseRubPos + new Vector3(offsetX, 0f, 0f);
-            yield return null;
-        }
-
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.StopToolSFX();
-        }
-
-        toolFollower.enabled = true;
     }
 }
