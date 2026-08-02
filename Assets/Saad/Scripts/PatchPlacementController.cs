@@ -23,6 +23,7 @@ public class PatchPlacementController : MonoBehaviour
 
     private bool isAnimating = false;
     private bool isCompleted = false;
+    private bool hasTriggeredStep = false;   // ADDED: Double trigger rokne ke liye
     private float placementTimer = 0f;
     private ToolData lastData;
 
@@ -32,7 +33,11 @@ public class PatchPlacementController : MonoBehaviour
         {
             toolFollower = GetComponent<ToolFollower>();
         }
-
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            sr.sortingOrder = 10; // High number set kar diya taake Glue (order 5) ke upar aaye
+        }
         ResetUIState();
     }
 
@@ -51,11 +56,10 @@ public class PatchPlacementController : MonoBehaviour
             lastData = data;
             isCompleted = false;
             isAnimating = false;
+            hasTriggeredStep = false; // Reset trigger flag
             placementTimer = 0f;
 
             ShowAndResetUI();
-            // STEP SHURU HOTEY HI UI INITIALIZE KAREIN
-            ResetUIState();
         }
 
         if (isCompleted) return;
@@ -79,7 +83,7 @@ public class PatchPlacementController : MonoBehaviour
             return;
         }
 
-        // 4. AREA DETECTION CHECK: Target ke paas aane par lock aur snap trigger
+        // 4. AREA DETECTION CHECK
         float distance = Vector3.Distance(transform.position, patchTarget.position);
 
         if (distance <= triggerDistance)
@@ -114,7 +118,7 @@ public class PatchPlacementController : MonoBehaviour
             Time.deltaTime * autoSnapSpeed
         );
 
-        // 2. Progress fill: 0% se 100%
+        // 2. Progress fill
         placementTimer += Time.deltaTime;
         float progress = Mathf.Clamp01(placementTimer / placementDuration);
 
@@ -122,25 +126,28 @@ public class PatchPlacementController : MonoBehaviour
         if (progressText != null) progressText.text = Mathf.RoundToInt(progress * 100f) + "%";
 
         // 3. Complete & Next Step Signal
-        if (progress >= 1.0f)
+        if (progress >= 1.0f && !hasTriggeredStep)
         {
+            hasTriggeredStep = true; // Guard against multiple calls
             isAnimating = false;
             isCompleted = true;
+
+            GluePourController glueController = FindObjectOfType<GluePourController>();
+            if (glueController != null)
+            {
+                glueController.ClearGlueTrail();
+            }
 
             transform.position = patchTarget.position;
             transform.rotation = patchTarget.rotation;
 
-            // FIX: Next steps (Polish/Towel) ke liye UI ko ACTIVE rakhein
-            EnsureUIActiveForNextStep();
-
-            HideUI();
             // Tool Hide
             if (toolFollower != null)
             {
                 toolFollower.HideTool();
             }
 
-            // NEXT STEP TRIGGER
+            // NEXT STEP TRIGGER (Sirf 1 Baar Call Hoga)
             MaskEraser maskEraser = FindObjectOfType<MaskEraser>();
             if (maskEraser != null)
             {
@@ -164,22 +171,6 @@ public class PatchPlacementController : MonoBehaviour
         }
     }
 
-    // NEW HELPER: Patch khatam hote hi progress UI ko active rakhta hai
-    private void EnsureUIActiveForNextStep()
-    {
-        if (progressImage != null)
-        {
-            progressImage.fillAmount = 0f;
-            progressImage.gameObject.SetActive(true);
-        }
-
-        if (progressText != null)
-        {
-            progressText.text = "0%";
-            progressText.gameObject.SetActive(true);
-        }
-    }
-    // 1. Step Start hone par (Tool select hotey hi UI Show + 0%)
     private void ShowAndResetUI()
     {
         if (progressImage != null)
@@ -193,12 +184,5 @@ public class PatchPlacementController : MonoBehaviour
             progressText.text = "0%";
             progressText.gameObject.SetActive(true);
         }
-    }
-
-    // 2. Step 100% Complete hone par UI Hide
-    private void HideUI()
-    {
-        if (progressImage != null) progressImage.gameObject.SetActive(false);
-        if (progressText != null) progressText.gameObject.SetActive(false);
     }
 }

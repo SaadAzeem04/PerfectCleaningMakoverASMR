@@ -81,7 +81,6 @@ public class MaskEraser : MonoBehaviour
 
     [Header("End Game Settings")]
     public float levelCompleteDelay = 3.0f;
-    public float levelCompleteZoomSize = 4.5f;
 
     [Header("Eraser Smoothness Settings")]
     [Range(0.01f, 1.0f)] public float brushHardness = 0.15f;
@@ -109,6 +108,12 @@ public class MaskEraser : MonoBehaviour
     [Header("UI Animation References")]
     public SmoothUIAnimate pauseButtonAnim;
     public SmoothUIAnimate coinCounterAnim;
+
+    [Header("Chunk Hint / Idle Glow Settings")]
+    [Tooltip("Kitne seconds player touch na kare to green glow shuru ho (Default: 2.5s)")]
+    public float chunkIdleThreshold = 2.5f;
+    private float chunkIdleTimer = 0f;
+    private bool isChunksGlowing = false;
 
     private List<GameObject> stepGameObjects = new List<GameObject>();
 
@@ -181,8 +186,6 @@ public class MaskEraser : MonoBehaviour
         {
             PrepareLayer();
             SelectTool(layerRequiredTools[currentLayer], false);
-
-            // Target size ko filhal Default par hi rakhein taake camera zoom-in na ho pehle frame par
             targetCameraSize = defaultCameraSize;
         }
 
@@ -190,7 +193,7 @@ public class MaskEraser : MonoBehaviour
 
         if (progressBarMainPanel != null)
         {
-            progressBarMainPanel.SetActive(true); // Panel ko enable karein
+            progressBarMainPanel.SetActive(true);
         }
         percentText.text = "0%";
         progressFill.fillAmount = 0f;
@@ -302,6 +305,8 @@ public class MaskEraser : MonoBehaviour
                             instantiatedChunks.transform.localScale = Vector3.one;
 
                             MudChunk[] allChunks = instantiatedChunks.GetComponentsInChildren<MudChunk>(true);
+
+                            //  YAHAN AUTOMATIC SET HO RAHA HAI:
                             totalScraperChunks = allChunks.Length;
                             remainingScraperChunks = totalScraperChunks;
                         }
@@ -316,7 +321,7 @@ public class MaskEraser : MonoBehaviour
                             instantiatedGlue.transform.localRotation = Quaternion.identity;
                             instantiatedGlue.transform.localScale = Vector3.one;
                         }
-                        layersList.Add(null); // Placeholder for index alignment
+                        layersList.Add(null);
                         break;
                 }
 
@@ -331,6 +336,44 @@ public class MaskEraser : MonoBehaviour
 
     void Update()
     {
+        // IDLE SCRAPER CHUNKS GLOW LOGIC
+        bool isScraperStep = false;
+        if (objectData != null && objectData.cleaningSteps != null && currentLayer < objectData.cleaningSteps.Count)
+        {
+            CleaningStep currentStep = objectData.cleaningSteps[currentLayer];
+            if (currentStep != null && currentStep.stepType == CleaningStepType.ChunkScraper)
+            {
+                isScraperStep = true;
+            }
+        }
+
+        // 50% Chunk Removal Check:
+        bool isHalfOrMoreRemoved = (totalScraperChunks > 0) && (remainingScraperChunks <= totalScraperChunks * 0.5f);
+
+        if (isScraperStep && remainingScraperChunks > 0 && isHalfOrMoreRemoved && !gameCompleted && !isTransitioningTool)
+        {
+            if (Input.GetMouseButton(0))
+            {
+                chunkIdleTimer = 0f;
+                if (isChunksGlowing)
+                {
+                    SetRemainingChunksGlow(false);
+                }
+            }
+            else
+            {
+                chunkIdleTimer += Time.deltaTime;
+                if (chunkIdleTimer >= chunkIdleThreshold && !isChunksGlowing)
+                {
+                    SetRemainingChunksGlow(true);
+                }
+            }
+        }
+        else if (isChunksGlowing)
+        {
+            SetRemainingChunksGlow(false);
+        }
+
         if (scraperTriggerEdge != null && currentToolData != null)
         {
             bool isScraper = currentToolData.toolType == ToolType.Scraper || currentToolData.name.Contains("Scraper");
@@ -391,7 +434,6 @@ public class MaskEraser : MonoBehaviour
                                  layersList.Count > 0 &&
                                  Input.GetMouseButton(0);
 
-            // Current Step Se Sirf Allow Camera Movement (Permission) Check Kar Rahe Hain:
             CleaningStep currentStep = (objectData != null && objectData.cleaningSteps != null && currentLayer < objectData.cleaningSteps.Count)
                 ? objectData.cleaningSteps[currentLayer]
                 : null;
@@ -403,7 +445,6 @@ public class MaskEraser : MonoBehaviour
                 float mouseXOffset = ((Input.mousePosition.x / Screen.width) - 0.5f) * 2f;
                 float mouseYOffset = ((Input.mousePosition.y / Screen.height) - 0.5f) * 2f;
 
-                // Script ki apni intensity aur boosted Y-axis limit:
                 float targetX = mouseXOffset * cameraMoveIntensity;
                 float targetY = mouseYOffset * cameraMoveIntensity * 2.5f;
 
@@ -418,11 +459,8 @@ public class MaskEraser : MonoBehaviour
 
         if (gameCompleted || isTransitioningTool || layersList.Count == 0) return;
 
-        // YAHAN FADE OUT & TOUCH RELEASE KI NAYI LOGIC AAYEGI:
         if (isThresholdReached)
         {
-            // Jab tak player ne mouse/touch dabaya hua hai, erasing hoti rahegi.
-            // Jaise hi touch chhodega (!Input.GetMouseButton(0)), transition start hoga:
             if (!Input.GetMouseButton(0))
             {
                 isThresholdReached = false;
@@ -946,7 +984,6 @@ public class MaskEraser : MonoBehaviour
                 break;
 
             case CleaningStepType.GlueApply:
-                // TODO: GLUE PROGRESS LOGIC PLACEHOLDER
                 break;
         }
 
@@ -960,9 +997,6 @@ public class MaskEraser : MonoBehaviour
         if (isLayerFullyCleaned)
         {
             Debug.Log("LAYER TARGET ACHIEVED!");
-
-            // Sound block bilkul remove kar diya gaya hai!
-            // Sirf flag true hoga, baqi transition sound TransitionToNextLayerRoutine mein baje gi.
             isThresholdReached = true;
         }
     }
@@ -1005,52 +1039,34 @@ public class MaskEraser : MonoBehaviour
                 }
             }
         }
-        else
-       /* {
-            if (texture != null)
-            {
-                Color[] pixels = texture.GetPixels();
-                for (int i = 0; i < pixels.Length; i++)
-                {
-                    pixels[i].a = 0f;
-                }
-                texture.SetPixels(pixels);
-                texture.Apply(false);
-            }
-        }*/
 
         targetFill = 1f;
         currentFill = 1f;
         if (progressFill != null) progressFill.fillAmount = 1f;
         if (percentText != null) percentText.text = "100%";
     }
+
     IEnumerator TransitionToNextLayerRoutine()
     {
         isTransitioningTool = true;
         if (toolFollower != null) toolFollower.enabled = false;
 
-        // 1. THRESHOLD REACH: FORCE VISUALS TO 100%
         currentFill = 1f;
         targetFill = 1f;
         if (progressFill != null) progressFill.fillAmount = 1f;
         if (percentText != null) percentText.text = "100%";
 
-        // 2. PLAY CLEAR SOUND AT EXACTLY 100%
         if (!isLayerClearSoundPlayed)
         {
             isLayerClearSoundPlayed = true;
-
-            // SOUND CALL UNCOMMENT KARDIA GAYA HAI:
             if (AudioManager.Instance != null && AudioManager.Instance.layerClearSFX != null)
             {
                 AudioManager.Instance.PlaySFX(AudioManager.Instance.layerClearSFX);
             }
         }
 
-        // 0.2 Seconds Pause: Taake player ko 100% aur Sound clear feel ho
         yield return new WaitForSeconds(0.2f);
 
-        // 3. HIDE SPECIFIC UI ELEMENTS (Text, Fill & Background)
         if (progressBarMainPanel != null) progressBarMainPanel.SetActive(true);
         if (percentText != null) percentText.gameObject.SetActive(false);
         if (progressFill != null) progressFill.gameObject.SetActive(false);
@@ -1060,7 +1076,6 @@ public class MaskEraser : MonoBehaviour
 
         yield return new WaitForSeconds(0.07f);
 
-        // 4. OLD TOOL SLIDE-OUT & LAYER FADE-OUT
         Vector3 startPos = toolFollower.transform.position;
         Vector3 leftTarget = startPos + Vector3.left * 15f;
 
@@ -1099,7 +1114,6 @@ public class MaskEraser : MonoBehaviour
 
         currentLayer++;
 
-        // Game Completion Check
         if (currentLayer >= objectData.cleaningSteps.Count)
         {
             CompleteGame();
@@ -1134,7 +1148,6 @@ public class MaskEraser : MonoBehaviour
 
         isLayerClearSoundPlayed = false;
 
-        // 5. RESET VALUES TO 0% FOR NEW STEP
         currentFill = 0f;
         targetFill = 0f;
         if (progressFill != null) progressFill.fillAmount = 0f;
@@ -1142,7 +1155,6 @@ public class MaskEraser : MonoBehaviour
 
         yield return new WaitForSeconds(0.4f);
 
-        // 6. NEW TOOL SLIDE-IN
         time = 0;
         float durationIn = 0.6f;
         while (time < durationIn)
@@ -1169,14 +1181,10 @@ public class MaskEraser : MonoBehaviour
         if (toolFollower != null) toolFollower.enabled = true;
         isTransitioningTool = false;
 
-        // =========================================================
-        // 7. SHOW PROGRESS UI AGAIN (Text, Fill & Background)
-        // =========================================================
         if (percentText != null) percentText.gameObject.SetActive(true);
         if (progressFill != null) progressFill.gameObject.SetActive(true);
         if (progressFillBg != null) progressFillBg.SetActive(true);
 
-        // 8. CAP ANIMATION FOR NEW TOOL
         if (toolFollower != null)
         {
             toolFollower.AnimateCapOff();
@@ -1189,7 +1197,15 @@ public class MaskEraser : MonoBehaviour
         gameCompleted = true;
         percentText.text = "100%";
         progressFill.fillAmount = 1f;
-        targetCameraSize = levelCompleteZoomSize;
+
+        if (objectData != null && objectData.levelCompleteZoomSize > 0.1f)
+        {
+            targetCameraSize = objectData.levelCompleteZoomSize;
+        }
+        else
+        {
+            targetCameraSize = defaultCameraSize;
+        }
 
         if (celebrationPrefab != null && activeCelebrationInstance == null)
         {
@@ -1246,7 +1262,6 @@ public class MaskEraser : MonoBehaviour
         }
 
         if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
-       
     }
 
     void SnapToolUI()
@@ -1450,8 +1465,7 @@ public class MaskEraser : MonoBehaviour
 
         SetupToolVariantsPanel(tool);
 
-        
-if (currentToolData != null && currentToolData.isPolishTool)
+        if (currentToolData != null && currentToolData.isPolishTool)
         {
             StartCoroutine(PlayPolishPickupAnimation());
         }
@@ -1726,8 +1740,6 @@ if (currentToolData != null && currentToolData.isPolishTool)
         if (toolFollower != null && Camera.main != null)
         {
             toolFollower.gameObject.SetActive(true);
-
-            // NAYA FIX: Slide-in hone se pehle rotation zero (bilkul straight) karein
             toolFollower.transform.rotation = Quaternion.identity;
 
             Vector3 restTarget = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.3f, 10f));
@@ -1755,31 +1767,23 @@ if (currentToolData != null && currentToolData.isPolishTool)
                 float t = Mathf.SmoothStep(0f, 1f, time / duration);
 
                 toolFollower.transform.position = Vector3.Lerp(startPos, restTarget, t);
-
-                // NAYA FIX: Slide hote waqt bhi rotation bilkul straight (0,0,0) rahegi
                 toolFollower.transform.rotation = Quaternion.identity;
 
                 yield return null;
             }
 
             toolFollower.transform.position = restTarget;
-            toolFollower.transform.rotation = Quaternion.identity; // Final rotation lock
-
-            Debug.Log(">>> STEP 2: Tool Slide Finish ho gaya! <<<");
+            toolFollower.transform.rotation = Quaternion.identity;
 
             if (toolFollower != null)
             {
-                Debug.Log(">>> STEP 3: toolFollower valid hai, AnimateCapOff call ho raha hai... <<<");
                 toolFollower.AnimateCapOff();
-            }
-            else
-            {
-                Debug.LogError(">>> ERROR: toolFollower Reference NULL hai! <<<");
             }
         }
 
         isTransitioningTool = false;
     }
+
     void ClearOldGeneratedLayers()
     {
         if (levelParentAnchor == null) return;
@@ -1816,7 +1820,6 @@ if (currentToolData != null && currentToolData.isPolishTool)
         }
     }
 
-    // External scripts (e.g. GlueSequenceController) se call hone wala method
     public void OnCurrentStepCompleted()
     {
         effectGraceTimer = 0f;
@@ -1824,7 +1827,6 @@ if (currentToolData != null && currentToolData.isPolishTool)
 
         if (variantMainPanel != null) variantMainPanel.SetActive(false);
 
-        //  STEP COMPLETED: Progress UI aur Main Panel HIDE
         if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
         if (progressFill != null) progressFill.gameObject.SetActive(false);
         if (percentText != null) percentText.gameObject.SetActive(false);
@@ -1836,6 +1838,21 @@ if (currentToolData != null && currentToolData.isPolishTool)
         else
         {
             StartCoroutine(TransitionToNextLayerRoutine());
+        }
+    }
+
+    private void SetRemainingChunksGlow(bool enable)
+    {
+        isChunksGlowing = enable;
+        if (levelParentAnchor == null) return;
+
+        MudChunk[] activeChunks = levelParentAnchor.GetComponentsInChildren<MudChunk>(true);
+        foreach (MudChunk chunk in activeChunks)
+        {
+            if (chunk != null && chunk.gameObject.activeSelf)
+            {
+                chunk.SetGlow(enable);
+            }
         }
     }
 }

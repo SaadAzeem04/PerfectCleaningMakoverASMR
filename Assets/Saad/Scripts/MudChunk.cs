@@ -1,10 +1,13 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MudChunk : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
+    private LineRenderer lineRenderer;
     private bool isFalling = false;
+    private bool isGlowing = false;
     private Color originalColor;
 
     [Header("Level / Ground Settings")]
@@ -17,33 +20,112 @@ public class MudChunk : MonoBehaviour
     [SerializeField] private float rotateSpeed = 1f;       // Wobble speed
     [SerializeField] private float fadeDuration = 0.5f;     // Fade duration
 
+    [Header("Exact Sprite Edge Glow Settings")]
+    [SerializeField] private Color greenGlowColor = new Color(0f, 1f, 0f, 1f);
+    [SerializeField] private float lineWidth = 0.08f; // Line thickness
+    [SerializeField] private float glowPulseSpeed = 4f;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            originalColor = spriteRenderer.color;
+        }
+
+        // Collider ke bajaye direct SPRITE TEXTURE ki edges read karein
+        GenerateExactSpriteOutline();
+    }
+
+    private void GenerateExactSpriteOutline()
+    {
+        if (spriteRenderer == null || spriteRenderer.sprite == null) return;
+
+        Sprite sprite = spriteRenderer.sprite;
+        List<Vector2> spriteEdgePoints = new List<Vector2>();
+
+        // Sprite asset ki exact PNG boundary read kar rahe hain
+        if (sprite.GetPhysicsShapeCount() > 0)
+        {
+            sprite.GetPhysicsShape(0, spriteEdgePoints);
+        }
+
+        if (spriteEdgePoints.Count == 0)
+        {
+            Debug.LogWarning($"[MudChunk] '{gameObject.name}' ke Sprite Asset ki outline points read nahi ho sake!");
+            return;
+        }
+
+        lineRenderer = gameObject.AddComponent<LineRenderer>();
+        lineRenderer.startWidth = lineWidth;
+        lineRenderer.endWidth = lineWidth;
+
+        Shader lineShader = Shader.Find("Universal Render Pipeline/2D/Sprite-Unlit-Default");
+        if (lineShader == null) lineShader = Shader.Find("Sprites/Default");
+        if (lineShader == null) lineShader = Shader.Find("Hidden/Internal-Colored");
+
+        lineRenderer.material = new Material(lineShader);
+        lineRenderer.startColor = greenGlowColor;
+        lineRenderer.endColor = greenGlowColor;
+        lineRenderer.useWorldSpace = false;
+        lineRenderer.loop = true;
+
+        if (spriteRenderer != null)
+        {
+            lineRenderer.sortingLayerID = spriteRenderer.sortingLayerID;
+            lineRenderer.sortingOrder = spriteRenderer.sortingOrder + 10;
+        }
+
+        lineRenderer.positionCount = spriteEdgePoints.Count;
+        for (int i = 0; i < spriteEdgePoints.Count; i++)
+        {
+            // Sprite ke exact local points par line set kar rahe hain
+            lineRenderer.SetPosition(i, new Vector3(spriteEdgePoints[i].x, spriteEdgePoints[i].y, -0.1f));
+        }
+
+        lineRenderer.enabled = false;
+    }
+
+    private void Update()
+    {
+        // Line Green Pulse Effect
+        if (isGlowing && !isFalling && lineRenderer != null)
+        {
+            float pingPong = Mathf.PingPong(Time.time * glowPulseSpeed, 1f);
+            Color pulsedColor = Color.Lerp(new Color(greenGlowColor.r, greenGlowColor.g, greenGlowColor.b, 0.2f), greenGlowColor, pingPong);
+
+            lineRenderer.startColor = pulsedColor;
+            lineRenderer.endColor = pulsedColor;
+        }
+    }
+
+    public void SetGlow(bool glow)
+    {
+        if (isFalling) return;
+
+        isGlowing = glow;
+        if (lineRenderer != null)
+        {
+            lineRenderer.enabled = glow;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (isFalling) return;
 
-        // Dynamic Check: Compare Tag ya Name contain check (Case insensitive)
         bool isScraper = collision.CompareTag("ScraperEdge") ||
                          collision.gameObject.name.ToLower().Contains("scraper");
 
         if (isScraper)
         {
             isFalling = true;
+            SetGlow(false);
 
-            // MaskEraser notification
             MaskEraser eraser = Object.FindFirstObjectByType<MaskEraser>();
             if (eraser != null)
             {
                 eraser.ScraperChunkDestroyed();
-            }
-
-            if (spriteRenderer != null)
-            {
-                originalColor = spriteRenderer.color;
             }
 
             if (!gameObject.activeInHierarchy)
@@ -88,11 +170,9 @@ public class MudChunk : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = 3.5f;
 
-        // Bouncing force & random rotation
         rb.linearVelocity = new Vector2(Random.Range(-3f, 3f), Random.Range(2f, 4f));
         rb.angularVelocity = Random.Range(-90f, 90f);
 
-        // Wait until chunk drops below the Floor Y Threshold
         while (transform.position.y > floorYThreshold)
         {
             yield return null;

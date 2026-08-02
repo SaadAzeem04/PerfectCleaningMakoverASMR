@@ -114,7 +114,9 @@ public class ToolFollower : MonoBehaviour
             return;
         }
 
-        // Position Calculation
+        // ==========================================
+        // POSITION CALCULATION & OFFSETS
+        // ==========================================
         Vector3 screenPos = new Vector3(
             inputPosition.x,
             inputPosition.y,
@@ -123,6 +125,7 @@ public class ToolFollower : MonoBehaviour
         Vector3 world = cam.ScreenToWorldPoint(screenPos);
         world.z = 0;
 
+        // Pehle Tool Offset add karenge
         Vector3 targetPos = world + (currentToolData != null ? currentToolData.toolOffset : Vector3.zero);
         Quaternion targetRot = Quaternion.identity;
 
@@ -131,6 +134,7 @@ public class ToolFollower : MonoBehaviour
             isDragging = true;
         }
 
+        // Scrubbing / Spraying Animations add karenge
         if (currentToolData != null)
         {
             switch (currentToolData.movementType)
@@ -156,13 +160,26 @@ public class ToolFollower : MonoBehaviour
             }
         }
 
+        // ==========================================
+        //  FINAL CLAMPING (SAARE OFFSETS KE BAAD)
+        // ==========================================
+        Vector3 finalViewport = cam.WorldToViewportPoint(targetPos);
+
+        // X-axis Margin: 0.10f (10% left/right edges se andar)
+        // Y-axis Margin: 0.05f (5% top/bottom edges se andar)
+        finalViewport.x = Mathf.Clamp(finalViewport.x, 0.10f, 0.90f);
+        finalViewport.y = Mathf.Clamp(finalViewport.y, 0.05f, 0.95f);
+
+        targetPos = cam.ViewportToWorldPoint(finalViewport);
+        targetPos.z = 0f;
+        // ==========================================
+
         transform.position = targetPos;
         transform.rotation = targetRot;
 
         CanClean = true;
         UpdateColliderState(true);
     }
-
     private void UpdateColliderState(bool state)
     {
         if (toolCollider != null && toolCollider.enabled != state)

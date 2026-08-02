@@ -761,5 +761,21 @@ public class GluePourController : MonoBehaviour
         }
         isPlayingGlueSound = false;
     }
+    public void ClearGlueTrail()
+    {
+        if (glueTrail != null)
+        {
+            glueTrail.emitting = false;
+            glueTrail.Clear(); //  Screen par draw hui lines ko instant erase kar deta hai
+        }
+
+        if (glueTipTransform != null)
+        {
+            Destroy(glueTipTransform.gameObject); // Dynamic tip transform ko destroy kar dein
+            glueTipTransform = null;
+            glueTrail = null;
+        }
+
+    }
 
 }

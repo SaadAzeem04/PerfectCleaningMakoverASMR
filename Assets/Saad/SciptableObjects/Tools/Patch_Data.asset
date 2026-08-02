@@ -34,6 +34,7 @@ MonoBehaviour:
   useParticles: 1
   particlePrefab: {fileID: 0}
   particleOffset: {x: 0, y: 0, z: 0}
+  isPolishTool: 0
   useSecondParticles: 0
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}

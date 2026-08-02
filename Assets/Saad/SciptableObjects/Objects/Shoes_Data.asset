@@ -34,6 +34,7 @@ MonoBehaviour:
   scraperChunksPrefab: {fileID: 6922760847136583357, guid: 42ef06bf6c99a324f854efc00ddefc7b, type: 3}
   cameraMovementIntensity: 1
   customCameraZoomSize: 4.5
+  levelCompleteZoomSize: 6
   enableYAxisMovement: 0
   cleaningSteps:
   - stepName: Scraper

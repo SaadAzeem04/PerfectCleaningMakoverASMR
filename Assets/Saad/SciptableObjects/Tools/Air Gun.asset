@@ -14,28 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasVariants: 1
   toolVariants:
-  - variantName: waterspray02
-    toolSprite: {fileID: 2658037071850787674, guid: 08b6498c92215844e8ec18c9dde6a0ce, type: 3}
+  - variantName: Air Gun Variant01
+    toolSprite: {fileID: -3578833689271012316, guid: a02fdb516b4408a4ba25b37802147f4b, type: 3}
     iconSprite: {fileID: 8452017568035861585, guid: ccbfef4a74625064c9c3eb86d8087b31, type: 3}
     coinPrice: 0
     brushSize: 70
-  - variantName: waterspray03
-    toolSprite: {fileID: 21300000, guid: 88f05ba643ce7bf49a7a13a51a8e37dd, type: 3}
+  - variantName: Air Gun Variant02
+    toolSprite: {fileID: -3578833689271012316, guid: a02fdb516b4408a4ba25b37802147f4b, type: 3}
     iconSprite: {fileID: -3749877127376000549, guid: 79ec6ef540c2933449d37af08f680e8f, type: 3}
     coinPrice: 10
     brushSize: 75
-  - variantName: waterspray04
-    toolSprite: {fileID: 1755050588376245985, guid: 7375f16d19076f74ea0af73eb178c3a1, type: 3}
+  - variantName: Air Gun Variant03
+    toolSprite: {fileID: -3578833689271012316, guid: a02fdb516b4408a4ba25b37802147f4b, type: 3}
     iconSprite: {fileID: -3749877127376000549, guid: 79ec6ef540c2933449d37af08f680e8f, type: 3}
     coinPrice: 20
     brushSize: 80
   toolName: Air Gun
   cameraZoomSize: 7
+  capSprite: {fileID: 0}
+  capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 4
   toolSprite: {fileID: -3578833689271012316, guid: a02fdb516b4408a4ba25b37802147f4b, type: 3}
   soundOnlyOnHit: 0
   cleaningSpeed: 1
-  brushSize: 70
+  brushSize: 80
   brushShape: {fileID: 0}
   brushWidthScale: 1
   brushHeightScale: 1
@@ -46,7 +48,8 @@ MonoBehaviour:
   rotationAmount: 15
   useParticles: 1
   particlePrefab: {fileID: 8123549400438394861, guid: f2d19221327961c43a1d0c947f558436, type: 3}
-  particleOffset: {x: 0, y: -0.1, z: 0}
+  particleOffset: {x: 0, y: 0.2, z: 0}
+  isPolishTool: 0
   useSecondParticles: 1
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
@@ -54,3 +57,4 @@ MonoBehaviour:
   toolSound: {fileID: 8300000, guid: e993c567098bfc04a94bc58d009efab3, type: 3}
   toolOffset: {x: 0, y: -1, z: 0}
   panelIcon: {fileID: 590114823811502794, guid: 734c8583469466e48992702d5b4db3a4, type: 3}
+  canRemove: 1

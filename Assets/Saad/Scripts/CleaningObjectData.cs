@@ -22,6 +22,10 @@ public class CleaningObjectData : ScriptableObject
     [Header("Camera Settings")]
     public float cameraMovementIntensity = 1.0f; // Default intensity
     public float customCameraZoomSize = 5.0f;
+
+    [Tooltip("Level complete hone par camera ka zoom size kitna hona chahiye")]
+    public float levelCompleteZoomSize = 4.5f; // NAYA: Ab har Object/Level ka custom Complete Zoom yahan se set hoga
+
     public bool enableYAxisMovement = false;
 
     [Header("Dynamic Cleaning Sub-Steps")]
@@ -33,7 +37,7 @@ public class CleaningObjectData : ScriptableObject
 
     [Tooltip("Agar aap kisi specific layer ka size badalna chahte hain, to yahan scale dein. Default (1,1,1) rahega.")]
     public Vector3[] customLayerScales;
+
     [Header("UI Settings")]
     public Sprite levelCompleteIcon;
-
 }

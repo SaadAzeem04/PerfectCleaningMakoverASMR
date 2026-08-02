@@ -34,10 +34,11 @@ MonoBehaviour:
   useParticles: 1
   particlePrefab: {fileID: 8761929157680561608, guid: 6f5ed51ba5c7b304ea73c9b3a635b91b, type: 3}
   particleOffset: {x: 0, y: 0, z: 0}
+  isPolishTool: 0
   useSecondParticles: 0
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
-  eraseOffset: {x: 0, y: 0, z: 0}
+  eraseOffset: {x: 0, y: 0.5, z: 0}
   toolSound: {fileID: 8300000, guid: 545649752d804564092f70c58472e47c, type: 3}
   toolOffset: {x: 0, y: 0, z: 0}
   panelIcon: {fileID: -2354103043966879098, guid: 7a03461b2b4eaf04c835fa1c8c5dacd1, type: 3}
