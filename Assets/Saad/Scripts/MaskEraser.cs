@@ -415,6 +415,7 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
+        // CAMERA ZOOM LOGIC
         if (Camera.main != null)
         {
             if (Camera.main.orthographic)
@@ -423,6 +424,7 @@ public class MaskEraser : MonoBehaviour
                 Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, targetCameraSize, Time.deltaTime * cameraTransitionIntensity);
         }
 
+        // CAMERA MOVEMENT LOGIC (CLEAN & ERROR-FREE)
         if (Camera.main != null && Screen.width > 0 && Screen.height > 0)
         {
             float initialCamZ = Camera.main.transform.position.z;
@@ -446,7 +448,13 @@ public class MaskEraser : MonoBehaviour
                 float mouseYOffset = ((Input.mousePosition.y / Screen.height) - 0.5f) * 2f;
 
                 float targetX = mouseXOffset * cameraMoveIntensity;
-                float targetY = mouseYOffset * cameraMoveIntensity * 2.5f;
+
+                // Check: Enable Y Axis Movement ON hai ya OFF
+                float targetY = 0f;
+                if (objectData != null && objectData.enableYAxisMovement)
+                {
+                    targetY = mouseYOffset * cameraMoveIntensity * 2.5f;
+                }
 
                 targetCameraPos = new Vector3(targetX, targetY, initialCamZ);
             }
@@ -574,6 +582,7 @@ public class MaskEraser : MonoBehaviour
             progressTimer += Time.deltaTime;
             if (progressTimer > 0.15f || !Input.GetMouseButton(0))
             {
+            updateProgress:
                 UpdateProgress();
                 progressTimer = 0f;
                 needsProgressCheck = false;
@@ -1142,7 +1151,33 @@ public class MaskEraser : MonoBehaviour
         }
 
         SelectTool(nextTool, true);
-        targetCameraSize = (nextTool != null && nextTool.cameraZoomSize > 0.1f) ? nextTool.cameraZoomSize : defaultCameraSize;
+
+        // UPDATED LOGIC: Pehle Step Zoom -> Phir Level Custom Zoom -> Phir Default
+        if (objectData != null && objectData.cleaningSteps != null && currentLayer < objectData.cleaningSteps.Count)
+        {
+            CleaningStep currentStep = objectData.cleaningSteps[currentLayer];
+
+            if (currentStep != null && currentStep.cameraZoomSize > 0.1f)
+            {
+                targetCameraSize = currentStep.cameraZoomSize;
+            }
+            else if (objectData.customCameraZoomSize > 0.1f)
+            {
+                targetCameraSize = objectData.customCameraZoomSize; //  Level Level Custom Zoom (e.g. 7)
+            }
+            else
+            {
+                targetCameraSize = defaultCameraSize;
+            }
+        }
+        else if (objectData != null && objectData.customCameraZoomSize > 0.1f)
+        {
+            targetCameraSize = objectData.customCameraZoomSize;
+        }
+        else
+        {
+            targetCameraSize = defaultCameraSize;
+        }
 
         float camZ = Mathf.Abs(Camera.main.transform.position.z);
 
@@ -1752,9 +1787,14 @@ public class MaskEraser : MonoBehaviour
             {
                 SetupToolVariantsPanel(currentToolData);
 
-                if (currentToolData.cameraZoomSize > 0.1f)
+                // Startup par Pehli Layer (Step 0) ka Camera Zoom apply karein
+                if (objectData != null && objectData.cleaningSteps != null && objectData.cleaningSteps.Count > 0)
                 {
-                    targetCameraSize = currentToolData.cameraZoomSize;
+                    CleaningStep firstStep = objectData.cleaningSteps[0];
+                    if (firstStep != null && firstStep.cameraZoomSize > 0.1f)
+                    {
+                        targetCameraSize = firstStep.cameraZoomSize;
+                    }
                 }
             }
 
@@ -1831,16 +1871,16 @@ public class MaskEraser : MonoBehaviour
         if (progressFill != null) progressFill.gameObject.SetActive(false);
         if (percentText != null) percentText.gameObject.SetActive(false);
 
+        //  CHECK: Agar AAKHRI Step Complete hua hai (Level Finish)
         if (currentLayer >= objectData.cleaningSteps.Count - 1)
-        {
-            CompleteGame();
+        { 
+    CompleteGame();
         }
         else
         {
             StartCoroutine(TransitionToNextLayerRoutine());
         }
     }
-
     private void SetRemainingChunksGlow(bool enable)
     {
         isChunksGlowing = enable;

@@ -30,7 +30,7 @@ MonoBehaviour:
     coinPrice: 20
     brushSize: 80
   toolName: Water Spray
-  cameraZoomSize: 7
+  cameraZoomSize: 6.5
   capSprite: {fileID: 0}
   capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 4
@@ -49,6 +49,7 @@ MonoBehaviour:
   useParticles: 1
   particlePrefab: {fileID: 8123549400438394861, guid: f2d19221327961c43a1d0c947f558436, type: 3}
   particleOffset: {x: 0, y: 1, z: 0}
+  isPolishTool: 0
   useSecondParticles: 1
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
@@ -56,3 +57,4 @@ MonoBehaviour:
   toolSound: {fileID: 8300000, guid: e993c567098bfc04a94bc58d009efab3, type: 3}
   toolOffset: {x: 0, y: -1, z: 0}
   panelIcon: {fileID: 1755050588376245985, guid: 7375f16d19076f74ea0af73eb178c3a1, type: 3}
+  canRemove: 1

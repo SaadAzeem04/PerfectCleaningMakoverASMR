@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "NewCleaningObject", menuName = "Cleaning Game/Object Data")]
 public class CleaningObjectData : ScriptableObject
@@ -24,12 +25,12 @@ public class CleaningObjectData : ScriptableObject
     public float customCameraZoomSize = 5.0f;
 
     [Tooltip("Level complete hone par camera ka zoom size kitna hona chahiye")]
-    public float levelCompleteZoomSize = 4.5f; // NAYA: Ab har Object/Level ka custom Complete Zoom yahan se set hoga
+    public float levelCompleteZoomSize = 4.5f;
 
     public bool enableYAxisMovement = false;
 
     [Header("Dynamic Cleaning Sub-Steps")]
-    public System.Collections.Generic.List<CleaningStep> cleaningSteps = new System.Collections.Generic.List<CleaningStep>();
+    public List<CleaningStep> cleaningSteps = new List<CleaningStep>();
 
     [Header("Layer Transform Overrides (Optional)")]
     [Tooltip("Agar aap kisi specific layer ki position badalna chahte hain, to yahan vector offset dein. (Element 0 = Layer 1)")]

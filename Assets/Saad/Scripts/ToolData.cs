@@ -32,7 +32,7 @@ public class ToolData : ScriptableObject
     public System.Collections.Generic.List<ToolVariant> toolVariants = new System.Collections.Generic.List<ToolVariant>();
 
     public string toolName;
-    public float cameraZoomSize = 5f;
+   // public float cameraZoomSize = 5f;
 
     [Header("Cap Settings")]
     public Sprite capSprite; // Glue Cap ki sprite asset yahan drag karein
