@@ -63,10 +63,18 @@ public class MaskEraser : MonoBehaviour
     private GameObject activeCelebrationInstance;
     private ToolVariant currentEquippedVariant;
 
+    [Header("UI Delay Hide/Show Settings")]
+    public float holdToHideDelay = 2.0f;   // 2 second continuous touch
+    public float idleToShowDelay = 2.0f;   // 2 second continuous untouch
+    private float touchTimer = 0f;
+    private float idleTimer = 0f;
+    private bool isUIHiddenByTimer = false;
+
     [Header("Tool UI Panel")]
     public Image previousToolUIImage;
     public Image currentToolUIImage;
     public Image upcomingToolUIImage;
+
 
     [Header("Background Reference")]
     public SpriteRenderer backgroundRenderer;
@@ -201,6 +209,9 @@ public class MaskEraser : MonoBehaviour
         targetFill = 0f;
 
         if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
+
+        // FIX: Pehle tool ke variant panel ko smooth popup animation se show karne ke liye
+        ToggleGameplayUI(false);
 
         StartCoroutine(AnimateFirstToolOnStartup());
     }
@@ -403,15 +414,32 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
+        // NAYA CODE (2-Second Delay Logic):
         if (!gameCompleted && !isTransitioningTool)
         {
-            if (Input.GetMouseButtonDown(0))
+            bool isTouching = Input.GetMouseButton(0) || Input.touchCount > 0;
+
+            if (isTouching)
             {
-                ToggleGameplayUI(true);
+                idleTimer = 0f; // Untouch timer reset
+                touchTimer += Time.deltaTime;
+
+                if (touchTimer >= holdToHideDelay && !isUIHiddenByTimer)// Agar touch 2 second touch raha aur UI hidden nahi hai
+                {
+                    ToggleGameplayUI(true); // Isse Pause Button, Coin Bar aur Tool Panel teeno hide honge
+                    isUIHiddenByTimer = true;
+                }
             }
-            else if (Input.GetMouseButtonUp(0))
+            else
             {
-                ToggleGameplayUI(false);
+                touchTimer = 0f; // Hold timer reset
+                idleTimer += Time.deltaTime;
+
+                if (idleTimer >= idleToShowDelay && isUIHiddenByTimer) // Agar touch 2 second bina touch ke guzar jayein aur UI hidden ho
+                {
+                    ToggleGameplayUI(false); // Isse teeno UI elements wapas show honge
+                    isUIHiddenByTimer = false;
+                }
             }
         }
 
@@ -582,7 +610,7 @@ public class MaskEraser : MonoBehaviour
             progressTimer += Time.deltaTime;
             if (progressTimer > 0.15f || !Input.GetMouseButton(0))
             {
-            updateProgress:
+            //updateProgress:
                 UpdateProgress();
                 progressTimer = 0f;
                 needsProgressCheck = false;
@@ -627,7 +655,11 @@ public class MaskEraser : MonoBehaviour
         {
             if (panelAnimCoroutine != null) StopCoroutine(panelAnimCoroutine);
 
-            bool shouldShowVariant = !hide && !layerFinishedWaitingRelease;
+            bool shouldShowVariant = !hide && !layerFinishedWaitingRelease && !isTransitioningTool;
+            if (shouldShowVariant)
+            {
+                variantMainPanel.SetActive(true);
+            }
             panelAnimCoroutine = StartCoroutine(AnimateVariantPanelVideoStyle(shouldShowVariant));
         }
 
@@ -1058,6 +1090,20 @@ public class MaskEraser : MonoBehaviour
     IEnumerator TransitionToNextLayerRoutine()
     {
         isTransitioningTool = true;
+        layerFinishedWaitingRelease = false;
+
+        // FIX 1: Direct SetActive(false) ki jagah ToggleGameplayUI(true) call karein.
+        // Is se current Variant Panel smooth animation (scale 0) ke sath hide hoga.
+        ToggleGameplayUI(true);
+
+        if (isUIHiddenByTimer)
+        {
+            isUIHiddenByTimer = false;
+        }
+
+        touchTimer = 0f;
+        idleTimer = 0f;
+
         if (toolFollower != null) toolFollower.enabled = false;
 
         currentFill = 1f;
@@ -1152,7 +1198,6 @@ public class MaskEraser : MonoBehaviour
 
         SelectTool(nextTool, true);
 
-        // UPDATED LOGIC: Pehle Step Zoom -> Phir Level Custom Zoom -> Phir Default
         if (objectData != null && objectData.cleaningSteps != null && currentLayer < objectData.cleaningSteps.Count)
         {
             CleaningStep currentStep = objectData.cleaningSteps[currentLayer];
@@ -1163,7 +1208,7 @@ public class MaskEraser : MonoBehaviour
             }
             else if (objectData.customCameraZoomSize > 0.1f)
             {
-                targetCameraSize = objectData.customCameraZoomSize; //  Level Level Custom Zoom (e.g. 7)
+                targetCameraSize = objectData.customCameraZoomSize;
             }
             else
             {
@@ -1214,7 +1259,12 @@ public class MaskEraser : MonoBehaviour
 
         UpdateUpcomingIconsPanel(true);
         if (toolFollower != null) toolFollower.enabled = true;
+
+        // Transition mukammal ho gayi
         isTransitioningTool = false;
+
+        // FIX 2: Naye step ka tool set hone par, uska Variant Panel smooth animation (scale 1) ke sath screen par aayega.
+        ToggleGameplayUI(false);
 
         if (percentText != null) percentText.gameObject.SetActive(true);
         if (progressFill != null) progressFill.gameObject.SetActive(true);
@@ -1610,6 +1660,8 @@ public class MaskEraser : MonoBehaviour
 
     void SetupToolVariantsPanel(ToolData tool)
     {
+        currentToolData = tool;
+
         if (variantButtonsContainer != null)
         {
             foreach (Transform child in variantButtonsContainer)
@@ -1619,12 +1671,9 @@ public class MaskEraser : MonoBehaviour
         }
         spawnedVariantButtons.Clear();
 
-        if (tool == null || !tool.hasVariants || tool.toolVariants.Count == 0)
+        if (tool == null || !tool.hasVariants || tool.toolVariants == null || tool.toolVariants.Count == 0)
         {
-            if (variantMainPanel != null)
-            {
-                variantMainPanel.SetActive(false);
-            }
+            if (variantMainPanel != null) variantMainPanel.SetActive(false);
             return;
         }
 
@@ -1641,23 +1690,21 @@ public class MaskEraser : MonoBehaviour
 
         if (tool.toolVariants.Count > 0)
         {
-            ToolVariant originalVariant = tool.toolVariants[0];
+            // FIX: Level replay ya tool initial setup par HAMESHA pehla (base) variant hi select hoga
+            ToolVariant baseVariant = tool.toolVariants[0];
 
-            PlayerPrefs.SetString(tool.name + "_Equipped", originalVariant.variantName);
+            PlayerPrefs.SetString(tool.name + "_Equipped", baseVariant.variantName);
             PlayerPrefs.Save();
 
-            ApplyVariantSkin(tool, originalVariant, false);
+            ApplyVariantSkin(tool, baseVariant, false);
         }
 
         if (variantMainPanel != null)
         {
             variantMainPanel.transform.localScale = new Vector3(0.5f, 0f, 1f);
             variantMainPanel.SetActive(true);
-
-            StartCoroutine(AnimateVariantPanelVideoStyle(true));
         }
     }
-
     private IEnumerator AnimateVariantPanelVideoStyle(bool show)
     {
         if (variantMainPanel == null) yield break;
@@ -1822,6 +1869,7 @@ public class MaskEraser : MonoBehaviour
         }
 
         isTransitioningTool = false;
+        ToggleGameplayUI(false);
     }
 
     void ClearOldGeneratedLayers()
@@ -1862,10 +1910,18 @@ public class MaskEraser : MonoBehaviour
 
     public void OnCurrentStepCompleted()
     {
+        if (isUIHiddenByTimer)
+        {
+            isUIHiddenByTimer = false;
+            ToggleGameplayUI(false);
+        }
+        touchTimer = 0f;
+        idleTimer = 0f;
+
         effectGraceTimer = 0f;
         StopToolEffects();
 
-        if (variantMainPanel != null) variantMainPanel.SetActive(false);
+        if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
 
         if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
         if (progressFill != null) progressFill.gameObject.SetActive(false);

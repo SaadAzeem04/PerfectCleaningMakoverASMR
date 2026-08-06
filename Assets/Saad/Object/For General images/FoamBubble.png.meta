@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: adf5456a03dff0243865d0cee77a3d31
+guid: 1c006f3358bc28145b6846a69d1cacae
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8740349881217403783
-    second: 01_Hand Scrub_0
+      213: 8026786313690856358
+    second: FoamBubble_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 600
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 01_Hand Scrub_0
+      name: FoamBubble_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1024
-        height: 1536
+        x: 4
+        y: 4
+        width: 539
+        height: 539
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 78b479a98e5fb4970800000000000000
-      internalID: 8740349881217403783
+      spriteID: 6abb283ef9fd46f60800000000000000
+      internalID: 8026786313690856358
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 78c309e24684bd240af85c8ff393323e
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      01_Hand Scrub_0: 8740349881217403783
+      FoamBubble_0: 8026786313690856358
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

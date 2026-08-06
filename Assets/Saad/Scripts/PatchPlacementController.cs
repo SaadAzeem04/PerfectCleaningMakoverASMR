@@ -23,7 +23,7 @@ public class PatchPlacementController : MonoBehaviour
 
     private bool isAnimating = false;
     private bool isCompleted = false;
-    private bool hasTriggeredStep = false;   // ADDED: Double trigger rokne ke liye
+    private bool hasTriggeredStep = false;   // Double trigger rokne ke liye
     private float placementTimer = 0f;
     private ToolData lastData;
 
@@ -132,7 +132,8 @@ public class PatchPlacementController : MonoBehaviour
             isAnimating = false;
             isCompleted = true;
 
-            GluePourController glueController = FindObjectOfType<GluePourController>();
+            // DEPRECATED METHOD UPDATED TO Object.FindFirstObjectByType
+            GluePourController glueController = Object.FindFirstObjectByType<GluePourController>();
             if (glueController != null)
             {
                 glueController.ClearGlueTrail();
@@ -148,7 +149,8 @@ public class PatchPlacementController : MonoBehaviour
             }
 
             // NEXT STEP TRIGGER (Sirf 1 Baar Call Hoga)
-            MaskEraser maskEraser = FindObjectOfType<MaskEraser>();
+            // DEPRECATED METHOD UPDATED TO Object.FindFirstObjectByType
+            MaskEraser maskEraser = Object.FindFirstObjectByType<MaskEraser>();
             if (maskEraser != null)
             {
                 maskEraser.OnCurrentStepCompleted();

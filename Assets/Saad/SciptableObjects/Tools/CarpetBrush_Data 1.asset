@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
+  m_Name: CarpetBrush_Data 1
+  m_EditorClassIdentifier: 
+  hasVariants: 1
+  toolVariants:
+  - variantName: Carpet Brush01
+    toolSprite: {fileID: -2775846695594095369, guid: 22f2f8add934ea2499106bc9a40b681b, type: 3}
+    iconSprite: {fileID: -5986452673002578869, guid: 49b17bbc107bee34da09cb94054d6c06, type: 3}
+    coinPrice: 0
+    brushSize: 70
+  - variantName: Carpet Brush02
+    toolSprite: {fileID: -2775846695594095369, guid: 22f2f8add934ea2499106bc9a40b681b, type: 3}
+    iconSprite: {fileID: -5986452673002578869, guid: 49b17bbc107bee34da09cb94054d6c06, type: 3}
+    coinPrice: 20
+    brushSize: 75
+  - variantName: Carpet Brush03
+    toolSprite: {fileID: -2775846695594095369, guid: 22f2f8add934ea2499106bc9a40b681b, type: 3}
+    iconSprite: {fileID: 21300000, guid: 3cdb78e5dc8482b43baacfc820541863, type: 3}
+    coinPrice: 10
+    brushSize: 80
+  toolName: Carpet Brush
+  capSprite: {fileID: 0}
+  capLocalPosition: {x: 0, y: 0, z: 0}
+  toolType: 3
+  toolSprite: {fileID: -2775846695594095369, guid: 22f2f8add934ea2499106bc9a40b681b, type: 3}
+  soundOnlyOnHit: 1
+  cleaningSpeed: 1
+  brushSize: 70
+  brushShape: {fileID: 0}
+  brushWidthScale: 1
+  brushHeightScale: 1
+  movementType: 2
+  scrubSpeed: 8
+  scrubAmount: 3
+  rotationSpeed: 12
+  rotationAmount: 20
+  useParticles: 1
+  particlePrefab: {fileID: 7963218675485666827, guid: 0e1d58f4bf39bc84b9c5d2766e8d46be, type: 3}
+  particleOffset: {x: 0, y: 0.5, z: 0}
+  isPolishTool: 0
+  useSecondParticles: 0
+  secondParticlePrefab: {fileID: 0}
+  secondParticleOffset: {x: 0, y: 0, z: 0}
+  eraseOffset: {x: 0, y: 0.5, z: 0}
+  toolSound: {fileID: 8300000, guid: 367dd06d79b10da4780279068654a961, type: 3}
+  toolOffset: {x: 0, y: 0, z: 0}
+  panelIcon: {fileID: -2775846695594095369, guid: 22f2f8add934ea2499106bc9a40b681b, type: 3}
+  canRemove: 1

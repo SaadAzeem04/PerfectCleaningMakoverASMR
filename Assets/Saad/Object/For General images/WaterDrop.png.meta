@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: adf5456a03dff0243865d0cee77a3d31
+guid: b54d3c5251f25e641b6243e70771c9e7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8740349881217403783
-    second: 01_Hand Scrub_0
+      213: -2015825873862102229
+    second: WaterDrop_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 600
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 01_Hand Scrub_0
+      name: WaterDrop_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1024
-        height: 1536
+        x: 801
+        y: 628
+        width: 1392
+        height: 1923
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 78b479a98e5fb4970800000000000000
-      internalID: 8740349881217403783
+      spriteID: b23786b4c095604e0800000000000000
+      internalID: -2015825873862102229
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 78c309e24684bd240af85c8ff393323e
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      01_Hand Scrub_0: 8740349881217403783
+      WaterDrop_0: -2015825873862102229
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -35,7 +35,7 @@ MonoBehaviour:
   cameraMovementIntensity: 0.2
   customCameraZoomSize: 5
   levelCompleteZoomSize: 6
-  enableYAxisMovement: 0
+  enableYAxisMovement: 1
   cleaningSteps:
   - stepName: Scraper
     stepType: 1
