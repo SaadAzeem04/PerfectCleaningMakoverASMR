@@ -31,7 +31,7 @@ MonoBehaviour:
   rotationSpeed: 10
   rotationAmount: 15
   useParticles: 1
-  particlePrefab: {fileID: 8761929157680561608, guid: e97293d3d4601e04bb5f6e658edbe259, type: 3}
+  particlePrefab: {fileID: 8761929157680561608, guid: f1f1f69b245db3e45bbf43f89f66bbab, type: 3}
   particleOffset: {x: 0, y: 0.9, z: 0}
   isPolishTool: 0
   useSecondParticles: 0

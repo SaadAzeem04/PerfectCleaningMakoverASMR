@@ -813,8 +813,9 @@ public class MaskEraser : MonoBehaviour
     void PrepareLayer()
     {
         if (currentLayer >= layersList.Count) return;
-
         if (layersList[currentLayer] == null) return;
+
+        layersList[currentLayer].maskInteraction = SpriteMaskInteraction.None;  // Active layer ka mask reset karein
 
         Sprite originalSprite = layersList[currentLayer].sprite;
         Texture2D sheetTexture = originalSprite.texture;
@@ -836,6 +837,7 @@ public class MaskEraser : MonoBehaviour
         texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
         texture.SetPixels(slicePixels);
         texture.Apply();
+
         Vector2 exactPivot = new Vector2(originalSprite.pivot.x / width, originalSprite.pivot.y / height);
         layersList[currentLayer].sprite = Sprite.Create(
             texture,
@@ -845,6 +847,9 @@ public class MaskEraser : MonoBehaviour
             0,
             SpriteMeshType.FullRect
         );
+
+        // Dynamic Masking Call Karein
+        ApplyLayerMasking(originalSprite);
     }
 
     public bool EraseAtWorldPosition(Vector3 world)
@@ -1042,6 +1047,31 @@ public class MaskEraser : MonoBehaviour
         }
     }
 
+    void ApplyLayerMasking(Sprite originalSprite)
+    {
+        if (currentLayer >= layersList.Count) return;
+
+        SpriteRenderer currentSR = layersList[currentLayer];
+        if (currentSR != null)
+        {
+            SpriteMask mask = currentSR.gameObject.GetComponent<SpriteMask>();
+            if (mask == null)
+            {
+                mask = currentSR.gameObject.AddComponent<SpriteMask>();
+            }
+
+            mask.enabled = true;
+            mask.sprite = originalSprite;
+        }
+
+        int nextIndex = currentLayer + 1;
+        if (nextIndex < layersList.Count && layersList[nextIndex] != null)
+        {
+            SpriteRenderer nextSR = layersList[nextIndex];
+            nextSR.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+        }
+    }
+
     public void ScraperChunkDestroyed()
     {
         remainingScraperChunks--;
@@ -1092,8 +1122,6 @@ public class MaskEraser : MonoBehaviour
         isTransitioningTool = true;
         layerFinishedWaitingRelease = false;
 
-        // FIX 1: Direct SetActive(false) ki jagah ToggleGameplayUI(true) call karein.
-        // Is se current Variant Panel smooth animation (scale 0) ke sath hide hoga.
         ToggleGameplayUI(true);
 
         if (isUIHiddenByTimer)
@@ -1143,6 +1171,7 @@ public class MaskEraser : MonoBehaviour
         float time = 0;
         float durationOut = 0.6f;
 
+        // Purane Tool aur Layer ka normal Exit Animation
         while (time < durationOut)
         {
             time += Time.deltaTime;
@@ -1167,6 +1196,16 @@ public class MaskEraser : MonoBehaviour
             if (currentLayerSR != null) currentLayerSR.color = originalColor;
         }
 
+        // Purana Mask Disable Karein
+        if (currentLayer < layersList.Count && layersList[currentLayer] != null)
+        {
+            SpriteMask oldMask = layersList[currentLayer].GetComponent<SpriteMask>();
+            if (oldMask != null)
+            {
+                oldMask.enabled = false;
+            }
+        }
+
         currentLayer++;
 
         if (currentLayer >= objectData.cleaningSteps.Count)
@@ -1188,6 +1227,7 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
+        // Nayi Layer prepare hogi (Masking auto-set ho jayegi)
         PrepareLayer();
 
         ToolData nextTool = null;
@@ -1215,14 +1255,6 @@ public class MaskEraser : MonoBehaviour
                 targetCameraSize = defaultCameraSize;
             }
         }
-        else if (objectData != null && objectData.customCameraZoomSize > 0.1f)
-        {
-            targetCameraSize = objectData.customCameraZoomSize;
-        }
-        else
-        {
-            targetCameraSize = defaultCameraSize;
-        }
 
         float camZ = Mathf.Abs(Camera.main.transform.position.z);
 
@@ -1233,10 +1265,12 @@ public class MaskEraser : MonoBehaviour
         if (progressFill != null) progressFill.fillAmount = 0f;
         if (percentText != null) percentText.text = "0%";
 
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.2f);
 
         time = 0;
         float durationIn = 0.6f;
+
+        // Naye Tool ka Slide-In Animation (Layer standard rahegi, koi alpha fade nahi hoga)
         while (time < durationIn)
         {
             time += Time.deltaTime;
@@ -1260,10 +1294,8 @@ public class MaskEraser : MonoBehaviour
         UpdateUpcomingIconsPanel(true);
         if (toolFollower != null) toolFollower.enabled = true;
 
-        // Transition mukammal ho gayi
         isTransitioningTool = false;
 
-        // FIX 2: Naye step ka tool set hone par, uska Variant Panel smooth animation (scale 1) ke sath screen par aayega.
         ToggleGameplayUI(false);
 
         if (percentText != null) percentText.gameObject.SetActive(true);
@@ -1275,7 +1307,6 @@ public class MaskEraser : MonoBehaviour
             toolFollower.AnimateCapOff();
         }
     }
-
     void CompleteGame()
     {
         Debug.Log("CompleteGame() START HUA HAI!");

@@ -15,8 +15,7 @@ MonoBehaviour:
   hasVariants: 1
   toolVariants: []
   toolName: Glue_Data
-  cameraZoomSize: 6
-  capSprite: {fileID: -3608418587980911214, guid: 570882fe99a292048ba5c5c9e8709998, type: 3}
+  capSprite: {fileID: -2366766001498735861, guid: d2895c85e2720144a938f68cad862738, type: 3}
   capLocalPosition: {x: 0, y: 0.4, z: 0}
   toolType: 5
   toolSprite: {fileID: -989295801627094005, guid: 5b11df839079ec24c9d2881bc07efdb2, type: 3}
@@ -34,6 +33,7 @@ MonoBehaviour:
   useParticles: 1
   particlePrefab: {fileID: 0}
   particleOffset: {x: 0, y: -0.1, z: 0}
+  isPolishTool: 0
   useSecondParticles: 1
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
