@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 570882fe99a292048ba5c5c9e8709998
+guid: 19473f47ad33a4247a5e0dd5c4b3ef91
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3608418587980911214
-    second: Glue Cap_0
+      213: 1678503345882458972
+    second: PolishCOntainer_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 250
+  spritePixelsToUnits: 1400
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Glue Cap_0
+      name: PolishCOntainer_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 153
-        height: 181
+        width: 2628
+        height: 2736
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 29d2b7699625cedc0800000000000000
-      internalID: -3608418587980911214
+      spriteID: c5be0a566ed3b4710800000000000000
+      internalID: 1678503345882458972
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Glue Cap_0: -3608418587980911214
+      PolishCOntainer_0: 1678503345882458972
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
