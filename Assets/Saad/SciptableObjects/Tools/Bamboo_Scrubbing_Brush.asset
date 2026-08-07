@@ -15,14 +15,13 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: Bamboo_Scrubbing_Brush
-  cameraZoomSize: 6
   capSprite: {fileID: 0}
   capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 1
   toolSprite: {fileID: 6876266443201971334, guid: 0b279aa6a0bb439489986b0354da98a5, type: 3}
   soundOnlyOnHit: 1
   cleaningSpeed: 5
-  brushSize: 73
+  brushSize: 70
   brushShape: {fileID: 0}
   brushWidthScale: 1
   brushHeightScale: 1
@@ -32,13 +31,13 @@ MonoBehaviour:
   rotationSpeed: 10
   rotationAmount: 15
   useParticles: 1
-  particlePrefab: {fileID: 8761929157680561608, guid: 6f5ed51ba5c7b304ea73c9b3a635b91b, type: 3}
-  particleOffset: {x: 0, y: 0, z: 0}
+  particlePrefab: {fileID: 8761929157680561608, guid: e97293d3d4601e04bb5f6e658edbe259, type: 3}
+  particleOffset: {x: 0, y: 0.9, z: 0}
   isPolishTool: 0
   useSecondParticles: 0
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
-  eraseOffset: {x: 0, y: 0.5, z: 0}
+  eraseOffset: {x: 0, y: 0.9, z: 0}
   toolSound: {fileID: 8300000, guid: 545649752d804564092f70c58472e47c, type: 3}
   toolOffset: {x: 0, y: 0, z: 0}
   panelIcon: {fileID: -2354103043966879098, guid: 7a03461b2b4eaf04c835fa1c8c5dacd1, type: 3}

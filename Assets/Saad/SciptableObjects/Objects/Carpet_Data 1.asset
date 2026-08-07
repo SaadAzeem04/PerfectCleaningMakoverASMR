@@ -32,7 +32,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
   - {fileID: 11400000, guid: 51d3833199726f64aaecac50f4842704, type: 2}
   scraperChunksPrefab: {fileID: 0}
-  cameraMovementIntensity: 0.5
+  cameraMovementIntensity: 0.8
   customCameraZoomSize: 7
   levelCompleteZoomSize: 7
   enableYAxisMovement: 0
@@ -41,42 +41,42 @@ MonoBehaviour:
     stepType: 0
     requiredTool: {fileID: 11400000, guid: dd2a05e4c5384374e8091109dfaa0999, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 5.5
+    cameraZoomSize: 4.5
     dirtySprite: {fileID: -855298285791758126, guid: e0555847d094d2e4e8b2a765535a3114, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Wiping Water
     stepType: 0
     requiredTool: {fileID: 11400000, guid: da5139365cc0963408727028a090f6cc, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 5.5
+    cameraZoomSize: 4.5
     dirtySprite: {fileID: 6937817954938267909, guid: bc4dba1cb1ba99f408b0838a0ef7ca3f, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Foam Spray
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 5.5
+    cameraZoomSize: 4.5
     dirtySprite: {fileID: -6470460504253458178, guid: ff6bfe6119658544ebe60a5b69fc87aa, type: 3}
     stepPrefab: {fileID: 0}
-  - stepName: Wet Brush
+  - stepName: WipingWater
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 1327fb49ac58328418b9675fd0cd76ad, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 5.5
+    cameraZoomSize: 4.5
     dirtySprite: {fileID: -4178046375966092550, guid: 85a47617fa6c22b4e88340cd13a88082, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Water Spray
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 6.5
+    cameraZoomSize: 4.5
     dirtySprite: {fileID: -2276259661975475453, guid: 1d277fc5c4e6f7d4ea708a61ae6c500f, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Wiping
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 51d3833199726f64aaecac50f4842704, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 5.5
+    cameraZoomSize: 4.5
     dirtySprite: {fileID: 141893073332109768, guid: 000ba65a752dd814e800408ea7913d3c, type: 3}
     stepPrefab: {fileID: 0}
   customLayerOffsets: []

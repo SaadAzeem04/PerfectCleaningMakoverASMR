@@ -15,7 +15,6 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: Brush
-  cameraZoomSize: 6
   capSprite: {fileID: 0}
   capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 1
@@ -32,8 +31,9 @@ MonoBehaviour:
   rotationSpeed: 10
   rotationAmount: 15
   useParticles: 1
-  particlePrefab: {fileID: 8761929157680561608, guid: 6f5ed51ba5c7b304ea73c9b3a635b91b, type: 3}
+  particlePrefab: {fileID: 8761929157680561608, guid: 338fde2f5ac912c439ec152929eb0c06, type: 3}
   particleOffset: {x: 0, y: 0, z: 0}
+  isPolishTool: 0
   useSecondParticles: 0
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
@@ -41,3 +41,4 @@ MonoBehaviour:
   toolSound: {fileID: 8300000, guid: 545649752d804564092f70c58472e47c, type: 3}
   toolOffset: {x: 0, y: 0, z: 0}
   panelIcon: {fileID: -7469049263692879614, guid: 9de01350ef0269346b5f75d5acf41f2a, type: 3}
+  canRemove: 1

@@ -1,115 +1,139 @@
 fileFormatVersion: 2
-guid: eba627467a769904b9f22ffe2ec6da9c
+guid: d7584ebb427c4074e8e0932a79890edc
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 938133562103083597
-    second: 02_Dirt_remover_0
+      213: -9089949551101411353
+    second: AikSpray 1_0
   - first:
-      213: -6556612649838034756
-    second: 02_Dirt_remover_1
+      213: -6062756611061495772
+    second: AikSpray 1_1
   - first:
-      213: -778895066513093535
-    second: 02_Dirt_remover_2
+      213: -2505910738249299828
+    second: AikSpray 1_2
   - first:
-      213: 3531646597520169665
-    second: 02_Dirt_remover_3
+      213: 2122913407296891815
+    second: AikSpray 1_3
   - first:
-      213: -2666167291719061735
-    second: 02_Dirt_remover_4
+      213: -5993672251954288839
+    second: AikSpray 1_4
   - first:
-      213: 6231724511946827740
-    second: 02_Dirt_remover_5
+      213: 45904387170089426
+    second: AikSpray 1_5
   - first:
-      213: -7856448729967147144
-    second: 02_Dirt_remover_6
+      213: 7570437388805466999
+    second: AikSpray 1_6
   - first:
-      213: -8487579202842021523
-    second: 02_Dirt_remover_7
+      213: 7774910434225729277
+    second: AikSpray 1_7
   - first:
-      213: -1142744785220146434
-    second: 02_Dirt_remover_8
+      213: 5571079316512814263
+    second: AikSpray 1_8
   - first:
-      213: -301947439536835687
-    second: 02_Dirt_remover_9
+      213: -3161067539828778385
+    second: AikSpray 1_9
   - first:
-      213: 7659690433989929322
-    second: 02_Dirt_remover_10
+      213: -2486815026881470360
+    second: AikSpray 1_10
   - first:
-      213: 8688901460710942269
-    second: 02_Dirt_remover_11
+      213: 7483691852223841559
+    second: AikSpray 1_11
   - first:
-      213: -6179376143649603635
-    second: 02_Dirt_remover_12
+      213: 3204544948726451345
+    second: AikSpray 1_12
   - first:
-      213: 1589286574380512818
-    second: 02_Dirt_remover_13
+      213: 1368661537294216299
+    second: AikSpray 1_13
   - first:
-      213: -2167537213452452817
-    second: 02_Dirt_remover_14
+      213: 2817845903996464510
+    second: AikSpray 1_14
   - first:
-      213: -1535371639136655446
-    second: 02_Dirt_remover_15
+      213: 4084907420739877870
+    second: AikSpray 1_15
   - first:
-      213: 361183714228848536
-    second: 02_Dirt_remover_16
+      213: 9019202337416155269
+    second: AikSpray 1_16
   - first:
-      213: 3078359481480664384
-    second: 02_Dirt_remover_17
+      213: -4001857588114210730
+    second: AikSpray 1_17
   - first:
-      213: 2310760363236646867
-    second: 02_Dirt_remover_18
+      213: -6817698905125671384
+    second: AikSpray 1_18
   - first:
-      213: -8975249510931284696
-    second: 02_Dirt_remover_19
+      213: 5748726609275803179
+    second: AikSpray 1_19
   - first:
-      213: -5620206574633329207
-    second: 02_Dirt_remover_20
+      213: -4459138836515079941
+    second: AikSpray 1_20
   - first:
-      213: -8047041333447663360
-    second: 02_Dirt_remover_21
+      213: -6617297954533342582
+    second: AikSpray 1_21
   - first:
-      213: 2573543276598682716
-    second: 02_Dirt_remover_22
+      213: -7815178477585950301
+    second: AikSpray 1_22
   - first:
-      213: 6717765045302106380
-    second: 02_Dirt_remover_23
+      213: 5582678875556345816
+    second: AikSpray 1_23
   - first:
-      213: -317300353130648316
-    second: 02_Dirt_remover_24
+      213: -8983672039404632763
+    second: AikSpray 1_24
   - first:
-      213: -6676461263413734553
-    second: 02_Dirt_remover_25
+      213: -88143107420744999
+    second: AikSpray 1_25
   - first:
-      213: 7027418982996482608
-    second: 02_Dirt_remover_26
+      213: -2729193266902742702
+    second: AikSpray 1_26
   - first:
-      213: 3730456082236379977
-    second: 02_Dirt_remover_27
+      213: 5511411799146374137
+    second: AikSpray 1_27
   - first:
-      213: -9214325701199329825
-    second: 02_Dirt_remover_28
+      213: -317647009175880279
+    second: AikSpray 1_28
   - first:
-      213: -157559026540045991
-    second: 02_Dirt_remover_29
+      213: 2033202363320279172
+    second: AikSpray 1_29
   - first:
-      213: 4659263909616236866
-    second: 02_Dirt_remover_30
+      213: -4730969196575221036
+    second: AikSpray 1_30
   - first:
-      213: 3233015857642959136
-    second: 02_Dirt_remover_31
+      213: 5676248881664078674
+    second: AikSpray 1_31
   - first:
-      213: -6609912623308124381
-    second: 02_Dirt_remover_32
+      213: -1660555413005649436
+    second: AikSpray 1_32
   - first:
-      213: 564864889840317313
-    second: 02_Dirt_remover_33
+      213: -5733443141328088274
+    second: AikSpray 1_33
   - first:
-      213: 1564926627542902695
-    second: 02_Dirt_remover_34
+      213: 5751873891035983961
+    second: AikSpray 1_34
   - first:
-      213: 709413007781238557
-    second: 02_Dirt_remover_35
+      213: -4497657896667060310
+    second: AikSpray 1_35
+  - first:
+      213: 5384396362531764485
+    second: AikSpray 1_36
+  - first:
+      213: -255218186083871425
+    second: AikSpray 1_37
+  - first:
+      213: 100540454535070183
+    second: AikSpray 1_38
+  - first:
+      213: 3062978464669957372
+    second: AikSpray 1_39
+  - first:
+      213: 7967350313149688155
+    second: AikSpray 1_40
+  - first:
+      213: 6857140794415722917
+    second: AikSpray 1_41
+  - first:
+      213: -2914047736517377617
+    second: AikSpray 1_42
+  - first:
+      213: 9129306169406830840
+    second: AikSpray 1_43
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -129,7 +153,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 1
+  isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -156,7 +180,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 900
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -218,13 +242,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 02_Dirt_remover_0
+      name: AikSpray 1_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 246
-        height: 1024
+        x: 296
+        y: 34
+        width: 694
+        height: 1166
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -233,19 +257,151 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d42b609118be40d00800000000000000
-      internalID: 938133562103083597
+      spriteID: 7eff06c3b030ad180800000000000000
+      internalID: -9089949551101411353
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 02_Dirt_remover_1
+      name: AikSpray 1_1
       rect:
         serializedVersion: 2
-        x: 81
-        y: 990
-        width: 7
+        x: 724
+        y: 1195
+        width: 9
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 428470eebf2ccdba0800000000000000
+      internalID: -6062756611061495772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_2
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1189
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8840dfd577393dd0800000000000000
+      internalID: -2505910738249299828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_3
+      rect:
+        serializedVersion: 2
+        x: 771
+        y: 1174
+        width: 20
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ab68da0f7a167d10800000000000000
+      internalID: 2122913407296891815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_4
+      rect:
+        serializedVersion: 2
+        x: 791
+        y: 1192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 937262ab7d232dca0800000000000000
+      internalID: -5993672251954288839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_5
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 1195
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d9b7e20cc513a000800000000000000
+      internalID: 45904387170089426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_6
+      rect:
+        serializedVersion: 2
+        x: 815
+        y: 1184
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77be51af1b89f0960800000000000000
+      internalID: 7570437388805466999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_7
+      rect:
+        serializedVersion: 2
+        x: 827
+        y: 1186
+        width: 10
         height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -255,18 +411,128 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cb0429c888b3205a0800000000000000
-      internalID: -6556612649838034756
+      spriteID: dfea080c8d706eb60800000000000000
+      internalID: 7774910434225729277
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 02_Dirt_remover_2
+      name: AikSpray 1_8
       rect:
         serializedVersion: 2
-        x: 81
-        y: 982
+        x: 737
+        y: 1183
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b4b54c1f13705d40800000000000000
+      internalID: 5571079316512814263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_9
+      rect:
+        serializedVersion: 2
+        x: 741
+        y: 1174
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6adc7112d1a124d0800000000000000
+      internalID: -3161067539828778385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_10
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 1187
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86060a4a8ee0d7dd0800000000000000
+      internalID: -2486815026881470360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_11
+      rect:
+        serializedVersion: 2
+        x: 795
+        y: 1184
+        width: 21
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 715894cd61a6bd760800000000000000
+      internalID: 7483691852223841559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_12
+      rect:
+        serializedVersion: 2
+        x: 948
+        y: 1043
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19ccc9707a4d87c20800000000000000
+      internalID: 3204544948726451345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_13
+      rect:
+        serializedVersion: 2
+        x: 952
+        y: 1026
         width: 7
         height: 6
       alignment: 0
@@ -277,20 +543,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 16cce23501fc035f0800000000000000
-      internalID: -778895066513093535
+      spriteID: b6c692caa667ef210800000000000000
+      internalID: 1368661537294216299
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 02_Dirt_remover_3
+      name: AikSpray 1_14
       rect:
         serializedVersion: 2
-        x: 81
-        y: 972
+        x: 951
+        y: 1008
         width: 7
-        height: 11
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -299,20 +565,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1ca18657edde20130800000000000000
-      internalID: 3531646597520169665
+      spriteID: e7daf7b8beffa1720800000000000000
+      internalID: 2817845903996464510
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 02_Dirt_remover_4
+      name: AikSpray 1_15
       rect:
         serializedVersion: 2
-        x: 81
-        y: 803
-        width: 7
-        height: 9
+        x: 309
+        y: 971
+        width: 6
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -321,217 +587,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 91fe15169fedffad0800000000000000
-      internalID: -2666167291719061735
+      spriteID: eebbe8908a180b830800000000000000
+      internalID: 4084907420739877870
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 02_Dirt_remover_5
+      name: AikSpray 1_16
       rect:
         serializedVersion: 2
-        x: 81
-        y: 651
-        width: 7
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: cd76fa03d688b7650800000000000000
-      internalID: 6231724511946827740
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_6
-      rect:
-        serializedVersion: 2
-        x: 81
-        y: 350
-        width: 7
-        height: 11
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8774d3e518948f290800000000000000
-      internalID: -7856448729967147144
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_7
-      rect:
-        serializedVersion: 2
-        x: 81
-        y: 334
-        width: 7
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d61bb932faf063a80800000000000000
-      internalID: -8487579202842021523
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_8
-      rect:
-        serializedVersion: 2
-        x: 81
-        y: 302
-        width: 8
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: efae5002ca72420f0800000000000000
-      internalID: -1142744785220146434
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_9
-      rect:
-        serializedVersion: 2
-        x: 81
-        y: 286
-        width: 7
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 993719d47644fcbf0800000000000000
-      internalID: -301947439536835687
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_10
-      rect:
-        serializedVersion: 2
-        x: 81
-        y: 126
-        width: 8
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a696d6feddfac4a60800000000000000
-      internalID: 7659690433989929322
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_11
-      rect:
-        serializedVersion: 2
-        x: 81
-        y: 94
-        width: 8
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d366c0eb7dd259870800000000000000
-      internalID: 8688901460710942269
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_12
-      rect:
-        serializedVersion: 2
-        x: 81
-        y: 86
-        width: 8
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: dcffd3813227e3aa0800000000000000
-      internalID: -6179376143649603635
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_13
-      rect:
-        serializedVersion: 2
-        x: 81
-        y: 22
-        width: 8
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2367f3018b74e0610800000000000000
-      internalID: 1589286574380512818
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_14
-      rect:
-        serializedVersion: 2
-        x: 81
-        y: 8
-        width: 8
+        x: 958
+        y: 958
+        width: 11
         height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -541,20 +609,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f2cf9b2736c5be1e0800000000000000
-      internalID: -2167537213452452817
+      spriteID: 58010177db4aa2d70800000000000000
+      internalID: 9019202337416155269
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 02_Dirt_remover_15
+      name: AikSpray 1_17
       rect:
         serializedVersion: 2
-        x: 82
-        y: 710
+        x: 298
+        y: 946
         width: 7
-        height: 7
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -563,18 +631,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: aa7ec0301a341bae0800000000000000
-      internalID: -1535371639136655446
+      spriteID: 65040c2f9bb8678c0800000000000000
+      internalID: -4001857588114210730
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 02_Dirt_remover_16
+      name: AikSpray 1_18
       rect:
         serializedVersion: 2
-        x: 82
-        y: 622
+        x: 957
+        y: 950
         width: 6
         height: 8
       alignment: 0
@@ -585,327 +653,459 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8974449acae230500800000000000000
-      internalID: 361183714228848536
+      spriteID: 82e2a6ea7faa261a0800000000000000
+      internalID: -6817698905125671384
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 02_Dirt_remover_17
+      name: AikSpray 1_19
       rect:
         serializedVersion: 2
-        x: 82
-        y: 326
-        width: 7
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0455c9873a788ba20800000000000000
-      internalID: 3078359481480664384
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_18
-      rect:
-        serializedVersion: 2
-        x: 82
-        y: 238
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 3dfd5c3be48711020800000000000000
-      internalID: 2310760363236646867
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_19
-      rect:
-        serializedVersion: 2
-        x: 82
-        y: 230
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 82d317a6f12817380800000000000000
-      internalID: -8975249510931284696
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_20
-      rect:
-        serializedVersion: 2
-        x: 82
-        y: 222
-        width: 7
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9cd5aa2c5e30102b0800000000000000
-      internalID: -5620206574633329207
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_21
-      rect:
-        serializedVersion: 2
-        x: 82
-        y: 142
-        width: 7
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 00167f2da8a235090800000000000000
-      internalID: -8047041333447663360
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_22
-      rect:
-        serializedVersion: 2
-        x: 82
-        y: 70
-        width: 7
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c5462cf89ff07b320800000000000000
-      internalID: 2573543276598682716
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_23
-      rect:
-        serializedVersion: 2
-        x: 82
-        y: 62
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c0994c967bb4a3d50800000000000000
-      internalID: 6717765045302106380
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_24
-      rect:
-        serializedVersion: 2
-        x: 82
-        y: 38
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 40daa8c8209b89bf0800000000000000
-      internalID: -317300353130648316
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_25
-      rect:
-        serializedVersion: 2
-        x: 82
-        y: 30
-        width: 7
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7639195bad17853a0800000000000000
-      internalID: -6676461263413734553
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_26
-      rect:
-        serializedVersion: 2
-        x: 259
-        y: 0
-        width: 1273
-        height: 1024
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 03a97590558668160800000000000000
-      internalID: 7027418982996482608
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_27
-      rect:
-        serializedVersion: 2
-        x: 802
-        y: 805
-        width: 36
-        height: 44
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 94315efba0e35c330800000000000000
-      internalID: 3730456082236379977
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_28
-      rect:
-        serializedVersion: 2
-        x: 826
-        y: 856
-        width: 32
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: fd503472893202080800000000000000
-      internalID: -9214325701199329825
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_29
-      rect:
-        serializedVersion: 2
-        x: 829
-        y: 880
-        width: 11
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9599cef66ec30ddf0800000000000000
-      internalID: -157559026540045991
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_30
-      rect:
-        serializedVersion: 2
-        x: 844
-        y: 876
-        width: 58
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 249397707d709a040800000000000000
-      internalID: 4659263909616236866
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_31
-      rect:
-        serializedVersion: 2
-        x: 891
-        y: 938
+        x: 300
+        y: 942
         width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2658b0a46497cf40800000000000000
+      internalID: 5748726609275803179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_20
+      rect:
+        serializedVersion: 2
+        x: 306
+        y: 925
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf8be5d8ad4fd12c0800000000000000
+      internalID: -4459138836515079941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_21
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 924
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a820f1ff192aa24a0800000000000000
+      internalID: -6617297954533342582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_22
+      rect:
+        serializedVersion: 2
+        x: 980
+        y: 918
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a9163bc498ea8390800000000000000
+      internalID: -7815178477585950301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_23
+      rect:
+        serializedVersion: 2
+        x: 961
+        y: 911
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d7fc98ebd8a97d40800000000000000
+      internalID: 5582678875556345816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_24
+      rect:
+        serializedVersion: 2
+        x: 945
+        y: 887
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5458da0b0e5935380800000000000000
+      internalID: -8983672039404632763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_25
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 897
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d299c09f4ad6cef0800000000000000
+      internalID: -88143107420744999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_26
+      rect:
+        serializedVersion: 2
+        x: 997
+        y: 898
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 259cfd20f25ff1ad0800000000000000
+      internalID: -2729193266902742702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_27
+      rect:
+        serializedVersion: 2
+        x: 955
+        y: 889
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f32403a4d77c7c40800000000000000
+      internalID: 5511411799146374137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_28
+      rect:
+        serializedVersion: 2
+        x: 971
+        y: 881
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ad3b166abd779bf0800000000000000
+      internalID: -317647009175880279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_29
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 870
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 480a03ee6c2673c10800000000000000
+      internalID: 2033202363320279172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_30
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 866
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4da91dad498385eb0800000000000000
+      internalID: -4730969196575221036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_31
+      rect:
+        serializedVersion: 2
+        x: 955
+        y: 856
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 253bb48a84616ce40800000000000000
+      internalID: 5676248881664078674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_32
+      rect:
+        serializedVersion: 2
+        x: 962
+        y: 857
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e932fd56a584f8e0800000000000000
+      internalID: -1660555413005649436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_33
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 835
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e235d3d07d7be60b0800000000000000
+      internalID: -5733443141328088274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_34
+      rect:
+        serializedVersion: 2
+        x: 993
+        y: 830
+        width: 13
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9503b0444d2c2df40800000000000000
+      internalID: 5751873891035983961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_35
+      rect:
+        serializedVersion: 2
+        x: 974
+        y: 825
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa7edebf8fb1591c0800000000000000
+      internalID: -4497657896667060310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_36
+      rect:
+        serializedVersion: 2
+        x: 950
+        y: 816
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5097c96c6f739ba40800000000000000
+      internalID: 5384396362531764485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_37
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 809
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3550467968457cf0800000000000000
+      internalID: -255218186083871425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_38
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 798
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e18e1eb201356100800000000000000
+      internalID: 100540454535070183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_39
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 783
+        width: 7
         height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -915,18 +1115,62 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 02173041bcafddc20800000000000000
-      internalID: 3233015857642959136
+      spriteID: cfcf25d6fa2e18a20800000000000000
+      internalID: 3062978464669957372
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 02_Dirt_remover_32
+      name: AikSpray 1_40
       rect:
         serializedVersion: 2
-        x: 891
-        y: 924
+        x: 948
+        y: 764
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b596260a5e6b19e60800000000000000
+      internalID: 7967350313149688155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_41
+      rect:
+        serializedVersion: 2
+        x: 957
+        y: 761
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a13df9c835792f50800000000000000
+      internalID: 6857140794415722917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AikSpray 1_42
+      rect:
+        serializedVersion: 2
+        x: 955
+        y: 756
         width: 6
         height: 6
       alignment: 0
@@ -937,64 +1181,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 32f495b6d7fd444a0800000000000000
-      internalID: -6609912623308124381
+      spriteID: fa1c95ed5093f87d0800000000000000
+      internalID: -2914047736517377617
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 02_Dirt_remover_33
+      name: AikSpray 1_43
       rect:
         serializedVersion: 2
-        x: 899
-        y: 928
-        width: 38
-        height: 33
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 183b501ef9dc6d700800000000000000
-      internalID: 564864889840317313
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_34
-      rect:
-        serializedVersion: 2
-        x: 903
-        y: 895
-        width: 27
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7a7ae36f97cb7b510800000000000000
-      internalID: 1564926627542902695
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02_Dirt_remover_35
-      rect:
-        serializedVersion: 2
-        x: 995
-        y: 187
+        x: 979
+        y: 753
         width: 6
-        height: 6
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1003,8 +1203,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d1797d73f5758d900800000000000000
-      internalID: 709413007781238557
+      spriteID: 8f8b649879fc1be70800000000000000
+      internalID: 9129306169406830840
       vertices: []
       indices: 
       edges: []
@@ -1023,42 +1223,50 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      02_Dirt_remover_0: 938133562103083597
-      02_Dirt_remover_1: -6556612649838034756
-      02_Dirt_remover_10: 7659690433989929322
-      02_Dirt_remover_11: 8688901460710942269
-      02_Dirt_remover_12: -6179376143649603635
-      02_Dirt_remover_13: 1589286574380512818
-      02_Dirt_remover_14: -2167537213452452817
-      02_Dirt_remover_15: -1535371639136655446
-      02_Dirt_remover_16: 361183714228848536
-      02_Dirt_remover_17: 3078359481480664384
-      02_Dirt_remover_18: 2310760363236646867
-      02_Dirt_remover_19: -8975249510931284696
-      02_Dirt_remover_2: -778895066513093535
-      02_Dirt_remover_20: -5620206574633329207
-      02_Dirt_remover_21: -8047041333447663360
-      02_Dirt_remover_22: 2573543276598682716
-      02_Dirt_remover_23: 6717765045302106380
-      02_Dirt_remover_24: -317300353130648316
-      02_Dirt_remover_25: -6676461263413734553
-      02_Dirt_remover_26: 7027418982996482608
-      02_Dirt_remover_27: 3730456082236379977
-      02_Dirt_remover_28: -9214325701199329825
-      02_Dirt_remover_29: -157559026540045991
-      02_Dirt_remover_3: 3531646597520169665
-      02_Dirt_remover_30: 4659263909616236866
-      02_Dirt_remover_31: 3233015857642959136
-      02_Dirt_remover_32: -6609912623308124381
-      02_Dirt_remover_33: 564864889840317313
-      02_Dirt_remover_34: 1564926627542902695
-      02_Dirt_remover_35: 709413007781238557
-      02_Dirt_remover_4: -2666167291719061735
-      02_Dirt_remover_5: 6231724511946827740
-      02_Dirt_remover_6: -7856448729967147144
-      02_Dirt_remover_7: -8487579202842021523
-      02_Dirt_remover_8: -1142744785220146434
-      02_Dirt_remover_9: -301947439536835687
+      AikSpray 1_0: -9089949551101411353
+      AikSpray 1_1: -6062756611061495772
+      AikSpray 1_10: -2486815026881470360
+      AikSpray 1_11: 7483691852223841559
+      AikSpray 1_12: 3204544948726451345
+      AikSpray 1_13: 1368661537294216299
+      AikSpray 1_14: 2817845903996464510
+      AikSpray 1_15: 4084907420739877870
+      AikSpray 1_16: 9019202337416155269
+      AikSpray 1_17: -4001857588114210730
+      AikSpray 1_18: -6817698905125671384
+      AikSpray 1_19: 5748726609275803179
+      AikSpray 1_2: -2505910738249299828
+      AikSpray 1_20: -4459138836515079941
+      AikSpray 1_21: -6617297954533342582
+      AikSpray 1_22: -7815178477585950301
+      AikSpray 1_23: 5582678875556345816
+      AikSpray 1_24: -8983672039404632763
+      AikSpray 1_25: -88143107420744999
+      AikSpray 1_26: -2729193266902742702
+      AikSpray 1_27: 5511411799146374137
+      AikSpray 1_28: -317647009175880279
+      AikSpray 1_29: 2033202363320279172
+      AikSpray 1_3: 2122913407296891815
+      AikSpray 1_30: -4730969196575221036
+      AikSpray 1_31: 5676248881664078674
+      AikSpray 1_32: -1660555413005649436
+      AikSpray 1_33: -5733443141328088274
+      AikSpray 1_34: 5751873891035983961
+      AikSpray 1_35: -4497657896667060310
+      AikSpray 1_36: 5384396362531764485
+      AikSpray 1_37: -255218186083871425
+      AikSpray 1_38: 100540454535070183
+      AikSpray 1_39: 3062978464669957372
+      AikSpray 1_4: -5993672251954288839
+      AikSpray 1_40: 7967350313149688155
+      AikSpray 1_41: 6857140794415722917
+      AikSpray 1_42: -2914047736517377617
+      AikSpray 1_43: 9129306169406830840
+      AikSpray 1_5: 45904387170089426
+      AikSpray 1_6: 7570437388805466999
+      AikSpray 1_7: 7774910434225729277
+      AikSpray 1_8: 5571079316512814263
+      AikSpray 1_9: -3161067539828778385
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
