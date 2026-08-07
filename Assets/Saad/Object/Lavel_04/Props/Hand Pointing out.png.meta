@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5e3b16b6a635daf46aaf25a2fedced33
+guid: af601d0bc601e4a41aeee92dd7c38f9f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2366766001498735861
-    second: Glue Cap 1_0
+      213: -4392634867086077912
+    second: Hand Pointing out_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 1200
+  spritePixelsToUnits: 250
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Glue Cap 1_0
+      name: Hand Pointing out_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1039
-        height: 2085
+        width: 224
+        height: 222
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b0b323e7cde872fd0800000000000000
-      internalID: -2366766001498735861
+      spriteID: 820d65f8cd93a03c0800000000000000
+      internalID: -4392634867086077912
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: d391a3fc303794c4b8964b873116af75
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Glue Cap 1_0: -2366766001498735861
+      Hand Pointing out_0: -4392634867086077912
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

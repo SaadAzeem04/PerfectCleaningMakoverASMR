@@ -141,9 +141,6 @@ public class GluePourController : MonoBehaviour
 
         if (isNearTarget)
         {
-            // Position ko patchTarget ke center par smoothly lock karein
-            transform.position = Vector3.Lerp(transform.position, patchTarget.position, Time.deltaTime * 10f);
-
             // --- STEP 1: ROTATION ---
             toolVisualTransform.localRotation = Quaternion.Lerp(
                 toolVisualTransform.localRotation,
@@ -157,9 +154,6 @@ public class GluePourController : MonoBehaviour
             // --- STEP 2: WAVE MOTION, SOUND & UI UPDATE ---
             if (isRotationComplete && enableWaveMotion)
             {
-                // Exact target position match
-                transform.position = patchTarget.position;
-
                 isUIControlledByGlue = true;
 
                 // Touch Freeze: Jaise hi Wave Animation shuru ho, player touch ignore hoga
@@ -262,7 +256,7 @@ public class GluePourController : MonoBehaviour
                 toolFollower.HideTool();
             }
 
-            // MaskEraser ko Next Step par bhejein
+            // MaskEraser ko Next Step par bhejein (FIXED HERE)
             MaskEraser maskEraser = Object.FindFirstObjectByType<MaskEraser>();
             if (maskEraser != null)
             {

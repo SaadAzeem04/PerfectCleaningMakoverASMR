@@ -37,7 +37,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
   scraperChunksPrefab: {fileID: 0}
   cameraMovementIntensity: 1.5
-  customCameraZoomSize: 6
+  customCameraZoomSize: 5
   levelCompleteZoomSize: 7.5
   enableYAxisMovement: 0
   cleaningSteps:
@@ -45,63 +45,63 @@ MonoBehaviour:
     stepType: 0
     requiredTool: {fileID: 11400000, guid: d80f976ed70147547aaa7e94ab5fbbf5, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 6
+    cameraZoomSize: 5
     dirtySprite: {fileID: -3164809056393425246, guid: 050b1007bbff59640874dc65caef9dfe, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Air Gun
     stepType: 0
     requiredTool: {fileID: 11400000, guid: dd2a05e4c5384374e8091109dfaa0999, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 8
+    cameraZoomSize: 7
     dirtySprite: {fileID: -5225540622116197949, guid: a4c2683b4b5ba734099061c76f1ffbb0, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Foam Spray
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 8
+    cameraZoomSize: 7
     dirtySprite: {fileID: 8793915729297761979, guid: a5068d661f4034b48b3724fe59798554, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Wet Brush
     stepType: 0
     requiredTool: {fileID: 11400000, guid: bbc0dc95d91ed5b4d9fe24396025dfff, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 6
+    cameraZoomSize: 5
     dirtySprite: {fileID: 8793915729297761979, guid: a5068d661f4034b48b3724fe59798554, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Water Spray
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 8
+    cameraZoomSize: 7
     dirtySprite: {fileID: 2750298860172458669, guid: fff7cb2b1ac73fa41880c00af0a5f165, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Glue
     stepType: 0
     requiredTool: {fileID: 11400000, guid: ea55c264c9ed2434db0d180940fdf889, type: 2}
     allowCameraMovement: 0
-    cameraZoomSize: 6
+    cameraZoomSize: 5
     dirtySprite: {fileID: -2276259661975475453, guid: 19d0b4f5a90d478439ece16a286fcee7, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Patch
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 3633bbd303f05a64498edbfea534a8e9, type: 2}
     allowCameraMovement: 0
-    cameraZoomSize: 6
+    cameraZoomSize: 5
     dirtySprite: {fileID: -2276259661975475453, guid: 19d0b4f5a90d478439ece16a286fcee7, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Leather Polish
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 5f11a787b11dc634c9d2b4a82b301e70, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 8
+    cameraZoomSize: 7
     dirtySprite: {fileID: 141893073332109768, guid: 38eb8918b287fd0469be894ecd3b731d, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Towel
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 8
+    cameraZoomSize: 7.5
     dirtySprite: {fileID: 7336298474659753992, guid: e6dcae71140c9ab46bb87d987773bc25, type: 3}
     stepPrefab: {fileID: 0}
   customLayerOffsets: []
