@@ -16,7 +16,7 @@ MonoBehaviour:
   backgroundSprite: {fileID: -6695950386315148514, guid: 5ea6c9fe944a5ba488bf858a1e0de37b, type: 3}
   cleanSprite: {fileID: -247037112251525876, guid: e25c60912f1eaf14dad233d7bbf5a4c0, type: 3}
   levelBackgroundSprite: {fileID: -6695950386315148514, guid: 5ea6c9fe944a5ba488bf858a1e0de37b, type: 3}
-  levelPositionOffset: {x: 0, y: 0.3, z: 0}
+  levelPositionOffset: {x: 0, y: 0.6, z: 0}
   dirtyLayers:
   - {fileID: -3164809056393425246, guid: 050b1007bbff59640874dc65caef9dfe, type: 3}
   - {fileID: -5225540622116197949, guid: a4c2683b4b5ba734099061c76f1ffbb0, type: 3}

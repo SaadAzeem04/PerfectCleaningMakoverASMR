@@ -34,7 +34,7 @@ MonoBehaviour:
   scraperChunksPrefab: {fileID: 0}
   cameraMovementIntensity: 0.8
   customCameraZoomSize: 7
-  levelCompleteZoomSize: 7
+  levelCompleteZoomSize: 6.5
   enableYAxisMovement: 0
   cleaningSteps:
   - stepName: Air Gun

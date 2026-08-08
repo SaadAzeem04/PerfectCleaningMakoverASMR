@@ -36,6 +36,10 @@ public class ToolFollower : MonoBehaviour
     private Coroutine capCoroutine;
     private Coroutine handGestureCoroutine;
 
+    // Drag Tilt variables
+    private Vector3 lastPosition;
+    private float currentTilt = 0f;
+
     void Awake()
     {
         cam = Camera.main;
@@ -46,14 +50,19 @@ public class ToolFollower : MonoBehaviour
         if (handGestureRenderer != null) handGestureRenderer.gameObject.SetActive(false);
     }
 
+    void Start()
+    {
+        lastPosition = transform.position;
+    }
+
     void Update()
     {
-        // ADDED: IsInputLocked check - Jab touch lock ho to movement aur cleaning freeze ho jaye
+        // FIX: Jab Input Lock ho, tab HandleDragTilt() run nahi hoga taake external glue animation lock na ho
         if (IsInputLocked || PauseManager.IsGamePaused || toolSprite == null || !toolSprite.enabled)
         {
             CanClean = false;
             UpdateColliderState(false);
-            return;
+            return; // Early return without overriding rotation
         }
 
         // 1. INPUT DETECTION
@@ -91,10 +100,11 @@ public class ToolFollower : MonoBehaviour
             canFollow = false;
             isDragging = false;
             UpdateColliderState(false);
+            HandleDragTilt();
             return;
         }
 
-        // 3. TOUCH START - Touch karte hi Hand Gesture instant stop ho jayega
+        // 3. TOUCH START & RELEASE
         if (touchStarted || touchPressing)
         {
             if (!hasPlayerInteracted)
@@ -109,8 +119,8 @@ public class ToolFollower : MonoBehaviour
             canFollow = false;
             isDragging = false;
             CanClean = false;
-            transform.rotation = Quaternion.identity;
             UpdateColliderState(false);
+            HandleDragTilt();
             return;
         }
 
@@ -125,7 +135,6 @@ public class ToolFollower : MonoBehaviour
         Vector3 world = cam.ScreenToWorldPoint(screenPos);
         world.z = 0;
 
-        // Pehle Tool Offset add karenge
         Vector3 targetPos = world + (currentToolData != null ? currentToolData.toolOffset : Vector3.zero);
         Quaternion targetRot = Quaternion.identity;
 
@@ -134,7 +143,7 @@ public class ToolFollower : MonoBehaviour
             isDragging = true;
         }
 
-        // Scrubbing / Spraying Animations add karenge
+        // Scrubbing / Spraying Animations
         if (currentToolData != null)
         {
             switch (currentToolData.movementType)
@@ -161,25 +170,60 @@ public class ToolFollower : MonoBehaviour
         }
 
         // ==========================================
-        //  FINAL CLAMPING (SAARE OFFSETS KE BAAD)
+        // FINAL CLAMPING
         // ==========================================
         Vector3 finalViewport = cam.WorldToViewportPoint(targetPos);
 
-        // X-axis Margin: 0.10f (10% left/right edges se andar)
-        // Y-axis Margin: 0.05f (5% top/bottom edges se andar)
         finalViewport.x = Mathf.Clamp(finalViewport.x, 0.10f, 0.90f);
         finalViewport.y = Mathf.Clamp(finalViewport.y, 0.05f, 0.95f);
 
         targetPos = cam.ViewportToWorldPoint(finalViewport);
         targetPos.z = 0f;
-        // ==========================================
 
         transform.position = targetPos;
         transform.rotation = targetRot;
 
+        // Drag Tilt apply karein
+        HandleDragTilt();
+
         CanClean = true;
         UpdateColliderState(true);
     }
+
+    private void HandleDragTilt()
+    {
+        // FIX: Lock state ya tilt disabled hone par rotation override nahi hogi
+        if (IsInputLocked || currentToolData == null || !currentToolData.enableDragTilt)
+        {
+            return;
+        }
+
+        Vector3 viewportPos = cam.WorldToViewportPoint(transform.position);
+
+        float normalizedX = (viewportPos.x - 0.5f) * 2f;
+
+        float targetTilt = normalizedX * currentToolData.maxTiltAngle;
+
+        currentTilt = Mathf.Lerp(currentTilt, targetTilt, Time.deltaTime * currentToolData.tiltSpeed);
+
+        if (toolSprite != null)
+        {
+            toolSprite.transform.localRotation = Quaternion.Euler(0f, 0f, currentTilt);
+        }
+    }
+
+    private void ResetTilt()
+    {
+        currentTilt = Mathf.Lerp(currentTilt, 0f, Time.deltaTime * 10f);
+
+        if (toolSprite != null)
+        {
+            toolSprite.transform.localRotation = Quaternion.Euler(0f, 0f, currentTilt);
+        }
+
+        lastPosition = transform.position;
+    }
+
     private void UpdateColliderState(bool state)
     {
         if (toolCollider != null && toolCollider.enabled != state)
@@ -192,7 +236,6 @@ public class ToolFollower : MonoBehaviour
     {
         Debug.Log("<color=green>SetTool Called! Tool Name: </color>" + (data != null ? data.name : "NULL"));
 
-        // ADDED: Direct Reset so every new tool starts with touch enabled
         IsInputLocked = false;
 
         currentToolData = data;
@@ -201,16 +244,18 @@ public class ToolFollower : MonoBehaviour
         hasPlayerInteracted = false;
         transform.rotation = Quaternion.identity;
 
+        // Tilt Angle Clear
+        currentTilt = 0f;
+        if (toolSprite != null) toolSprite.transform.localRotation = Quaternion.identity;
+
         StopHandGesture();
 
         if (data != null)
         {
-            // 1. Ensure Main Tool GameObject is active
             gameObject.SetActive(true);
 
             if (toolSprite != null)
             {
-                // Sprite GameObject ko active karein aur render enable karein
                 toolSprite.gameObject.SetActive(true);
                 toolSprite.sprite = data.toolSprite;
                 toolSprite.enabled = true;
@@ -220,10 +265,10 @@ public class ToolFollower : MonoBehaviour
                 toolSprite.color = c;
             }
 
-            // 2. Tool ko immediately spawn point par move karein (taake drag se pehle visible ho)
             if (spawnPoint != null)
             {
                 transform.position = spawnPoint.position;
+                lastPosition = spawnPoint.position;
 
                 if (data.particleOffset != Vector3.zero)
                 {
@@ -317,7 +362,6 @@ public class ToolFollower : MonoBehaviour
 
         capSpriteRenderer.gameObject.SetActive(false);
 
-        // Cap animation complete hone ke BAAD 2-Step Hand Gesture Trigger!
         if (!hasPlayerInteracted && handGestureTarget != null)
         {
             StartHandGesture();
@@ -341,11 +385,11 @@ public class ToolFollower : MonoBehaviour
 
         while (!hasPlayerInteracted && handGestureTarget != null)
         {
-            Vector3 gluePos = transform.position; // Glue tool ki position
-            Vector3 leftStartPos = gluePos + handStartOffset; // Left side position
-            Vector3 targetPos = handGestureTarget.position; // Target (Purse) position
+            Vector3 gluePos = transform.position;
+            Vector3 leftStartPos = gluePos + handStartOffset;
+            Vector3 targetPos = handGestureTarget.position;
 
-            float duration = 1.3f; // Total movement time
+            float duration = 1.3f;
             float elapsed = 0f;
 
             handGestureRenderer.transform.position = leftStartPos;
@@ -366,13 +410,11 @@ public class ToolFollower : MonoBehaviour
 
                 Vector3 currentPos;
 
-                // 1. STEP 1 (Pehle 35% time): Left se Glue ki taraf aayega
                 if (t < 0.35f)
                 {
                     float tSub = t / 0.35f;
                     currentPos = Vector3.Lerp(leftStartPos, gluePos, Mathf.SmoothStep(0f, 1f, tSub));
                 }
-                // 2. STEP 2 (Baaki 65% time): Glue se Target point ki taraf upar jayega
                 else
                 {
                     float tSub = (t - 0.35f) / 0.65f;
@@ -381,7 +423,6 @@ public class ToolFollower : MonoBehaviour
 
                 handGestureRenderer.transform.position = currentPos;
 
-                // Smooth Fade-In and Fade-Out
                 if (t < 0.15f)
                 {
                     c.a = Mathf.Lerp(0f, 1f, t / 0.15f);
@@ -426,14 +467,20 @@ public class ToolFollower : MonoBehaviour
     {
         StopHandGesture();
 
-        if (toolSprite != null) toolSprite.enabled = false;
+        if (toolSprite != null)
+        {
+            toolSprite.enabled = false;
+            toolSprite.transform.localRotation = Quaternion.identity;
+        }
+
         if (capSpriteRenderer != null) capSpriteRenderer.gameObject.SetActive(false);
 
         canFollow = false;
         isDragging = false;
         hasPlayerInteracted = false;
         CanClean = false;
-        IsInputLocked = false; // Safety reset on hide
+        IsInputLocked = false;
+        currentTilt = 0f;
 
         UpdateColliderState(false);
     }

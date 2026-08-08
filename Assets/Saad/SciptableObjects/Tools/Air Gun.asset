@@ -45,6 +45,9 @@ MonoBehaviour:
   scrubAmount: 0.4
   rotationSpeed: 10
   rotationAmount: 15
+  enableDragTilt: 1
+  maxTiltAngle: 10
+  tiltSpeed: 10
   useParticles: 1
   particlePrefab: {fileID: 8123549400438394861, guid: f2d19221327961c43a1d0c947f558436, type: 3}
   particleOffset: {x: 0, y: 1.1, z: 0}

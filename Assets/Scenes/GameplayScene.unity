@@ -743,7 +743,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -30928558859418925, guid: 081544e6034f87b46bf1c3c08a63c54d, type: 3}
+  m_Sprite: {fileID: -5601767544888516966, guid: b045c1e14a1b7e84b83b65a7fffd5b40, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1257,7 +1257,7 @@ MonoBehaviour:
   upcomingIcons: []
   levelCompleteDelay: 2.5
   brushHardness: 0.14
-  eraserIntensityMultiplier: 0.3
+  eraserIntensityMultiplier: 0.519
   cleaningThreshold: 52
   cameraTransitionIntensity: 2
   cameraMoveIntensity: 0
@@ -1683,7 +1683,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -30928558859418925, guid: 081544e6034f87b46bf1c3c08a63c54d, type: 3}
+  m_Sprite: {fileID: -5601767544888516966, guid: b045c1e14a1b7e84b83b65a7fffd5b40, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3233,8 +3233,8 @@ MonoBehaviour:
   slideInOffset: {x: 12, y: 0, z: 0}
   slideDuration: 0.5
   rubDuration: 1.2
-  rubSpeed: 18
-  rubAmount: 0.35
+  rubSpeed: 14
+  rubAmount: 0.2
 --- !u!4 &1055864676
 Transform:
   m_ObjectHideFlags: 0
@@ -3623,7 +3623,7 @@ MonoBehaviour:
   pourAngle: 120
   rotationSpeed: 8
   enableWaveMotion: 1
-  fixedStartOffset: {x: 0.5, y: 0, z: 0}
+  fixedStartOffset: {x: 0.3, y: 0.5, z: 0}
   strokeSpeed: 1
   maxDistanceX: 0.8
   waveHeightY: 0.1
@@ -4512,7 +4512,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -9103333480473540825, guid: 267600f9b6f2d824fbcd8a51342fd94e, type: 3}
+  m_Sprite: {fileID: -5113469029405553909, guid: 3deb387bf2c351643bc6cb67d1383b59, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5288,7 +5288,7 @@ Transform:
   m_GameObject: {fileID: 1513780384}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.09, y: -0.39, z: 0}
+  m_LocalPosition: {x: 0.09, y: 0.68, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6362,7 +6362,7 @@ Transform:
   m_GameObject: {fileID: 2107839769}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.38, y: -0.7, z: 0}
+  m_LocalPosition: {x: 0.24, y: -0.47, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

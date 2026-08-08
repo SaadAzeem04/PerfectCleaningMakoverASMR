@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
+  m_Name: Scrubber_data
+  m_EditorClassIdentifier: 
+  hasVariants: 0
+  toolVariants: []
+  toolName: Brush
+  capSprite: {fileID: 0}
+  capLocalPosition: {x: 0, y: 0, z: 0}
+  toolType: 1
+  toolSprite: {fileID: 2034542128009207851, guid: f8edb77fac5e0ac4ea18097797271391, type: 3}
+  soundOnlyOnHit: 1
+  cleaningSpeed: 5
+  brushSize: 73
+  brushShape: {fileID: 0}
+  brushWidthScale: 1
+  brushHeightScale: 1
+  movementType: 0
+  scrubSpeed: 0
+  scrubAmount: 0
+  rotationSpeed: 30
+  rotationAmount: 90
+  enableDragTilt: 1
+  maxTiltAngle: 10
+  tiltSpeed: 10
+  useParticles: 1
+  particlePrefab: {fileID: 8761929157680561608, guid: 338fde2f5ac912c439ec152929eb0c06, type: 3}
+  particleOffset: {x: 0, y: 0, z: 0}
+  isPolishTool: 0
+  useSecondParticles: 0
+  secondParticlePrefab: {fileID: 0}
+  secondParticleOffset: {x: 0, y: 0, z: 0}
+  eraseOffset: {x: 0, y: 0, z: 0}
+  toolSound: {fileID: 8300000, guid: 545649752d804564092f70c58472e47c, type: 3}
+  toolOffset: {x: 0, y: 0, z: 0}
+  panelIcon: {fileID: 2034542128009207851, guid: f8edb77fac5e0ac4ea18097797271391, type: 3}
+  canRemove: 1

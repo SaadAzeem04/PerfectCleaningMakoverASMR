@@ -38,7 +38,7 @@ MonoBehaviour:
   cleaningSpeed: 5
   brushSize: 70
   brushShape: {fileID: 2800000, guid: 7ab29361b5a635748be26076c62212ea, type: 3}
-  brushWidthScale: 3
+  brushWidthScale: 2
   brushHeightScale: 0.5
   movementType: 0
   scrubSpeed: -5
@@ -47,12 +47,12 @@ MonoBehaviour:
   rotationAmount: 15
   useParticles: 1
   particlePrefab: {fileID: 1680514027832752688, guid: c6c5c197df5c6c445bf0eb6917b0efa0, type: 3}
-  particleOffset: {x: 0, y: 1, z: 0}
+  particleOffset: {x: 0, y: 0.7, z: 0}
   isPolishTool: 0
   useSecondParticles: 0
   secondParticlePrefab: {fileID: 7963218675485666827, guid: a0a06b1cb3bdd65468463a03bedc38bf, type: 3}
   secondParticleOffset: {x: 0, y: 0, z: 0}
-  eraseOffset: {x: 0, y: 1.1, z: 0}
+  eraseOffset: {x: 0, y: 0.7, z: 0}
   toolSound: {fileID: 8300000, guid: 99ebdfe0a3711f1499e10c7079651908, type: 3}
   toolOffset: {x: 0, y: 0, z: 0}
   panelIcon: {fileID: 7745951184457009190, guid: 657b952c2726a2e4b92eacf98d58a6f2, type: 3}

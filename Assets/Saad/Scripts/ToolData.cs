@@ -7,7 +7,6 @@ public enum ToolMovementType
     Scrubbing,      // Left-Right move hone ke liye
     Spraying,       // Vibration ke liye
     Rotation
-
 }
 
 [System.Serializable]
@@ -26,13 +25,11 @@ menuName = "Cleaning Game/Tool Data"
 )]
 public class ToolData : ScriptableObject
 {
-
     [Header("--- Variant Settings ---")]
     public bool hasVariants = false; // Is tool ke naye options on/off karne ke liye
     public System.Collections.Generic.List<ToolVariant> toolVariants = new System.Collections.Generic.List<ToolVariant>();
 
     public string toolName;
-   // public float cameraZoomSize = 5f;
 
     [Header("Cap Settings")]
     public Sprite capSprite; // Glue Cap ki sprite asset yahan drag karein
@@ -46,7 +43,7 @@ public class ToolData : ScriptableObject
 
     public int brushSize = 35;
 
-    // NAYA ADDITION: Custom Brush Shape (Square, Rectangle, Dual Circle, etc.) and Dimensions
+    // Custom Brush Shape (Square, Rectangle, Dual Circle, etc.) and Dimensions
     [Header("--- Custom Brush Shape & Tip Settings ---")]
     [Tooltip("Brush ki custom shape PNG assign karein (Square, Rectangle, Dual Circle, etc.). Blank hone par default circle chalega.")]
     public Texture2D brushShape;
@@ -57,7 +54,7 @@ public class ToolData : ScriptableObject
     [Tooltip("Brush Height Multiplier (Y-Axis)")]
     public float brushHeightScale = 1.0f;
 
-    // 2. NAYA SECTION ADD KYA HE: Tool ki Animation / Movement ke liye
+    // Tool ki Animation / Movement ke liye
     [Header("Animation & Movement Settings")]
     [Tooltip("Check karein ke tool screen par kaise move karega (Scrubbing, Spraying, ya Normal)")]
     public ToolMovementType movementType = ToolMovementType.StandardFollow;
@@ -71,11 +68,20 @@ public class ToolData : ScriptableObject
     [Tooltip("Kitne degree tak aage-piche rotate kare? (Normal = 15 ya 20 degree)")]
     public float rotationAmount = 15f;
 
+    // NAYA SECTION: Long tools (Bamboo, Air Gun, Spray) ke drag tilt ke liye
+    [Header("Drag Tilt / Rotation Settings")]
+    [Tooltip("Kya drag karte waqt tool left/right drag karne par tilt/rotate hoga?")]
+    public bool enableDragTilt = false;
+    [Tooltip("Maximum kitna tilt/rotate hoga degrees mein (Normal = 15)")]
+    public float maxTiltAngle = 15f;
+    [Tooltip("Tilt hone aur wapas seedha hone ki speed (Normal = 10)")]
+    public float tiltSpeed = 10f;
+
     // Effects
     [Header("Purana Particle System")]
     public bool useParticles;
     public GameObject particlePrefab;
-    public Vector3 particleOffset; // Agar pehle particle ka offset chahiye
+    public Vector3 particleOffset;
 
     [Header("Polish Settings")]
     public bool isPolishTool;
@@ -90,7 +96,7 @@ public class ToolData : ScriptableObject
 
     [Header("UI Display Settings")]
     [Tooltip("Yeh woh picture hai jo Top Panel mein saaf aur clean nazar aayegi.")]
-    public Sprite panelIcon; // Yeh nayi line add kar dein
+    public Sprite panelIcon;
 
     [Header("Tool Functionality")]
     public bool canRemove = true; // Check karein agar yeh tool erase/clean kar sakta hai

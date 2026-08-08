@@ -141,6 +141,15 @@ public class GluePourController : MonoBehaviour
 
         if (isNearTarget)
         {
+            // Touch Freeze: Range mein aate hi player control disable ho jayega
+            if (toolFollower != null)
+            {
+                toolFollower.IsInputLocked = true;
+            }
+
+            // Object ko EXACT Patch Target Transform ki position par lock/snap karein
+            transform.position = Vector3.Lerp(transform.position, patchTarget.position, Time.deltaTime * 15f);
+
             // --- STEP 1: ROTATION ---
             toolVisualTransform.localRotation = Quaternion.Lerp(
                 toolVisualTransform.localRotation,
@@ -155,12 +164,6 @@ public class GluePourController : MonoBehaviour
             if (isRotationComplete && enableWaveMotion)
             {
                 isUIControlledByGlue = true;
-
-                // Touch Freeze: Jaise hi Wave Animation shuru ho, player touch ignore hoga
-                if (toolFollower != null)
-                {
-                    toolFollower.IsInputLocked = true;
-                }
 
                 // GLUE POUR SOUND START
                 if (strokeProgress < 1f)
@@ -225,6 +228,12 @@ public class GluePourController : MonoBehaviour
         }
         else
         {
+            // Target se door hone par Touch Unlock karein
+            if (toolFollower != null && !isCompleted)
+            {
+                toolFollower.IsInputLocked = false;
+            }
+
             StopGlueSound();
             ResetVisualTransform();
         }
@@ -256,7 +265,7 @@ public class GluePourController : MonoBehaviour
                 toolFollower.HideTool();
             }
 
-            // MaskEraser ko Next Step par bhejein (FIXED HERE)
+            // MaskEraser ko Next Step par bhejein
             MaskEraser maskEraser = Object.FindFirstObjectByType<MaskEraser>();
             if (maskEraser != null)
             {

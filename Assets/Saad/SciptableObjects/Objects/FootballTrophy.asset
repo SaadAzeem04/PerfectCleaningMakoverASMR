@@ -26,7 +26,7 @@ MonoBehaviour:
   - {fileID: 3465286685962602723, guid: 8b3ad91b17503a14090a6aeffd399834, type: 3}
   requiredTools:
   - {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
-  - {fileID: 11400000, guid: bdab883a2eb5d4a42952bc8c56c2acdb, type: 2}
+  - {fileID: 11400000, guid: f4b2c6e5c097b8b499e2b2db113d44f6, type: 2}
   - {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
   - {fileID: 11400000, guid: bbc0dc95d91ed5b4d9fe24396025dfff, type: 2}
   - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
@@ -46,7 +46,7 @@ MonoBehaviour:
     stepPrefab: {fileID: 6922760847136583357, guid: 4deff5d503a112b40a0edd4be17cf33d, type: 3}
   - stepName: Scrubbing Brush
     stepType: 0
-    requiredTool: {fileID: 11400000, guid: bdab883a2eb5d4a42952bc8c56c2acdb, type: 2}
+    requiredTool: {fileID: 11400000, guid: f4b2c6e5c097b8b499e2b2db113d44f6, type: 2}
     allowCameraMovement: 1
     cameraZoomSize: 5
     dirtySprite: {fileID: 6937817954938267909, guid: 0709f2c67e6c7774e92590ca27189681, type: 3}
