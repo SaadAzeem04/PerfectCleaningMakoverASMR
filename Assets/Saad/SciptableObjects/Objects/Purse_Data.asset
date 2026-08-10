@@ -36,8 +36,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5f11a787b11dc634c9d2b4a82b301e70, type: 2}
   - {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
   scraperChunksPrefab: {fileID: 0}
-  cameraMovementIntensity: 1.5
-  customCameraZoomSize: 7
+  cameraMovementIntensity: 1.8
+  customCameraZoomSize: 5
   levelCompleteZoomSize: 7.5
   enableYAxisMovement: 0
   cleaningSteps:

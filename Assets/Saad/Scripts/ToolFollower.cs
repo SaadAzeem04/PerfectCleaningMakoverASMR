@@ -192,26 +192,42 @@ public class ToolFollower : MonoBehaviour
 
     private void HandleDragTilt()
     {
-        // FIX: Lock state ya tilt disabled hone par rotation override nahi hogi
+        // Input locked ho, tool null ho, ya tilt disabled ho to return
         if (IsInputLocked || currentToolData == null || !currentToolData.enableDragTilt)
         {
             return;
         }
 
-        Vector3 viewportPos = cam.WorldToViewportPoint(transform.position);
+        float targetTilt = 0f;
 
-        float normalizedX = (viewportPos.x - 0.5f) * 2f;
+        if (hasPlayerInteracted)
+        {
+            Vector3 viewportPos = cam.WorldToViewportPoint(transform.position);
 
-        float targetTilt = normalizedX * currentToolData.maxTiltAngle;
+            // Center (0.5) = 0 | Left (< 0.5) = Negative | Right (> 0.5) = Positive
+            float normalizedX = (viewportPos.x - 0.5f) * 2f;
 
-        currentTilt = Mathf.Lerp(currentTilt, targetTilt, Time.deltaTime * currentToolData.tiltSpeed);
+            // Invert Check: Agar invertTiltDirection true hoga to direction ulat (-1) ho jaye gi
+            float directionMultiplier = currentToolData.invertTiltDirection ? -1f : 1f;
+
+            // Final Tilt Angle Calculation
+            targetTilt = normalizedX * currentToolData.maxTiltAngle * directionMultiplier;
+        }
+        else
+        {
+            // Entrance / Slide-in animation ke waqt straight rahega
+            targetTilt = 0f;
+        }
+
+        // Smoothness & Responsiveness
+        float speed = Mathf.Max(currentToolData.tiltSpeed, 20f);
+        currentTilt = Mathf.Lerp(currentTilt, targetTilt, Time.deltaTime * speed);
 
         if (toolSprite != null)
         {
             toolSprite.transform.localRotation = Quaternion.Euler(0f, 0f, currentTilt);
         }
     }
-
     private void ResetTilt()
     {
         currentTilt = Mathf.Lerp(currentTilt, 0f, Time.deltaTime * 10f);

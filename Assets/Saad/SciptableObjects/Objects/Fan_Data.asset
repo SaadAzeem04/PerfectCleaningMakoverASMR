@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b3b812e2aacbd478ca7e4faba98cae, type: 3}
+  m_Name: Fan_Data
+  m_EditorClassIdentifier: 
+  objectName: Fan
+  backgroundSprite: {fileID: -4770323187786573839, guid: 3aca05c84fa58c642874c2e426ff6f02, type: 3}
+  cleanSprite: {fileID: -2909001653608646754, guid: 39b4227331485ac4092f3c9de0d024a8, type: 3}
+  levelBackgroundSprite: {fileID: -4770323187786573839, guid: 3aca05c84fa58c642874c2e426ff6f02, type: 3}
+  levelPositionOffset: {x: 0, y: 0, z: 0}
+  dirtyLayers:
+  - {fileID: -3164809056393425246, guid: 169616cc683ccff46b1fa5d44eb7fb65, type: 3}
+  - {fileID: -5225540622116197949, guid: 5b21010b05739c741bfd369a38366a37, type: 3}
+  - {fileID: 8793915729297761979, guid: e038cc3128ff9d24c81feada1f0fb93d, type: 3}
+  - {fileID: 2750298860172458669, guid: bfc6716a15af5c64bb1c89dfe164fe3d, type: 3}
+  - {fileID: -2276259661975475453, guid: 210cb1dedde08754c8260e2fb16d47a2, type: 3}
+  - {fileID: -8779701301079290561, guid: c23a3315f06accf49a607caa27e0e6d5, type: 3}
+  - {fileID: 5330841517489122334, guid: 4afc48a04787cf84b8c1cbf4c870bcb7, type: 3}
+  - {fileID: 6107874386685228254, guid: 2556d918c0a723c49b666436111ab1b9, type: 3}
+  - {fileID: -1789501607007826491, guid: 1221af10a58c02b4995fb251cbede827, type: 3}
+  - {fileID: 7521781616925448243, guid: 7b4b1fa3e1c1914409047dce475a2db1, type: 3}
+  - {fileID: -2909001653608646754, guid: 39b4227331485ac4092f3c9de0d024a8, type: 3}
+  requiredTools:
+  - {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
+  - {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
+  - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+  - {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
+  - {fileID: 11400000, guid: 0b1dd081eb0e051499ca074b3e852c68, type: 2}
+  - {fileID: 11400000, guid: 15c990029dcb1584c88894f3dede08ed, type: 2}
+  scraperChunksPrefab: {fileID: 0}
+  cameraMovementIntensity: 0.2
+  customCameraZoomSize: 5
+  levelCompleteZoomSize: 6
+  enableYAxisMovement: 1
+  cleaningSteps:
+  - stepName: Scraper
+    stepType: 1
+    requiredTool: {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
+    allowCameraMovement: 1
+    cameraZoomSize: 5.8
+    dirtySprite: {fileID: 0}
+    stepPrefab: {fileID: 6922760847136583357, guid: bebf539b168b6c744846f15c065272a5, type: 3}
+  - stepName: Foam Spray
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
+    allowCameraMovement: 1
+    cameraZoomSize: 6.5
+    dirtySprite: {fileID: -5225540622116197949, guid: 5b21010b05739c741bfd369a38366a37, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: Water Spray
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+    allowCameraMovement: 1
+    cameraZoomSize: 6.5
+    dirtySprite: {fileID: 8793915729297761979, guid: e038cc3128ff9d24c81feada1f0fb93d, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: Grander
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 0b1dd081eb0e051499ca074b3e852c68, type: 2}
+    allowCameraMovement: 1
+    cameraZoomSize: 6.5
+    dirtySprite: {fileID: 2750298860172458669, guid: bfc6716a15af5c64bb1c89dfe164fe3d, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: ColorSpray
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 15c990029dcb1584c88894f3dede08ed, type: 2}
+    allowCameraMovement: 1
+    cameraZoomSize: 6.5
+    dirtySprite: {fileID: -2276259661975475453, guid: 210cb1dedde08754c8260e2fb16d47a2, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: FanBaseMud
+    stepType: 1
+    requiredTool: {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
+    allowCameraMovement: 1
+    cameraZoomSize: 6.5
+    dirtySprite: {fileID: 0}
+    stepPrefab: {fileID: 6922760847136583357, guid: 7e285e49510327747b8bb3abd69514ed, type: 3}
+  - stepName: FoamSpray
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
+    allowCameraMovement: 1
+    cameraZoomSize: 6.5
+    dirtySprite: {fileID: 5330841517489122334, guid: 4afc48a04787cf84b8c1cbf4c870bcb7, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: WaterSpray
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+    allowCameraMovement: 1
+    cameraZoomSize: 6.5
+    dirtySprite: {fileID: 6107874386685228254, guid: 2556d918c0a723c49b666436111ab1b9, type: 3}
+    stepPrefab: {fileID: 0}
+  - stepName: Color Spray
+    stepType: 0
+    requiredTool: {fileID: 11400000, guid: 15c990029dcb1584c88894f3dede08ed, type: 2}
+    allowCameraMovement: 1
+    cameraZoomSize: 6.5
+    dirtySprite: {fileID: 7521781616925448243, guid: 7b4b1fa3e1c1914409047dce475a2db1, type: 3}
+    stepPrefab: {fileID: 0}
+  customLayerOffsets: []
+  customLayerScales: []
+  levelCompleteIcon: {fileID: -2909001653608646754, guid: 39b4227331485ac4092f3c9de0d024a8, type: 3}

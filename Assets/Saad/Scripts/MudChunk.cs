@@ -11,7 +11,7 @@ public class MudChunk : MonoBehaviour
     private Color originalColor;
 
     [Header("Level / Ground Settings")]
-    [Tooltip("Is Y-position par chunk ruk kar fade out ho jayega.")]
+    [Tooltip("Agar dynamic floor calculate na ho paye to fallback value")]
     [SerializeField] private float floorYThreshold = -3.5f;
 
     [Header("Chunk Animation Settings")]
@@ -33,8 +33,18 @@ public class MudChunk : MonoBehaviour
             originalColor = spriteRenderer.color;
         }
 
-        // Collider ke bajaye direct SPRITE TEXTURE ki edges read karein
         GenerateExactSpriteOutline();
+    }
+
+    private void Start()
+    {
+        // Camera Viewport ke hisaab se ground level calculate karein
+        if (Camera.main != null)
+        {
+            float camZ = Mathf.Abs(Camera.main.transform.position.z);
+            Vector3 bottomScreenWorldPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.05f, camZ));
+            floorYThreshold = bottomScreenWorldPos.y;
+        }
     }
 
     private void GenerateExactSpriteOutline()
@@ -44,17 +54,12 @@ public class MudChunk : MonoBehaviour
         Sprite sprite = spriteRenderer.sprite;
         List<Vector2> spriteEdgePoints = new List<Vector2>();
 
-        // Sprite asset ki exact PNG boundary read kar rahe hain
         if (sprite.GetPhysicsShapeCount() > 0)
         {
             sprite.GetPhysicsShape(0, spriteEdgePoints);
         }
 
-        if (spriteEdgePoints.Count == 0)
-        {
-            Debug.LogWarning($"[MudChunk] '{gameObject.name}' ke Sprite Asset ki outline points read nahi ho sake!");
-            return;
-        }
+        if (spriteEdgePoints.Count == 0) return;
 
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.startWidth = lineWidth;
@@ -73,13 +78,12 @@ public class MudChunk : MonoBehaviour
         if (spriteRenderer != null)
         {
             lineRenderer.sortingLayerID = spriteRenderer.sortingLayerID;
-            lineRenderer.sortingOrder = spriteRenderer.sortingOrder + 10;
+            lineRenderer.sortingOrder = spriteRenderer.sortingOrder + 1;
         }
 
         lineRenderer.positionCount = spriteEdgePoints.Count;
         for (int i = 0; i < spriteEdgePoints.Count; i++)
         {
-            // Sprite ke exact local points par line set kar rahe hain
             lineRenderer.SetPosition(i, new Vector3(spriteEdgePoints[i].x, spriteEdgePoints[i].y, -0.1f));
         }
 
@@ -88,7 +92,6 @@ public class MudChunk : MonoBehaviour
 
     private void Update()
     {
-        // Line Green Pulse Effect
         if (isGlowing && !isFalling && lineRenderer != null)
         {
             float pingPong = Mathf.PingPong(Time.time * glowPulseSpeed, 1f);
@@ -122,6 +125,9 @@ public class MudChunk : MonoBehaviour
             isFalling = true;
             SetGlow(false);
 
+            // TOOL KE PEECHE BHEJNE KA COMPREHENSIVE LOGIC
+            PushChunkBehindTool(collision.gameObject);
+
             MaskEraser eraser = Object.FindFirstObjectByType<MaskEraser>();
             if (eraser != null)
             {
@@ -137,13 +143,57 @@ public class MudChunk : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Tool ke tamaam visual parts read karke chunk ko hamesha tool ke peeche bhejta hai
+    /// </summary>
+    private void PushChunkBehindTool(GameObject toolObject)
+    {
+        // 1. Tool aur uske sabhi child components se SpriteRenderer dhoondo
+        SpriteRenderer[] toolSRs = toolObject.GetComponentsInParent<SpriteRenderer>();
+        if (toolSRs == null || toolSRs.Length == 0)
+        {
+            toolSRs = toolObject.GetComponentsInChildren<SpriteRenderer>();
+        }
+
+        if (toolSRs != null && toolSRs.Length > 0)
+        {
+            // Tool ka sab se highest sorting order aur layer nikalen
+            SpriteRenderer highestToolSR = toolSRs[0];
+            foreach (var sr in toolSRs)
+            {
+                if (sr.sortingOrder > highestToolSR.sortingOrder)
+                {
+                    highestToolSR = sr;
+                }
+            }
+
+            // Chunk aur uske tamaam child Sprites ko Tool ki Layer match karke Order -10 kar do
+            SpriteRenderer[] chunkSRs = GetComponentsInChildren<SpriteRenderer>();
+            foreach (var cSR in chunkSRs)
+            {
+                cSR.sortingLayerID = highestToolSR.sortingLayerID;
+                cSR.sortingOrder = highestToolSR.sortingOrder - 10;
+            }
+        }
+        else if (spriteRenderer != null)
+        {
+            // Backup fallback
+            spriteRenderer.sortingOrder -= 20;
+        }
+
+        // 2. Extra Safety: 3D World Space Z-Axis par bhi Tool se thoda peeche bhejen
+        Vector3 pos = transform.position;
+        pos.z = toolObject.transform.position.z + 0.5f;
+        transform.position = pos;
+    }
+
     private IEnumerator ChunkCompleteSequenceRoutine()
     {
         Quaternion initialRotation = transform.rotation;
         float elapsed = 0f;
         float direction = Random.value > 0.5f ? 1f : -1f;
 
-        // STEP 1: WOBBLE / ROTATE IN PLACE
+        // STEP 1: WOBBLE / ROTATE IN PLACE (Tool ke peeche)
         while (elapsed < rotateDuration)
         {
             elapsed += Time.deltaTime;
@@ -168,9 +218,10 @@ public class MudChunk : MonoBehaviour
         }
 
         rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.gravityScale = 3.5f;
+        rb.gravityScale = 4f;
 
-        rb.linearVelocity = new Vector2(Random.Range(-3f, 3f), Random.Range(2f, 4f));
+        // Direct niche drop hone ke liye velocity
+        rb.linearVelocity = new Vector2(Random.Range(-2f, 2f), Random.Range(-1f, -3f));
         rb.angularVelocity = Random.Range(-90f, 90f);
 
         while (transform.position.y > floorYThreshold)

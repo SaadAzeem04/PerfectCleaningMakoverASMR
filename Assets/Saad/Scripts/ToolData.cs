@@ -76,6 +76,7 @@ public class ToolData : ScriptableObject
     public float maxTiltAngle = 15f;
     [Tooltip("Tilt hone aur wapas seedha hone ki speed (Normal = 10)")]
     public float tiltSpeed = 10f;
+    public bool invertTiltDirection; // Brush jaise flat tools ke liye isay TICK kar dein
 
     // Effects
     [Header("Purana Particle System")]

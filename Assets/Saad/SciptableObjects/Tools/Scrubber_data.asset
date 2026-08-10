@@ -18,7 +18,7 @@ MonoBehaviour:
   capSprite: {fileID: 0}
   capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 1
-  toolSprite: {fileID: 2034542128009207851, guid: f8edb77fac5e0ac4ea18097797271391, type: 3}
+  toolSprite: {fileID: 7986114588071771919, guid: 3394d8f02b4160444a6023f3beb94569, type: 3}
   soundOnlyOnHit: 1
   cleaningSpeed: 5
   brushSize: 73
@@ -31,8 +31,9 @@ MonoBehaviour:
   rotationSpeed: 30
   rotationAmount: 90
   enableDragTilt: 1
-  maxTiltAngle: 10
+  maxTiltAngle: 60
   tiltSpeed: 10
+  invertTiltDirection: 1
   useParticles: 1
   particlePrefab: {fileID: 8761929157680561608, guid: 338fde2f5ac912c439ec152929eb0c06, type: 3}
   particleOffset: {x: 0, y: 0, z: 0}

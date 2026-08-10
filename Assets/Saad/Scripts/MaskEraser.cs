@@ -610,7 +610,7 @@ public class MaskEraser : MonoBehaviour
             progressTimer += Time.deltaTime;
             if (progressTimer > 0.15f || !Input.GetMouseButton(0))
             {
-            //updateProgress:
+                //updateProgress:
                 UpdateProgress();
                 progressTimer = 0f;
                 needsProgressCheck = false;
@@ -1170,6 +1170,7 @@ public class MaskEraser : MonoBehaviour
 
         float time = 0;
         float durationOut = 0.6f;
+        float patchFadeDelay = 2f; // Patch 0.3 seconds tak fully visible rahega, phir ghaib hoga
 
         // Purane Tool aur Layer ka normal Exit Animation
         while (time < durationOut)
@@ -1183,7 +1184,11 @@ public class MaskEraser : MonoBehaviour
             if (currentLayerSR != null)
             {
                 Color c = originalColor;
-                c.a = Mathf.Lerp(originalColor.a, 0f, t);
+
+                // Loop ke andar hi delay: Pehle 0.3s tak alpha 1.0 rahega, baki ke 0.3s mein smoothly 0 ho jayega
+                float fadeT = Mathf.Clamp01((time - patchFadeDelay) / (durationOut - patchFadeDelay));
+                c.a = Mathf.Lerp(originalColor.a, 0f, fadeT);
+
                 currentLayerSR.color = c;
             }
 
@@ -1960,8 +1965,8 @@ public class MaskEraser : MonoBehaviour
 
         //  CHECK: Agar AAKHRI Step Complete hua hai (Level Finish)
         if (currentLayer >= objectData.cleaningSteps.Count - 1)
-        { 
-    CompleteGame();
+        {
+            CompleteGame();
         }
         else
         {
