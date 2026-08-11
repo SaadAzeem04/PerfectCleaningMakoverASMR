@@ -49,28 +49,28 @@ MonoBehaviour:
     requiredTool: {fileID: 11400000, guid: f4b2c6e5c097b8b499e2b2db113d44f6, type: 2}
     allowCameraMovement: 1
     cameraZoomSize: 5.8
-    dirtySprite: {fileID: -3164809056393425246, guid: ed7a2a7ef73e1774e8337e62912cb707, type: 3}
+    dirtySprite: {fileID: -5225540622116197949, guid: 000802bb106c31c44a545a2dcbabefbe, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Foam Spray
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
     allowCameraMovement: 1
     cameraZoomSize: 6.5
-    dirtySprite: {fileID: -5225540622116197949, guid: 000802bb106c31c44a545a2dcbabefbe, type: 3}
+    dirtySprite: {fileID: 8793915729297761979, guid: f01c512c15c701541aee13461d7c6082, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Wet Brush
     stepType: 0
     requiredTool: {fileID: 11400000, guid: bbc0dc95d91ed5b4d9fe24396025dfff, type: 2}
     allowCameraMovement: 1
     cameraZoomSize: 5.8
-    dirtySprite: {fileID: 8793915729297761979, guid: f01c512c15c701541aee13461d7c6082, type: 3}
+    dirtySprite: {fileID: 2750298860172458669, guid: b8ccf5ef21d657947a31c8ef7ce9de6d, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Water Spray
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
     allowCameraMovement: 1
     cameraZoomSize: 6.5
-    dirtySprite: {fileID: 2750298860172458669, guid: b8ccf5ef21d657947a31c8ef7ce9de6d, type: 3}
+    dirtySprite: {fileID: -2276259661975475453, guid: 683bdc5ba21237c47abb092214a8913e, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: towel
     stepType: 0

@@ -15,7 +15,7 @@ MonoBehaviour:
   hasVariants: 1
   toolVariants:
   - variantName: WetBrush
-    toolSprite: {fileID: -1165259615240445614, guid: f63b4a39e8db07b43b68af4d86c47df1, type: 3}
+    toolSprite: {fileID: 3492953786835675030, guid: 246ec4f6d1418d146a4216737a92ba92, type: 3}
     iconSprite: {fileID: -5986452673002578869, guid: 49b17bbc107bee34da09cb94054d6c06, type: 3}
     coinPrice: 0
     brushSize: 70
@@ -45,6 +45,10 @@ MonoBehaviour:
   scrubAmount: 10
   rotationSpeed: 12
   rotationAmount: 20
+  enableDragTilt: 0
+  maxTiltAngle: 15
+  tiltSpeed: 10
+  invertTiltDirection: 0
   useParticles: 1
   particlePrefab: {fileID: 7963218675485666827, guid: 0e1d58f4bf39bc84b9c5d2766e8d46be, type: 3}
   particleOffset: {x: 0, y: 0, z: 0}

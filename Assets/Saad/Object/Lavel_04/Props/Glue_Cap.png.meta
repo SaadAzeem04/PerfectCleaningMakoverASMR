@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6d2638ce5a78674409187e6ea70ea782
+guid: 7400d6e46f8f3d543b3ed82fb18f955f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6695950386315148514
-    second: BG_0
+      213: 68299640160208602
+    second: Glue_Cap_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 220
+  spritePixelsToUnits: 1000
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BG_0
+      name: Glue_Cap_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 3500
-        height: 3500
+        x: 409
+        y: 1074
+        width: 200
+        height: 417
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e13cb0ea9943313a0800000000000000
-      internalID: -6695950386315148514
+      spriteID: ad6490e2926a2f000800000000000000
+      internalID: 68299640160208602
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BG_0: -6695950386315148514
+      Glue_Cap_0: 68299640160208602
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

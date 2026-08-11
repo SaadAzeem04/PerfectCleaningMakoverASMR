@@ -1231,6 +1231,8 @@ MonoBehaviour:
   progressFill: {fileID: 1089768405}
   progressFillBg: {fileID: 110823343}
   polishSpotTarget: {fileID: 0}
+  toolSpriteRenderer: {fileID: 702211540}
+  defaultToolOrder: 10
   effectAnchor: {fileID: 70609840}
   eraseAnchor: {fileID: 1084573659}
   currentParticle: {fileID: 0}
@@ -1268,6 +1270,7 @@ MonoBehaviour:
   pauseButtonAnim: {fileID: 1320420397}
   coinCounterAnim: {fileID: 1227842182}
   chunkIdleThreshold: 1
+  toolSorter: {fileID: 0}
   scraperTriggerEdge: {fileID: 1397027113}
 --- !u!114 &281523830
 MonoBehaviour:
@@ -2155,7 +2158,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 100
+  m_SortingOrder: 90
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3411,7 +3414,6 @@ GameObject:
   - component: {fileID: 1157572091}
   - component: {fileID: 1157572092}
   - component: {fileID: 1157572093}
-  - component: {fileID: 1157572094}
   m_Layer: 5
   m_Name: ToolCursor
   m_TagString: Untagged
@@ -3512,19 +3514,6 @@ MonoBehaviour:
   progressText: {fileID: 1506435415}
   autoHideProgressBar: 0
   placementDuration: 1.2
---- !u!114 &1157572094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1157572089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 467a8185b130a9342a1f071f2a5bb116, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultFrontOrder: 25
 --- !u!1 &1195468991
 GameObject:
   m_ObjectHideFlags: 0
@@ -3676,7 +3665,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 8
   m_Sprite: {fileID: 1678503345882458972, guid: 49bf68d8a293dfb42ada586ccaf2c6de, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

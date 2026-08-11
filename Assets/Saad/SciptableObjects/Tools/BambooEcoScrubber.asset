@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30614bcb607772c4fb1cf7c12838bf9a, type: 3}
-  m_Name: Scrubber_data
+  m_Name: BambooEcoScrubber
   m_EditorClassIdentifier: 
   hasVariants: 0
   toolVariants: []
@@ -18,24 +18,24 @@ MonoBehaviour:
   capSprite: {fileID: 0}
   capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 1
-  toolSprite: {fileID: 7986114588071771919, guid: 3394d8f02b4160444a6023f3beb94569, type: 3}
+  toolSprite: {fileID: -1165259615240445614, guid: f63b4a39e8db07b43b68af4d86c47df1, type: 3}
   soundOnlyOnHit: 1
   cleaningSpeed: 5
   brushSize: 73
   brushShape: {fileID: 0}
   brushWidthScale: 1
   brushHeightScale: 1
-  movementType: 0
+  movementType: 3
   scrubSpeed: 0
   scrubAmount: 0
-  rotationSpeed: 60
-  rotationAmount: 90
-  enableDragTilt: 1
-  maxTiltAngle: 60
+  rotationSpeed: 12
+  rotationAmount: 15
+  enableDragTilt: 0
+  maxTiltAngle: 15
   tiltSpeed: 10
-  invertTiltDirection: 1
+  invertTiltDirection: 0
   useParticles: 1
-  particlePrefab: {fileID: 8761929157680561608, guid: 338fde2f5ac912c439ec152929eb0c06, type: 3}
+  particlePrefab: {fileID: 8761929157680561608, guid: ddf02bb9cfcf19548b63254bde947577, type: 3}
   particleOffset: {x: 0, y: 0, z: 0}
   isPolishTool: 0
   useSecondParticles: 0
@@ -44,5 +44,5 @@ MonoBehaviour:
   eraseOffset: {x: 0, y: 0, z: 0}
   toolSound: {fileID: 8300000, guid: 545649752d804564092f70c58472e47c, type: 3}
   toolOffset: {x: 0, y: 0, z: 0}
-  panelIcon: {fileID: 2034542128009207851, guid: f8edb77fac5e0ac4ea18097797271391, type: 3}
+  panelIcon: {fileID: -1643464398520749379, guid: cf6b7ac8b5cb94d4392a7d8233d680ff, type: 3}
   canRemove: 1

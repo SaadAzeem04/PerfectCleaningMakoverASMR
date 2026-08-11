@@ -18,6 +18,7 @@ public class MaskEraser : MonoBehaviour
     public TMP_Text percentText;
     public Image progressFill;
     public GameObject progressFillBg;
+   // public DynamicToolSorting toolSorter;
 
     // TOOL ANIMATION VARIABLES
     private Vector3 originalToolLocalPos;
@@ -27,6 +28,10 @@ public class MaskEraser : MonoBehaviour
     [Header("Polish Tool Settings")]
     [Tooltip("Hierarchy se Polish Box/Dabi ka Transform yahan drag karein")]
     public Transform polishSpotTarget;
+
+    [Header("Tool Sorting Settings")]
+    public SpriteRenderer toolSpriteRenderer;
+    public int defaultToolOrder = 10;
 
     [Header("Particles")]
     public Transform effectAnchor;
@@ -133,12 +138,19 @@ public class MaskEraser : MonoBehaviour
     Texture2D texture;
     int totalOpaquePixels = 0;
 
+    private int cachedChunkOrder = -1;
+    private string cachedChunkLayer = "";
+
     float targetFill;
     private bool isLayerClearSoundPlayed = false;
     float currentFill;
     bool gameCompleted = false;
     bool textureNeedsApply = false;
 
+    //private GameObject baseCleanObjRef;
+
+    private GameObject baseCleanObjRef;
+    public DynamicToolSorting toolSorter;
     float progressTimer = 0f;
     bool needsProgressCheck = false;
 
@@ -278,6 +290,11 @@ public class MaskEraser : MonoBehaviour
             baseCleanSR.material = new Material(Shader.Find("Sprites/Default"));
             baseCleanSR.enabled = true;
             cleanObj.SetActive(true);
+
+            baseCleanObjRef = cleanObj;
+
+            bool isOnlyOneStep = (objectData.cleaningSteps != null && objectData.cleaningSteps.Count <= 1);
+            cleanObj.SetActive(isOnlyOneStep);
         }
 
         if (objectData.cleaningSteps != null && objectData.cleaningSteps.Count > 0)
@@ -358,6 +375,66 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
+        // --- ACCURATE CONTINUOUS SORTING LOGIC FOR MUDCHUNKS ---
+        if (toolSpriteRenderer != null)
+        {
+            GameObject currentStepObj = (stepGameObjects != null && currentLayer < stepGameObjects.Count) ? stepGameObjects[currentLayer] : null;
+
+            if (isScraperStep && currentStepObj != null)
+            {
+                SpriteRenderer stepRenderer = currentStepObj.GetComponentInChildren<SpriteRenderer>();
+
+                if (stepRenderer != null)
+                {
+                    cachedChunkOrder = stepRenderer.sortingOrder;
+                    cachedChunkLayer = stepRenderer.sortingLayerName;
+                }
+
+                string targetLayer = !string.IsNullOrEmpty(cachedChunkLayer) ? cachedChunkLayer : toolSpriteRenderer.sortingLayerName;
+                int baseChunkOrder = (cachedChunkOrder != -1) ? cachedChunkOrder : 98;
+
+                int toolOrder = baseChunkOrder - 1; // 97
+
+                // 1. Tool Order set karein (Tool = 97)
+                ApplyToolSorting(targetLayer, toolOrder);
+
+                // 2. Scene ke tamaam active MudChunks ko scan karke falling pieces ko tool ke piche (96) force karein
+                MudChunk[] activeMudChunks = FindObjectsByType<MudChunk>(FindObjectsSortMode.None);
+                foreach (MudChunk chunk in activeMudChunks)
+                {
+                    if (chunk == null) continue;
+
+                    // Intact main step parent chunk ke bajaye detached/falling pieces ka order down karein
+                    if (!chunk.transform.IsChildOf(currentStepObj.transform))
+                    {
+                        SpriteRenderer[] chunkRenderers = chunk.GetComponentsInChildren<SpriteRenderer>(true);
+                        foreach (SpriteRenderer sr in chunkRenderers)
+                        {
+                            sr.sortingLayerName = targetLayer;
+                            sr.sortingOrder = toolOrder - 1; // 96 (Tool ke piche)
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // BAAKI TAMAM TOOLS (Brush, Srya, Sponge, etc.): Dirty layer ke SAMNE (+10)
+                cachedChunkOrder = -1;
+                cachedChunkLayer = "";
+
+                SpriteRenderer stepRenderer = (currentStepObj != null) ? currentStepObj.GetComponentInChildren<SpriteRenderer>() : null;
+
+                if (stepRenderer != null)
+                {
+                    ApplyToolSorting(stepRenderer.sortingLayerName, stepRenderer.sortingOrder + 10);
+                }
+                else
+                {
+                    ApplyToolSorting(toolSpriteRenderer.sortingLayerName, defaultToolOrder);
+                }
+            }
+        }
+
         // 50% Chunk Removal Check:
         bool isHalfOrMoreRemoved = (totalScraperChunks > 0) && (remainingScraperChunks <= totalScraperChunks * 0.5f);
 
@@ -414,30 +491,30 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // NAYA CODE (2-Second Delay Logic):
+        // UI HIDE LOGIC (2-Second Delay)
         if (!gameCompleted && !isTransitioningTool)
         {
             bool isTouching = Input.GetMouseButton(0) || Input.touchCount > 0;
 
             if (isTouching)
             {
-                idleTimer = 0f; // Untouch timer reset
+                idleTimer = 0f;
                 touchTimer += Time.deltaTime;
 
-                if (touchTimer >= holdToHideDelay && !isUIHiddenByTimer)// Agar touch 2 second touch raha aur UI hidden nahi hai
+                if (touchTimer >= holdToHideDelay && !isUIHiddenByTimer)
                 {
-                    ToggleGameplayUI(true); // Isse Pause Button, Coin Bar aur Tool Panel teeno hide honge
+                    ToggleGameplayUI(true);
                     isUIHiddenByTimer = true;
                 }
             }
             else
             {
-                touchTimer = 0f; // Hold timer reset
+                touchTimer = 0f;
                 idleTimer += Time.deltaTime;
 
-                if (idleTimer >= idleToShowDelay && isUIHiddenByTimer) // Agar touch 2 second bina touch ke guzar jayein aur UI hidden ho
+                if (idleTimer >= idleToShowDelay && isUIHiddenByTimer)
                 {
-                    ToggleGameplayUI(false); // Isse teeno UI elements wapas show honge
+                    ToggleGameplayUI(false);
                     isUIHiddenByTimer = false;
                 }
             }
@@ -452,7 +529,7 @@ public class MaskEraser : MonoBehaviour
                 Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, targetCameraSize, Time.deltaTime * cameraTransitionIntensity);
         }
 
-        // CAMERA MOVEMENT LOGIC (CLEAN & ERROR-FREE)
+        // CAMERA MOVEMENT LOGIC
         if (Camera.main != null && Screen.width > 0 && Screen.height > 0)
         {
             float initialCamZ = Camera.main.transform.position.z;
@@ -477,7 +554,6 @@ public class MaskEraser : MonoBehaviour
 
                 float targetX = mouseXOffset * cameraMoveIntensity;
 
-                // Check: Enable Y Axis Movement ON hai ya OFF
                 float targetY = 0f;
                 if (objectData != null && objectData.enableYAxisMovement)
                 {
@@ -527,6 +603,7 @@ public class MaskEraser : MonoBehaviour
 
         if (currentLayer >= layersList.Count) return;
 
+        // --- TOUCH DOWN ---
         if (Input.GetMouseButtonDown(0))
         {
             hasLastErasePos = false;
@@ -583,6 +660,7 @@ public class MaskEraser : MonoBehaviour
             if (shouldPlay) effectGraceTimer = 0.15f;
         }
 
+        // --- TOUCH UP ---
         if (Input.GetMouseButtonUp(0))
         {
             hasLastErasePos = false;
@@ -610,7 +688,6 @@ public class MaskEraser : MonoBehaviour
             progressTimer += Time.deltaTime;
             if (progressTimer > 0.15f || !Input.GetMouseButton(0))
             {
-                //updateProgress:
                 UpdateProgress();
                 progressTimer = 0f;
                 needsProgressCheck = false;
@@ -640,7 +717,6 @@ public class MaskEraser : MonoBehaviour
             }
         }
     }
-
     [Header("Slide UI Animations")]
     private Coroutine topUISlideCoroutine;
     private Vector2 pauseBasePos;
@@ -850,6 +926,27 @@ public class MaskEraser : MonoBehaviour
 
         // Dynamic Masking Call Karein
         ApplyLayerMasking(originalSprite);
+    }
+    // Tool ke tamaam child renderers ya SortingGroup ko ek sath update karne ka method
+    private void ApplyToolSorting(string layerName, int order)
+    {
+        if (toolSpriteRenderer == null) return;
+
+        UnityEngine.Rendering.SortingGroup toolGroup = toolSpriteRenderer.GetComponentInParent<UnityEngine.Rendering.SortingGroup>();
+        if (toolGroup != null)
+        {
+            toolGroup.sortingLayerName = layerName;
+            toolGroup.sortingOrder = order;
+        }
+        else
+        {
+            SpriteRenderer[] toolRenderers = toolSpriteRenderer.GetComponentsInChildren<SpriteRenderer>(true);
+            foreach (SpriteRenderer sr in toolRenderers)
+            {
+                sr.sortingLayerName = layerName;
+                sr.sortingOrder = order;
+            }
+        }
     }
 
     public bool EraseAtWorldPosition(Vector3 world)
@@ -1170,9 +1267,9 @@ public class MaskEraser : MonoBehaviour
 
         float time = 0;
         float durationOut = 0.6f;
-        float patchFadeDelay = 2f; // Patch 0.3 seconds tak fully visible rahega, phir ghaib hoga
+        float patchFadeDelay = 0.3f; // Reduced delay to smoothly fade out old cleaned layer
 
-        // Purane Tool aur Layer ka normal Exit Animation
+        // Purane Tool aur Cleaned Layer ka fade out/exit animation
         while (time < durationOut)
         {
             time += Time.deltaTime;
@@ -1184,17 +1281,15 @@ public class MaskEraser : MonoBehaviour
             if (currentLayerSR != null)
             {
                 Color c = originalColor;
-
-                // Loop ke andar hi delay: Pehle 0.3s tak alpha 1.0 rahega, baki ke 0.3s mein smoothly 0 ho jayega
                 float fadeT = Mathf.Clamp01((time - patchFadeDelay) / (durationOut - patchFadeDelay));
                 c.a = Mathf.Lerp(originalColor.a, 0f, fadeT);
-
                 currentLayerSR.color = c;
             }
 
             yield return null;
         }
 
+        // 1. CLEANED LAYER KO HIDE KAREIN: Purani completed layer ko permanently disable kar dein
         if (stepGameObjects != null && currentLayer < stepGameObjects.Count && stepGameObjects[currentLayer] != null)
         {
             stepGameObjects[currentLayer].SetActive(false);
@@ -1213,6 +1308,7 @@ public class MaskEraser : MonoBehaviour
 
         currentLayer++;
 
+        // Check if level is finished
         if (currentLayer >= objectData.cleaningSteps.Count)
         {
             CompleteGame();
@@ -1220,16 +1316,26 @@ public class MaskEraser : MonoBehaviour
             yield break;
         }
 
+        // 2. LAYER REVEAL LOGIC: Pure array ko update karein
         if (stepGameObjects != null)
         {
             for (int i = 0; i < stepGameObjects.Count; i++)
             {
                 if (stepGameObjects[i] != null)
                 {
+                    // Purani tamaam layers (i < currentLayer) OFF rahengi.
+                    // Sirf current active layer aur uske bilkul neeche wali layer (currentLayer + 1) active hongi.
                     bool shouldBeActive = (i == currentLayer || i == currentLayer + 1);
                     stepGameObjects[i].SetActive(shouldBeActive);
                 }
             }
+        }
+
+        // 3. BASE CLEAN OBJECT LOGIC: Sirf tab reveal hoga jab AAKHRI step par pohnch jayein
+        if (baseCleanObjRef != null)
+        {
+            bool isLastStep = (currentLayer == objectData.cleaningSteps.Count - 1);
+            baseCleanObjRef.SetActive(isLastStep);
         }
 
         // Nayi Layer prepare hogi (Masking auto-set ho jayegi)
@@ -1275,7 +1381,7 @@ public class MaskEraser : MonoBehaviour
         time = 0;
         float durationIn = 0.6f;
 
-        // Naye Tool ka Slide-In Animation (Layer standard rahegi, koi alpha fade nahi hoga)
+        // Naye Tool ka Slide-In Animation
         while (time < durationIn)
         {
             time += Time.deltaTime;

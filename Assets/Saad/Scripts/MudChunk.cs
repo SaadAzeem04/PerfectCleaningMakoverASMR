@@ -125,7 +125,7 @@ public class MudChunk : MonoBehaviour
             isFalling = true;
             SetGlow(false);
 
-            // TOOL KE PEECHE BHEJNE KA COMPREHENSIVE LOGIC
+            // TOOL KE PEECHE BHEJNE KA ENHANCED LOGIC
             PushChunkBehindTool(collision.gameObject);
 
             MaskEraser eraser = Object.FindFirstObjectByType<MaskEraser>();
@@ -142,49 +142,67 @@ public class MudChunk : MonoBehaviour
             StartCoroutine(ChunkCompleteSequenceRoutine());
         }
     }
-
-    /// <summary>
-    /// Tool ke tamaam visual parts read karke chunk ko hamesha tool ke peeche bhejta hai
+    //// <summary>
+    /// Tool ke visual SpriteRenderer ko trace karke chunk ko hamesha tool ke piche bheja jata hai.
     /// </summary>
     private void PushChunkBehindTool(GameObject toolObject)
     {
-        // 1. Tool aur uske sabhi child components se SpriteRenderer dhoondo
-        SpriteRenderer[] toolSRs = toolObject.GetComponentsInParent<SpriteRenderer>();
-        if (toolSRs == null || toolSRs.Length == 0)
+        // 1. Chunk ko Parent se Instant Detach karein taake parent iska order reset na kar sake
+        transform.SetParent(null);
+
+        SpriteRenderer toolSR = null;
+
+        // Direct ToolFollower script se scene ka active Tool SpriteRenderer dhoondein (Sab se reliable tariqah)
+        ToolFollower toolFollower = Object.FindFirstObjectByType<ToolFollower>();
+        if (toolFollower != null)
         {
-            toolSRs = toolObject.GetComponentsInChildren<SpriteRenderer>();
+            toolSR = toolFollower.GetComponentInChildren<SpriteRenderer>();
         }
 
-        if (toolSRs != null && toolSRs.Length > 0)
+        // Backup Search: Agar ToolFollower na mile to collision object ki hierarchy check karein
+        if (toolSR == null)
         {
-            // Tool ka sab se highest sorting order aur layer nikalen
-            SpriteRenderer highestToolSR = toolSRs[0];
-            foreach (var sr in toolSRs)
-            {
-                if (sr.sortingOrder > highestToolSR.sortingOrder)
-                {
-                    highestToolSR = sr;
-                }
-            }
+            toolSR = toolObject.GetComponentInParent<SpriteRenderer>();
+            if (toolSR == null) toolSR = toolObject.GetComponentInChildren<SpriteRenderer>();
+        }
 
-            // Chunk aur uske tamaam child Sprites ko Tool ki Layer match karke Order -10 kar do
-            SpriteRenderer[] chunkSRs = GetComponentsInChildren<SpriteRenderer>();
+        // 2. Sorting Apply Karein
+        if (toolSR != null)
+        {
+            int targetOrder = toolSR.sortingOrder - 5; // Direct Tool ke 5 points niche
+            string targetLayer = toolSR.sortingLayerName;
+
+            // Tamaam child sprites ka order change karein
+            SpriteRenderer[] chunkSRs = GetComponentsInChildren<SpriteRenderer>(true);
             foreach (var cSR in chunkSRs)
             {
-                cSR.sortingLayerID = highestToolSR.sortingLayerID;
-                cSR.sortingOrder = highestToolSR.sortingOrder - 10;
+                if (cSR == null) continue;
+                cSR.sortingLayerName = targetLayer;
+                cSR.sortingOrder = targetOrder;
+            }
+
+            // Agar SortingGroup component laga ho
+            var sortingGroup = GetComponent<UnityEngine.Rendering.SortingGroup>();
+            if (sortingGroup != null)
+            {
+                sortingGroup.sortingLayerName = targetLayer;
+                sortingGroup.sortingOrder = targetOrder;
+            }
+
+            // 3. 3D World Z-Axis Par Bhi Tool Se Peeche Push Karein
+            Vector3 pos = transform.position;
+            pos.z = toolSR.transform.position.z + 0.5f; // +Z matlab Camera se door (Tool ke peeche)
+            transform.position = pos;
+        }
+        else
+        {
+            // Safe Fallback (Agar Tool ka SR na mile to Order 50 kar do jo Tool ke order ~97 se bohot chota hai)
+            SpriteRenderer[] chunkSRs = GetComponentsInChildren<SpriteRenderer>(true);
+            foreach (var cSR in chunkSRs)
+            {
+                if (cSR != null) cSR.sortingOrder = 50;
             }
         }
-        else if (spriteRenderer != null)
-        {
-            // Backup fallback
-            spriteRenderer.sortingOrder -= 20;
-        }
-
-        // 2. Extra Safety: 3D World Space Z-Axis par bhi Tool se thoda peeche bhejen
-        Vector3 pos = transform.position;
-        pos.z = toolObject.transform.position.z + 0.5f;
-        transform.position = pos;
     }
 
     private IEnumerator ChunkCompleteSequenceRoutine()

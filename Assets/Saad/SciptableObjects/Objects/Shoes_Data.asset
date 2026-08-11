@@ -44,9 +44,9 @@ MonoBehaviour:
     cameraZoomSize: 5
     dirtySprite: {fileID: 0}
     stepPrefab: {fileID: 6922760847136583357, guid: 42ef06bf6c99a324f854efc00ddefc7b, type: 3}
-  - stepName: Water Spray
+  - stepName: Mud Scrubber
     stepType: 0
-    requiredTool: {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+    requiredTool: {fileID: 11400000, guid: 724d0179db22f874f81ba94a76510065, type: 2}
     allowCameraMovement: 1
     cameraZoomSize: 6.5
     dirtySprite: {fileID: -5225540622116197949, guid: 6e9f8212af69e0b4b8d8272ddbdc9e55, type: 3}
