@@ -58,6 +58,11 @@ public class MaskEraser : MonoBehaviour
     public GameObject gameplayCoinPanel;
     public TMP_Text gameplayCoinText;
 
+    [Header("Diamond UI Settings")]
+    public GameObject gameplayDiamondPanel; // Unity Inspector me Diamond Bar drag karne ke liye
+    private Vector2 diamondBasePos;           // Animation ke liye initial position record karne ke liye
+    private Vector3 diamondBaseScale = Vector3.one;
+
     [Header("--- Ref Video Tool Variant UI ---")]
     public GameObject variantMainPanel;
     public Transform variantButtonsContainer;
@@ -121,6 +126,7 @@ public class MaskEraser : MonoBehaviour
     [Header("UI Animation References")]
     public SmoothUIAnimate pauseButtonAnim;
     public SmoothUIAnimate coinCounterAnim;
+    public SmoothUIAnimate diamondCounterAnim;
 
     [Header("Chunk Hint / Idle Glow Settings")]
     [Tooltip("Kitne seconds player touch na kare to green glow shuru ho (Default: 2.5s)")]
@@ -747,6 +753,7 @@ public class MaskEraser : MonoBehaviour
     {
         RectTransform pauseRect = pauseButton != null ? pauseButton.GetComponent<RectTransform>() : null;
         RectTransform coinRect = gameplayCoinPanel != null ? gameplayCoinPanel.GetComponent<RectTransform>() : null;
+        RectTransform diamondRect = gameplayDiamondPanel != null ? gameplayDiamondPanel.GetComponent<RectTransform>() : null;
 
         if (!isBasePosSaved)
         {
@@ -760,6 +767,11 @@ public class MaskEraser : MonoBehaviour
                 coinBasePos = coinRect.anchoredPosition;
                 coinBaseScale = coinRect.localScale;
             }
+            if (diamondRect != null)
+            {
+                diamondBasePos = diamondRect.anchoredPosition;
+                diamondBaseScale = diamondRect.localScale;
+            }
             isBasePosSaved = true;
         }
 
@@ -768,15 +780,19 @@ public class MaskEraser : MonoBehaviour
 
         Vector2 pauseStartPos = pauseRect != null ? pauseRect.anchoredPosition : Vector2.zero;
         Vector2 coinStartPos = coinRect != null ? coinRect.anchoredPosition : Vector2.zero;
+        Vector2 diamondStartPos = diamondRect != null ? diamondRect.anchoredPosition : Vector2.zero;
 
         Vector3 pauseStartScale = pauseRect != null ? pauseRect.localScale : Vector3.one;
         Vector3 coinStartScale = coinRect != null ? coinRect.localScale : Vector3.one;
+        Vector3 diamondStartScale = diamondRect != null ? diamondRect.localScale : Vector3.one;
 
         Vector2 pauseTargetPos = hide ? new Vector2(pauseBasePos.x + 350f, pauseBasePos.y) : pauseBasePos;
         Vector2 coinTargetPos = hide ? new Vector2(coinBasePos.x - 350f, coinBasePos.y) : coinBasePos;
+        Vector2 diamondTargetPos = hide ? new Vector2(diamondBasePos.x - 350f, diamondBasePos.y) : diamondBasePos;
 
         Vector3 pauseTargetScale = hide ? Vector3.zero : pauseBaseScale;
         Vector3 coinTargetScale = hide ? Vector3.zero : coinBaseScale;
+        Vector3 diamondTargetScale = hide ? Vector3.zero : diamondBaseScale;
 
         while (time < duration)
         {
@@ -786,9 +802,11 @@ public class MaskEraser : MonoBehaviour
 
             if (pauseRect != null) pauseRect.anchoredPosition = Vector2.Lerp(pauseStartPos, pauseTargetPos, smoothT);
             if (coinRect != null) coinRect.anchoredPosition = Vector2.Lerp(coinStartPos, coinTargetPos, smoothT);
+            if (diamondRect != null) diamondRect.anchoredPosition = Vector2.Lerp(diamondStartPos, diamondTargetPos, smoothT);
 
             if (pauseRect != null) pauseRect.localScale = Vector3.Lerp(pauseStartScale, pauseTargetScale, smoothT);
             if (coinRect != null) coinRect.localScale = Vector3.Lerp(coinStartScale, coinTargetScale, smoothT);
+            if (diamondRect != null) diamondRect.localScale = Vector3.Lerp(diamondStartScale, diamondTargetScale, smoothT);
 
             yield return null;
         }
@@ -802,6 +820,11 @@ public class MaskEraser : MonoBehaviour
         {
             coinRect.anchoredPosition = coinTargetPos;
             coinRect.localScale = coinTargetScale;
+        }
+        if (diamondRect != null)
+        {
+            diamondRect.anchoredPosition = diamondTargetPos;
+            diamondRect.localScale = diamondTargetScale;
         }
     }
 
