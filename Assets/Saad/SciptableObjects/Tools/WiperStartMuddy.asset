@@ -38,13 +38,17 @@ MonoBehaviour:
   cleaningSpeed: 5
   brushSize: 70
   brushShape: {fileID: 2800000, guid: 7ab29361b5a635748be26076c62212ea, type: 3}
-  brushWidthScale: 2
-  brushHeightScale: 0.5
+  brushWidthScale: 2.2
+  brushHeightScale: 0.7
   movementType: 0
   scrubSpeed: -5
   scrubAmount: 0
   rotationSpeed: 10
   rotationAmount: 15
+  enableDragTilt: 0
+  maxTiltAngle: 15
+  tiltSpeed: 10
+  invertTiltDirection: 0
   useParticles: 1
   particlePrefab: {fileID: 1680514027832752688, guid: 42976a40a262d4043b5ded25f0f51150, type: 3}
   particleOffset: {x: 0, y: 0.7, z: 0}

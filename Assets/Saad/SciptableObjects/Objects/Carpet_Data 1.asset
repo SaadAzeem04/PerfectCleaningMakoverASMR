@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectName: Carpet
   backgroundSprite: {fileID: -6695950386315148514, guid: bce39289606b6d44586bc78067888940, type: 3}
-  cleanSprite: {fileID: 7336298474659753992, guid: 5cf23b6f756fc4340b9eb96cde399c64, type: 3}
+  cleanSprite: {fileID: 7336298474659753992, guid: f0255cc0a6c27ba479f8eeb9fd4a88d7, type: 3}
   levelBackgroundSprite: {fileID: -6695950386315148514, guid: bce39289606b6d44586bc78067888940, type: 3}
   levelPositionOffset: {x: 0, y: 1, z: 0}
   dirtyLayers:
@@ -32,7 +32,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
   - {fileID: 11400000, guid: 51d3833199726f64aaecac50f4842704, type: 2}
   scraperChunksPrefab: {fileID: 0}
-  cameraMovementIntensity: 1.2
+  cameraMovementIntensity: 1.4
   customCameraZoomSize: 7
   levelCompleteZoomSize: 6.5
   enableYAxisMovement: 0
@@ -63,7 +63,7 @@ MonoBehaviour:
     requiredTool: {fileID: 11400000, guid: 1327fb49ac58328418b9675fd0cd76ad, type: 2}
     allowCameraMovement: 1
     cameraZoomSize: 4.5
-    dirtySprite: {fileID: -4178046375966092550, guid: 85a47617fa6c22b4e88340cd13a88082, type: 3}
+    dirtySprite: {fileID: 2750298860172458669, guid: c465d942b10d2d049a42431fd3daebe4, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Water Spray
     stepType: 0

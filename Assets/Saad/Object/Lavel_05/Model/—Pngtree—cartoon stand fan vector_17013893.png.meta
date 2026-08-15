@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 64d7472cd91733043afbf72c2a291c95
+guid: a9465c01e72e7464b9f038f4b1d5f3bb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3164809056393425246
-    second: 01_0
+      213: 2121684692145503689
+    second: "\u2014Pngtree\u2014cartoon stand fan vector_17013893_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -24,7 +24,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 1
+  isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 250
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 01_0
+      name: "\u2014Pngtree\u2014cartoon stand fan vector_17013893_0"
       rect:
         serializedVersion: 2
-        x: 56
-        y: 246
-        width: 1538
-        height: 936
+        x: 929
+        y: 427
+        width: 2142
+        height: 3146
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2ae0bbb5ee65414d0800000000000000
-      internalID: -3164809056393425246
+      spriteID: 9cd77b08cfcb17d10800000000000000
+      internalID: 2121684692145503689
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      01_0: -3164809056393425246
+      "\u2014Pngtree\u2014cartoon stand fan vector_17013893_0": 2121684692145503689
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
