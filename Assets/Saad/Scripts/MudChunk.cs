@@ -11,8 +11,15 @@ public class MudChunk : MonoBehaviour
     private Color originalColor;
 
     [Header("Level / Ground Settings")]
-    [Tooltip("Agar dynamic floor calculate na ho paye to fallback value")]
-    [SerializeField] private float floorYThreshold = -3.5f;
+    [Tooltip("Check karein agar aap Inspector se Custom Floor Value dena chahte hain")]
+    [SerializeField] private bool useCustomFloorY = true;
+
+    [Tooltip("Inspector se floor height adjust karein. Value jitni BADI hogi (e.g. -2.0, -1.0, 0.0), zameen utni UPER aayegi!")]
+    [SerializeField] private float floorYThreshold = -2f;
+
+    [Tooltip("Agar useCustomFloorY false ho, to screen bottom se kitna uper floor ho (0.1f = 10% bottom se uper)")]
+    [Range(0f, 0.5f)]
+    [SerializeField] private float screenBottomOffset = 0.2f;
 
     [Header("Chunk Animation Settings")]
     [SerializeField] private float rotateDuration = 0.5f;   // Wobble duration
@@ -38,11 +45,12 @@ public class MudChunk : MonoBehaviour
 
     private void Start()
     {
-        // Camera Viewport ke hisaab se ground level calculate karein
-        if (Camera.main != null)
+        // FIX: Agar Custom Floor uncheck hai, tabhi automatic calculation chalay
+        if (!useCustomFloorY && Camera.main != null)
         {
             float camZ = Mathf.Abs(Camera.main.transform.position.z);
-            Vector3 bottomScreenWorldPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.05f, camZ));
+            // screenBottomOffset = 0.2f matlab Screen ke bottom se 20% uper zameen rahegi
+            Vector3 bottomScreenWorldPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, screenBottomOffset, camZ));
             floorYThreshold = bottomScreenWorldPos.y;
         }
     }
@@ -125,7 +133,6 @@ public class MudChunk : MonoBehaviour
             isFalling = true;
             SetGlow(false);
 
-            // TOOL KE PEECHE BHEJNE KA ENHANCED LOGIC
             PushChunkBehindTool(collision.gameObject);
 
             MaskEraser eraser = Object.FindFirstObjectByType<MaskEraser>();
@@ -142,37 +149,30 @@ public class MudChunk : MonoBehaviour
             StartCoroutine(ChunkCompleteSequenceRoutine());
         }
     }
-    //// <summary>
-    /// Tool ke visual SpriteRenderer ko trace karke chunk ko hamesha tool ke piche bheja jata hai.
-    /// </summary>
+
     private void PushChunkBehindTool(GameObject toolObject)
     {
-        // 1. Chunk ko Parent se Instant Detach karein taake parent iska order reset na kar sake
         transform.SetParent(null);
 
         SpriteRenderer toolSR = null;
 
-        // Direct ToolFollower script se scene ka active Tool SpriteRenderer dhoondein (Sab se reliable tariqah)
         ToolFollower toolFollower = Object.FindFirstObjectByType<ToolFollower>();
         if (toolFollower != null)
         {
             toolSR = toolFollower.GetComponentInChildren<SpriteRenderer>();
         }
 
-        // Backup Search: Agar ToolFollower na mile to collision object ki hierarchy check karein
         if (toolSR == null)
         {
             toolSR = toolObject.GetComponentInParent<SpriteRenderer>();
             if (toolSR == null) toolSR = toolObject.GetComponentInChildren<SpriteRenderer>();
         }
 
-        // 2. Sorting Apply Karein
         if (toolSR != null)
         {
-            int targetOrder = toolSR.sortingOrder - 5; // Direct Tool ke 5 points niche
+            int targetOrder = toolSR.sortingOrder - 5;
             string targetLayer = toolSR.sortingLayerName;
 
-            // Tamaam child sprites ka order change karein
             SpriteRenderer[] chunkSRs = GetComponentsInChildren<SpriteRenderer>(true);
             foreach (var cSR in chunkSRs)
             {
@@ -181,7 +181,6 @@ public class MudChunk : MonoBehaviour
                 cSR.sortingOrder = targetOrder;
             }
 
-            // Agar SortingGroup component laga ho
             var sortingGroup = GetComponent<UnityEngine.Rendering.SortingGroup>();
             if (sortingGroup != null)
             {
@@ -189,14 +188,12 @@ public class MudChunk : MonoBehaviour
                 sortingGroup.sortingOrder = targetOrder;
             }
 
-            // 3. 3D World Z-Axis Par Bhi Tool Se Peeche Push Karein
             Vector3 pos = transform.position;
-            pos.z = toolSR.transform.position.z + 0.5f; // +Z matlab Camera se door (Tool ke peeche)
+            pos.z = toolSR.transform.position.z + 0.5f;
             transform.position = pos;
         }
         else
         {
-            // Safe Fallback (Agar Tool ka SR na mile to Order 50 kar do jo Tool ke order ~97 se bohot chota hai)
             SpriteRenderer[] chunkSRs = GetComponentsInChildren<SpriteRenderer>(true);
             foreach (var cSR in chunkSRs)
             {
@@ -211,7 +208,7 @@ public class MudChunk : MonoBehaviour
         float elapsed = 0f;
         float direction = Random.value > 0.5f ? 1f : -1f;
 
-        // STEP 1: WOBBLE / ROTATE IN PLACE (Tool ke peeche)
+        // STEP 1: WOBBLE / ROTATE IN PLACE
         while (elapsed < rotateDuration)
         {
             elapsed += Time.deltaTime;
@@ -238,10 +235,10 @@ public class MudChunk : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = 4f;
 
-        // Direct niche drop hone ke liye velocity
         rb.linearVelocity = new Vector2(Random.Range(-2f, 2f), Random.Range(-1f, -3f));
         rb.angularVelocity = Random.Range(-90f, 90f);
 
+        // Check: Jab tak Chunk ki Y position floorYThreshold se badi hai tab tak girega
         while (transform.position.y > floorYThreshold)
         {
             yield return null;

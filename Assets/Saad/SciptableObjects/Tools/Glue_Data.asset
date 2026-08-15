@@ -15,7 +15,7 @@ MonoBehaviour:
   hasVariants: 1
   toolVariants: []
   toolName: Glue_Data
-  capSprite: {fileID: -2366766001498735861, guid: d2895c85e2720144a938f68cad862738, type: 3}
+  capSprite: {fileID: 68299640160208602, guid: 7400d6e46f8f3d543b3ed82fb18f955f, type: 3}
   capLocalPosition: {x: 0, y: 0.4, z: 0}
   toolType: 5
   toolSprite: {fileID: -989295801627094005, guid: 5b11df839079ec24c9d2881bc07efdb2, type: 3}
@@ -30,6 +30,10 @@ MonoBehaviour:
   scrubAmount: 0.4
   rotationSpeed: 10
   rotationAmount: 15
+  enableDragTilt: 0
+  maxTiltAngle: 15
+  tiltSpeed: 10
+  invertTiltDirection: 0
   useParticles: 1
   particlePrefab: {fileID: 0}
   particleOffset: {x: 0, y: -0.1, z: 0}

@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectName: Cycle
   backgroundSprite: {fileID: -6695950386315148514, guid: 2b5334e76890cbd498f6981f2f30f4d2, type: 3}
-  cleanSprite: {fileID: 7336298474659753992, guid: 7e0ad6099a95e754db2b67015def8a89, type: 3}
+  cleanSprite: {fileID: 7336298474659753992, guid: 048e705d6ce713b4583391ee0dba5555, type: 3}
   levelBackgroundSprite: {fileID: -6695950386315148514, guid: 2b5334e76890cbd498f6981f2f30f4d2, type: 3}
   levelPositionOffset: {x: 0, y: 0, z: 0}
   dirtyLayers:
-  - {fileID: -3164809056393425246, guid: ed7a2a7ef73e1774e8337e62912cb707, type: 3}
-  - {fileID: -5225540622116197949, guid: 000802bb106c31c44a545a2dcbabefbe, type: 3}
-  - {fileID: 8793915729297761979, guid: f01c512c15c701541aee13461d7c6082, type: 3}
-  - {fileID: 2750298860172458669, guid: b8ccf5ef21d657947a31c8ef7ce9de6d, type: 3}
-  - {fileID: -2276259661975475453, guid: 683bdc5ba21237c47abb092214a8913e, type: 3}
-  - {fileID: 141893073332109768, guid: 7e7e95709f736cc4bb5af77b4b6b17f3, type: 3}
+  - {fileID: -3164809056393425246, guid: b105e228f6ee90b479fc80590e541cde, type: 3}
+  - {fileID: -5225540622116197949, guid: f77efcde88b5b494792b531411028dc9, type: 3}
+  - {fileID: 8793915729297761979, guid: 8fabecb96dc5c6b4393224a132fc38c7, type: 3}
+  - {fileID: 2750298860172458669, guid: 36192f4b58cb184468811380676863a5, type: 3}
+  - {fileID: -2276259661975475453, guid: 0b7417260057d3742a512607eaa4922b, type: 3}
+  - {fileID: 141893073332109768, guid: 1c557b728e2a4e645bad1cd2f8f70f2b, type: 3}
   requiredTools:
   - {fileID: 11400000, guid: d80f976ed70147547aaa7e94ab5fbbf5, type: 2}
   - {fileID: 11400000, guid: f4b2c6e5c097b8b499e2b2db113d44f6, type: 2}
@@ -32,52 +32,52 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
   - {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
   scraperChunksPrefab: {fileID: 0}
-  cameraMovementIntensity: 0.2
+  cameraMovementIntensity: 1.5
   customCameraZoomSize: 6
-  levelCompleteZoomSize: 6
+  levelCompleteZoomSize: 6.4
   enableYAxisMovement: 1
   cleaningSteps:
   - stepName: Bamboo
     stepType: 0
     requiredTool: {fileID: 11400000, guid: d80f976ed70147547aaa7e94ab5fbbf5, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 4
-    dirtySprite: {fileID: -3164809056393425246, guid: ed7a2a7ef73e1774e8337e62912cb707, type: 3}
+    cameraZoomSize: 5
+    dirtySprite: {fileID: -3164809056393425246, guid: b105e228f6ee90b479fc80590e541cde, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Scrub
     stepType: 0
     requiredTool: {fileID: 11400000, guid: f4b2c6e5c097b8b499e2b2db113d44f6, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 4
-    dirtySprite: {fileID: -5225540622116197949, guid: 000802bb106c31c44a545a2dcbabefbe, type: 3}
+    cameraZoomSize: 5
+    dirtySprite: {fileID: -5225540622116197949, guid: f77efcde88b5b494792b531411028dc9, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Foam Spray
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
     allowCameraMovement: 1
     cameraZoomSize: 6
-    dirtySprite: {fileID: 8793915729297761979, guid: f01c512c15c701541aee13461d7c6082, type: 3}
+    dirtySprite: {fileID: 8793915729297761979, guid: 8fabecb96dc5c6b4393224a132fc38c7, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Wet Brush
     stepType: 0
     requiredTool: {fileID: 11400000, guid: bbc0dc95d91ed5b4d9fe24396025dfff, type: 2}
     allowCameraMovement: 1
-    cameraZoomSize: 4
-    dirtySprite: {fileID: 2750298860172458669, guid: b8ccf5ef21d657947a31c8ef7ce9de6d, type: 3}
+    cameraZoomSize: 5
+    dirtySprite: {fileID: 2750298860172458669, guid: 36192f4b58cb184468811380676863a5, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: Water Spray
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
     allowCameraMovement: 1
     cameraZoomSize: 6
-    dirtySprite: {fileID: -2276259661975475453, guid: 683bdc5ba21237c47abb092214a8913e, type: 3}
+    dirtySprite: {fileID: -2276259661975475453, guid: 0b7417260057d3742a512607eaa4922b, type: 3}
     stepPrefab: {fileID: 0}
   - stepName: towel
     stepType: 0
     requiredTool: {fileID: 11400000, guid: 58180756ef2e25247890f8d56f2623b4, type: 2}
     allowCameraMovement: 1
     cameraZoomSize: 5
-    dirtySprite: {fileID: 141893073332109768, guid: 7e7e95709f736cc4bb5af77b4b6b17f3, type: 3}
+    dirtySprite: {fileID: 141893073332109768, guid: 1c557b728e2a4e645bad1cd2f8f70f2b, type: 3}
     stepPrefab: {fileID: 0}
   customLayerOffsets: []
   customLayerScales: []

@@ -5,6 +5,8 @@ public class HomeSettingsManager : MonoBehaviour
 {
     [Header("UI Panels")]
     public GameObject settingsPanel;
+    public GameObject getDiamondPanel; // Get Diamond Panel slot
+    public GameObject getCoinsPanel;   // NEW: Get Coins Panel slot
 
     [Header("Audio Toggles")]
     public Toggle soundToggle;
@@ -12,10 +14,12 @@ public class HomeSettingsManager : MonoBehaviour
 
     void Start()
     {
-        // Shuru mein settings panel band rahay
+        // Shuru mein panels band rahay
         if (settingsPanel != null) settingsPanel.SetActive(false);
+        if (getDiamondPanel != null) getDiamondPanel.SetActive(false);
+        if (getCoinsPanel != null) getCoinsPanel.SetActive(false); // Start mein Coins Panel hide rahega
 
-        // Toggles ko purani saved settings par set karein (taake sahi ON/OFF dikhayein)
+        // Toggles ko purani saved settings par set karein
         if (soundToggle != null)
         {
             soundToggle.isOn = PlayerPrefs.GetInt("SoundOn", 1) == 1;
@@ -29,7 +33,6 @@ public class HomeSettingsManager : MonoBehaviour
         }
     }
 
-    // Sound toggle ka function
     private void OnSoundToggleChanged(bool isOn)
     {
         if (AudioManager.Instance != null)
@@ -38,7 +41,6 @@ public class HomeSettingsManager : MonoBehaviour
         }
     }
 
-    // Music toggle ka function
     private void OnMusicToggleChanged(bool isOn)
     {
         if (AudioManager.Instance != null)
@@ -47,15 +49,36 @@ public class HomeSettingsManager : MonoBehaviour
         }
     }
 
-    // Settings Panel Kholne Ke Liye (Settings Button par lagayein)
+    // Settings Panel Functions
     public void OpenSettings()
     {
         if (settingsPanel != null) settingsPanel.SetActive(true);
     }
 
-    // Settings Panel Band Karne Ke Liye (Close/X Button par lagayein)
     public void CloseSettings()
     {
         if (settingsPanel != null) settingsPanel.SetActive(false);
+    }
+
+    // Get Diamond Panel Functions (Home Scene)
+    public void OpenGetDiamondPanel()
+    {
+        if (getDiamondPanel != null) getDiamondPanel.SetActive(true);
+    }
+
+    public void CloseGetDiamondPanel()
+    {
+        if (getDiamondPanel != null) getDiamondPanel.SetActive(false);
+    }
+
+    //  Get Coins Panel Functions (Home Scene - NEW)
+    public void OpenGetCoinsPanel()
+    {
+        if (getCoinsPanel != null) getCoinsPanel.SetActive(true);
+    }
+
+    public void CloseGetCoinsPanel()
+    {
+        if (getCoinsPanel != null) getCoinsPanel.SetActive(false);
     }
 }

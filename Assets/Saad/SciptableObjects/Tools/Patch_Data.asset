@@ -15,11 +15,10 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: Patch
-  cameraZoomSize: 6
   capSprite: {fileID: 0}
   capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 1
-  toolSprite: {fileID: -7280120397025921499, guid: 873bb6b4fffee9b4e8e653a60949762e, type: 3}
+  toolSprite: {fileID: -5681428181818119330, guid: 694d2ad797bcc2f40b69e420099fdbcf, type: 3}
   soundOnlyOnHit: 1
   cleaningSpeed: 5
   brushSize: 73
@@ -31,6 +30,10 @@ MonoBehaviour:
   scrubAmount: 0
   rotationSpeed: 10
   rotationAmount: 15
+  enableDragTilt: 0
+  maxTiltAngle: 15
+  tiltSpeed: 10
+  invertTiltDirection: 0
   useParticles: 1
   particlePrefab: {fileID: 0}
   particleOffset: {x: 0, y: 0, z: 0}

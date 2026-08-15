@@ -1,15 +1,17 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI; // UI Toggles use karne ke liye yeh line lazmi hai
+using UnityEngine.UI;
 
 public class PauseManager : MonoBehaviour
 {
     public GameObject pauseMenuPanel;
+    public GameObject getDiamondPanel; // In-Game Get Diamond Panel Slot
+    public GameObject getCoinsPanel;   //  NEW: In-Game Get Coins Panel Slot
     public static bool IsGamePaused = false;
 
     [Header("Audio Toggles (Game Scene)")]
-    public Toggle soundToggle; //  Inspector mein Sound Checkbox yahan drag karein
-    public Toggle musicToggle; //  Inspector mein Music Checkbox yahan drag karein
+    public Toggle soundToggle;
+    public Toggle musicToggle;
 
     void Awake()
     {
@@ -20,9 +22,11 @@ public class PauseManager : MonoBehaviour
     {
         IsGamePaused = false;
         if (pauseMenuPanel != null) pauseMenuPanel.SetActive(false);
+        if (getDiamondPanel != null) getDiamondPanel.SetActive(false);
+        if (getCoinsPanel != null) getCoinsPanel.SetActive(false); // Start mein Coins Panel hide rahega
+
         Time.timeScale = 1f;
 
-        //  CODE LISTENERS SETUP: Game start hote hi toggles ko purani settings par set karein aur functions connect karein
         if (soundToggle != null)
         {
             soundToggle.isOn = PlayerPrefs.GetInt("SoundOn", 1) == 1;
@@ -36,7 +40,6 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    // Jab player Sound Toggle ka checkmark badlega
     private void OnSoundToggleChanged(bool isOn)
     {
         if (AudioManager.Instance != null)
@@ -45,7 +48,6 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    // Jab player Music Toggle ka checkmark badlega
     private void OnMusicToggleChanged(bool isOn)
     {
         if (AudioManager.Instance != null)
@@ -65,11 +67,56 @@ public class PauseManager : MonoBehaviour
 
     public void ResumeGame()
     {
-        IsGamePaused = false;
-        Debug.Log("GAME RESUMED! IsGamePaused is now: " + IsGamePaused);
-
         if (pauseMenuPanel != null) pauseMenuPanel.SetActive(false);
-        Time.timeScale = 1f;
+
+        // Sub panels ki state check karke hi game unpause hogi
+        CheckAndResumeTime();
+    }
+
+    // Get Diamond Panel Functions
+    public void OpenGetDiamondPanel()
+    {
+        IsGamePaused = true;
+        Time.timeScale = 0f; // Game Pause
+        if (getDiamondPanel != null) getDiamondPanel.SetActive(true);
+    }
+
+    public void CloseGetDiamondPanel()
+    {
+        if (getDiamondPanel != null) getDiamondPanel.SetActive(false);
+
+        // Safety check before unpausing
+        CheckAndResumeTime();
+    }
+
+    // Get Coins Panel Functions (NEW)
+    public void OpenGetCoinsPanel()
+    {
+        IsGamePaused = true;
+        Time.timeScale = 0f; // Game Pause
+        if (getCoinsPanel != null) getCoinsPanel.SetActive(true);
+    }
+
+    public void CloseGetCoinsPanel()
+    {
+        if (getCoinsPanel != null) getCoinsPanel.SetActive(false);
+
+        // Safety check before unpausing
+        CheckAndResumeTime();
+    }
+
+    //  HELPER: Check karega ke agar koi bhi doosra panel khula nahi hai tabhi Game Unpause ho
+    private void CheckAndResumeTime()
+    {
+        bool isPauseOpen = (pauseMenuPanel != null && pauseMenuPanel.activeSelf);
+        bool isDiamondOpen = (getDiamondPanel != null && getDiamondPanel.activeSelf);
+        bool isCoinsOpen = (getCoinsPanel != null && getCoinsPanel.activeSelf);
+
+        if (!isPauseOpen && !isDiamondOpen && !isCoinsOpen)
+        {
+            IsGamePaused = false;
+            Time.timeScale = 1f;
+        }
     }
 
     public void GoToHome()

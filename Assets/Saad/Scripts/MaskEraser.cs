@@ -1513,29 +1513,6 @@ public class MaskEraser : MonoBehaviour
 
         if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
     }
-
-    void SnapToolUI()
-    {
-        if (previousToolUIImage != null)
-        {
-            previousToolUIImage.rectTransform.anchoredPosition = prevPos;
-            previousToolUIImage.transform.localScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
-            SetImageAlpha(previousToolUIImage, 0.6f);
-        }
-        if (currentToolUIImage != null)
-        {
-            currentToolUIImage.rectTransform.anchoredPosition = currPos;
-            currentToolUIImage.transform.localScale = new Vector3(activeToolScale, activeToolScale, 1f);
-            SetImageAlpha(currentToolUIImage, 1f);
-        }
-        if (upcomingToolUIImage != null)
-        {
-            upcomingToolUIImage.rectTransform.anchoredPosition = upPos;
-            upcomingToolUIImage.transform.localScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
-            SetImageAlpha(upcomingToolUIImage, 0.6f);
-        }
-    }
-
     void SetImageAlpha(Image img, float alpha)
     {
         if (img == null) return;
@@ -1543,127 +1520,223 @@ public class MaskEraser : MonoBehaviour
         c.a = alpha;
         img.color = c;
     }
+    private Coroutine slideCoroutine;
 
-    IEnumerator SlideToolUI()
+    private RectTransform GetTargetRect(Image img)
     {
-        float duration = 0.5f;
-        float time = 0;
-        Vector3 smallScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
-        Vector3 largeScale = new Vector3(activeToolScale, activeToolScale, 1f);
+        if (img == null) return null;
 
-        if (previousToolUIImage != null && previousToolUIImage.gameObject.activeSelf)
+        RectTransform parentRT = img.transform.parent as RectTransform;
+        if (parentRT != null && parentRT.GetComponent<Canvas>() == null && parentRT.name.ToLower().Contains("slot"))
         {
-            previousToolUIImage.rectTransform.anchoredPosition = currPos;
-            previousToolUIImage.transform.localScale = largeScale;
-            SetImageAlpha(previousToolUIImage, 1f);
+            return parentRT;
         }
-        if (currentToolUIImage != null && currentToolUIImage.gameObject.activeSelf)
-        {
-            currentToolUIImage.rectTransform.anchoredPosition = upPos;
-            currentToolUIImage.transform.localScale = smallScale;
-            SetImageAlpha(currentToolUIImage, 0.6f);
-        }
-        if (upcomingToolUIImage != null && upcomingToolUIImage.gameObject.activeSelf)
-        {
-            upcomingToolUIImage.rectTransform.anchoredPosition = upPos + new Vector2(toolSpacing, 0);
-            upcomingToolUIImage.transform.localScale = smallScale;
-            SetImageAlpha(upcomingToolUIImage, 0f);
-        }
-
-        while (time < duration)
-        {
-            time += Time.deltaTime;
-            float t = time / duration;
-            float smoothT = t * t * (3f - 2f * t);
-
-            if (previousToolUIImage != null && previousToolUIImage.gameObject.activeSelf)
-            {
-                previousToolUIImage.rectTransform.anchoredPosition = Vector2.Lerp(currPos, prevPos, smoothT);
-                previousToolUIImage.transform.localScale = Vector3.Lerp(largeScale, smallScale, smoothT);
-                SetImageAlpha(previousToolUIImage, Mathf.Lerp(1f, 0.6f, smoothT));
-            }
-            if (currentToolUIImage != null && currentToolUIImage.gameObject.activeSelf)
-            {
-                currentToolUIImage.rectTransform.anchoredPosition = Vector2.Lerp(upPos, currPos, smoothT);
-                currentToolUIImage.transform.localScale = Vector3.Lerp(smallScale, largeScale, smoothT);
-                SetImageAlpha(currentToolUIImage, Mathf.Lerp(0.6f, 1f, smoothT));
-            }
-            if (upcomingToolUIImage != null && upcomingToolUIImage.gameObject.activeSelf)
-            {
-                upcomingToolUIImage.rectTransform.anchoredPosition = Vector2.Lerp(upPos + new Vector2(toolSpacing, 0), upPos, smoothT);
-                SetImageAlpha(upcomingToolUIImage, Mathf.Lerp(0f, 0.6f, smoothT));
-            }
-            yield return null;
-        }
-        SnapToolUI();
+        return img.rectTransform;
     }
 
     void UpdateToolUI(bool animate = false)
     {
-        if (!positionsSaved)
+        // Purani chalne wali slide coroutine ko stop karein taakay glitch na ho
+        if (slideCoroutine != null)
         {
-            if (currentToolUIImage != null)
-            {
-                currPos = currentToolUIImage.rectTransform.anchoredPosition;
-                prevPos = currPos + new Vector2(-toolSpacing, 0);
-                upPos = currPos + new Vector2(toolSpacing, 0);
-            }
+            StopCoroutine(slideCoroutine);
+        }
+
+        RectTransform currTarget = GetTargetRect(currentToolUIImage);
+        RectTransform prevTarget = GetTargetRect(previousToolUIImage);
+        RectTransform upTarget = GetTargetRect(upcomingToolUIImage);
+
+        // 1. Initial Positions Safe Save
+        if (!positionsSaved && currTarget != null)
+        {
+            currPos = currTarget.anchoredPosition;
+            prevPos = prevTarget != null ? prevTarget.anchoredPosition : currPos - new Vector2(toolSpacing, 0);
+            upPos = upTarget != null ? upTarget.anchoredPosition : currPos + new Vector2(toolSpacing, 0);
             positionsSaved = true;
         }
 
+        if (animate)
+        {
+            slideCoroutine = StartCoroutine(SlideToolUI());
+        }
+        else
+        {
+            SnapToolUI();
+        }
+    }
+
+    IEnumerator SlideToolUI()
+    {
+        float duration = 0.38f;
+        float time = 0;
+
+        RectTransform prevTarget = GetTargetRect(previousToolUIImage);
+        RectTransform currTarget = GetTargetRect(currentToolUIImage);
+        RectTransform upTarget = GetTargetRect(upcomingToolUIImage);
+
+        if (currTarget == null)
+        {
+            SnapToolUI();
+            yield break;
+        }
+
+        Vector2 offscreenLeft = prevPos - (upPos - currPos);
+        Vector3 smallScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
+        Vector3 largeScale = new Vector3(activeToolScale, activeToolScale, 1f);
+
+        // PRE-ANIMATION LOCK: Frame 0 par exact position & scale lock
+        if (currTarget != null)
+        {
+            currTarget.anchoredPosition = currPos;
+            currTarget.localScale = largeScale;
+            currTarget.gameObject.SetActive(true);
+        }
+
+        if (upTarget != null && upcomingToolUIImage != null && upcomingToolUIImage.gameObject.activeSelf)
+        {
+            upTarget.anchoredPosition = upPos;
+            upTarget.localScale = smallScale;
+            upTarget.gameObject.SetActive(true);
+        }
+
+        if (prevTarget != null && previousToolUIImage != null && previousToolUIImage.gameObject.activeSelf)
+        {
+            prevTarget.anchoredPosition = prevPos;
+            prevTarget.localScale = smallScale;
+            prevTarget.gameObject.SetActive(true);
+        }
+
+        // --- SLIDE & SCALE LOOP ---
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float t = time / duration;
+            float smoothT = t * t * (3f - 2f * t); // Smooth interpolation
+
+            // 1. Current Tool (Center -> Left) + (Bada -> Chota Scale Saath Mein)
+            if (currTarget != null)
+            {
+                currTarget.anchoredPosition = Vector2.Lerp(currPos, prevPos, smoothT);
+                currTarget.localScale = Vector3.Lerp(largeScale, smallScale, smoothT);
+            }
+
+            // 2. Upcoming Tool (Right -> Center) + (Chota -> Bada Scale Saath Mein)
+            if (upTarget != null && upTarget.gameObject.activeSelf)
+            {
+                upTarget.anchoredPosition = Vector2.Lerp(upPos, currPos, smoothT);
+                upTarget.localScale = Vector3.Lerp(smallScale, largeScale, smoothT);
+            }
+
+            // 3. Old Previous Tool (Left -> Offscreen Left Exit)
+            if (prevTarget != null && prevTarget.gameObject.activeSelf)
+            {
+                prevTarget.anchoredPosition = Vector2.Lerp(prevPos, offscreenLeft, smoothT);
+                prevTarget.localScale = smallScale;
+            }
+
+            yield return null;
+        }
+
+        SnapToolUI();
+    }
+
+    void SnapToolUI()
+    {
+        RectTransform prevTarget = GetTargetRect(previousToolUIImage);
+        RectTransform currTarget = GetTargetRect(currentToolUIImage);
+        RectTransform upTarget = GetTargetRect(upcomingToolUIImage);
+
+        // A) Sprites Update & Full Slot Card (BG + Icon) Hide/Show Check
+
+        // 1. PREVIOUS TOOL (Left Slot)
+        bool hasPrevTool = (currentLayer > 0 && currentLayer - 1 < layerRequiredTools.Count);
         if (previousToolUIImage != null)
         {
-            if (currentLayer > 0 && currentLayer - 1 < layerRequiredTools.Count)
+            if (hasPrevTool)
             {
                 ToolData prevTool = layerRequiredTools[currentLayer - 1];
                 if (prevTool != null && prevTool.panelIcon != null)
                 {
                     previousToolUIImage.sprite = prevTool.panelIcon;
                     previousToolUIImage.gameObject.SetActive(true);
+                    if (prevTarget != null) prevTarget.gameObject.SetActive(true);
                 }
                 else
                 {
                     previousToolUIImage.gameObject.SetActive(false);
+                    if (prevTarget != null) prevTarget.gameObject.SetActive(false);
                 }
             }
             else
             {
+                // First layer par POORA BG CARD SLOT HIDE hoga
                 previousToolUIImage.gameObject.SetActive(false);
+                if (prevTarget != null) prevTarget.gameObject.SetActive(false);
             }
         }
 
-        if (currentToolUIImage != null && currentToolData != null && currentToolData.panelIcon != null)
+        // 2. CURRENT TOOL (Center Slot)
+        if (currentToolUIImage != null)
         {
-            currentToolUIImage.sprite = currentToolData.panelIcon;
-            currentToolUIImage.gameObject.SetActive(true);
+            if (currentToolData != null && currentToolData.panelIcon != null)
+            {
+                currentToolUIImage.sprite = currentToolData.panelIcon;
+                currentToolUIImage.gameObject.SetActive(true);
+                if (currTarget != null) currTarget.gameObject.SetActive(true);
+            }
+            else
+            {
+                currentToolUIImage.gameObject.SetActive(false);
+                if (currTarget != null) currTarget.gameObject.SetActive(false);
+            }
         }
 
+        // 3. UPCOMING TOOL (Right Slot)
+        int nextLayerIndex = currentLayer + 1;
+        bool hasUpTool = (nextLayerIndex < layerRequiredTools.Count);
         if (upcomingToolUIImage != null)
         {
-            int nextLayerIndex = currentLayer + 1;
-            if (nextLayerIndex < layerRequiredTools.Count)
+            if (hasUpTool)
             {
                 ToolData nextTool = layerRequiredTools[nextLayerIndex];
                 if (nextTool != null && nextTool.panelIcon != null)
                 {
                     upcomingToolUIImage.sprite = nextTool.panelIcon;
                     upcomingToolUIImage.gameObject.SetActive(true);
+                    if (upTarget != null) upTarget.gameObject.SetActive(true);
                 }
                 else
                 {
                     upcomingToolUIImage.gameObject.SetActive(false);
+                    if (upTarget != null) upTarget.gameObject.SetActive(false);
                 }
             }
             else
             {
                 upcomingToolUIImage.gameObject.SetActive(false);
+                if (upTarget != null) upTarget.gameObject.SetActive(false);
             }
         }
 
-        if (animate) StartCoroutine(SlideToolUI());
-        else SnapToolUI();
-    }
+        // B) Positions & Inspector Scales Reset
+        if (prevTarget != null)
+        {
+            prevTarget.anchoredPosition = prevPos;
+            prevTarget.localScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
+        }
 
+        if (currTarget != null)
+        {
+            currTarget.anchoredPosition = currPos;
+            currTarget.localScale = new Vector3(activeToolScale, activeToolScale, 1f);
+        }
+
+        if (upTarget != null)
+        {
+            upTarget.anchoredPosition = upPos;
+            upTarget.localScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
+        }
+    }
     IEnumerator AnimateUIPopup(Image img, float delay)
     {
         if (img == null || !img.gameObject.activeSelf) yield break;
