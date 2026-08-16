@@ -3886,7 +3886,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 150
+  m_SortingOrder: 200
   m_Sprite: {fileID: 68299640160208602, guid: 7400d6e46f8f3d543b3ed82fb18f955f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -6152,17 +6152,17 @@ MonoBehaviour:
   glueWidth: 0.05
   glueTrail: {fileID: 0}
   sortingLayerName: Default
-  sortingOrder: 20
+  sortingOrder: 90
   patchTarget: {fileID: 0}
   triggerDistance: 0.5
   pourAngle: 120
   rotationSpeed: 8
   enableWaveMotion: 1
-  fixedStartOffset: {x: 0.8, y: 0.5, z: 0}
+  fixedStartOffset: {x: 0.75, y: 0.5, z: 0}
   strokeSpeed: 0.8
-  maxDistanceX: 0.19
-  waveHeightY: 0.09
-  waveFrequency: 2
+  maxDistanceX: 0.17
+  waveHeightY: 0.07
+  waveFrequency: 1.5
   slideAwayOffset: {x: 6, y: -3, z: 0}
   slideSpeed: 4
 --- !u!114 &1157572093

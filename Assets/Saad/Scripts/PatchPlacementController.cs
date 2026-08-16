@@ -33,11 +33,10 @@ public class PatchPlacementController : MonoBehaviour
         {
             toolFollower = GetComponent<ToolFollower>();
         }
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        if (sr != null)
-        {
-            sr.sortingOrder = 10; // High number set kar diya taake Glue (order 5) ke upar aaye
-        }
+
+        // Order 100 set kar diya taake Glue (90) aur bakki layers ke uper aaye
+        SetPatchSortingOrder(100);
+
         ResetUIState();
     }
 
@@ -59,6 +58,7 @@ public class PatchPlacementController : MonoBehaviour
             hasTriggeredStep = false; // Reset trigger flag
             placementTimer = 0f;
 
+            SetPatchSortingOrder(100); // Step start hote hi order ensure karein
             ShowAndResetUI();
         }
 
@@ -132,7 +132,6 @@ public class PatchPlacementController : MonoBehaviour
             isAnimating = false;
             isCompleted = true;
 
-            // DEPRECATED METHOD UPDATED TO Object.FindFirstObjectByType
             GluePourController glueController = Object.FindFirstObjectByType<GluePourController>();
             if (glueController != null)
             {
@@ -148,8 +147,7 @@ public class PatchPlacementController : MonoBehaviour
                 toolFollower.HideTool();
             }
 
-            // NEXT STEP TRIGGER (Sirf 1 Baar Call Hoga)
-            // DEPRECATED METHOD UPDATED TO Object.FindFirstObjectByType
+            // NEXT STEP TRIGGER
             MaskEraser maskEraser = Object.FindFirstObjectByType<MaskEraser>();
             if (maskEraser != null)
             {
@@ -157,6 +155,43 @@ public class PatchPlacementController : MonoBehaviour
             }
         }
     }
+
+    private void SetPatchSortingOrder(int newOrder)
+    {
+        // 1. Tool / Current Object ka Order
+        ApplyOrderAndLayer(gameObject, newOrder);
+
+        // 2. Agar Patch target scene me alag object hai, to uska bhi Order badlein
+        if (patchTarget != null)
+        {
+            ApplyOrderAndLayer(patchTarget.gameObject, newOrder);
+        }
+    }
+    private void ApplyOrderAndLayer(GameObject obj, int order)
+{
+    // Layer aur Order dono enforce karein
+    SpriteRenderer[] renderers = obj.GetComponentsInChildren<SpriteRenderer>(true);
+    foreach (SpriteRenderer sr in renderers)
+    {
+        if (sr != null)
+        {
+            sr.sortingLayerName = "Default"; // Same Layer Ensure Karein
+            sr.sortingOrder = order;
+        }
+    }
+
+    var sortingGroup = obj.GetComponent<UnityEngine.Rendering.SortingGroup>();
+    if (sortingGroup != null)
+    {
+        sortingGroup.sortingLayerName = "Default";
+        sortingGroup.sortingOrder = order;
+    }
+
+    // Z-Position ko Camera ke qareeb karein taake 3D space me bhi Glue ke uper aaye
+    Vector3 pos = obj.transform.position;
+    pos.z = -0.1f; 
+    obj.transform.position = pos;
+}
 
     private void ResetUIState()
     {
