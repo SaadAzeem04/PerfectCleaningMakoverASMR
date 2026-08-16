@@ -26,8 +26,9 @@ MonoBehaviour:
   - {fileID: -2276259661975475453, guid: b995563bc0f360f41b2035d32a36b183, type: 3}
   - {fileID: 141893073332109768, guid: b6cac06851be8a64a8a26dd9eccd7958, type: 3}
   requiredTools:
+  - {fileID: 11400000, guid: 491233d2f7b2229418629d3fbbf61a5e, type: 2}
   - {fileID: 11400000, guid: 56c40f9d6072d33418fc9c29dfe5472e, type: 2}
-  - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+  - {fileID: 11400000, guid: dd2a05e4c5384374e8091109dfaa0999, type: 2}
   - {fileID: 11400000, guid: 694f3df02d8812e47b8bf767531c858c, type: 2}
   - {fileID: 11400000, guid: 3236f9ae4fb7b644489111eff4adbc6f, type: 2}
   - {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
@@ -52,9 +53,9 @@ MonoBehaviour:
     cameraZoomSize: 5
     dirtySprite: {fileID: 0}
     stepPrefab: {fileID: 6922760847136583357, guid: cae197a9bc7ae004fa4ffdc338a32d0c, type: 3}
-  - stepName: Water Spray
+  - stepName: Air Spray
     stepType: 0
-    requiredTool: {fileID: 11400000, guid: 86d8bc8053a799a4e8c735f3a3ce87b9, type: 2}
+    requiredTool: {fileID: 11400000, guid: dd2a05e4c5384374e8091109dfaa0999, type: 2}
     allowCameraMovement: 1
     cameraZoomSize: 6.5
     dirtySprite: {fileID: -5225540622116197949, guid: fe3e3c7bf01d50740a74c1cd9e78a0fd, type: 3}

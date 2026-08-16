@@ -18,7 +18,6 @@ public class MaskEraser : MonoBehaviour
     public TMP_Text percentText;
     public Image progressFill;
     public GameObject progressFillBg;
-   // public DynamicToolSorting toolSorter;
 
     // TOOL ANIMATION VARIABLES
     private Vector3 originalToolLocalPos;
@@ -59,8 +58,8 @@ public class MaskEraser : MonoBehaviour
     public TMP_Text gameplayCoinText;
 
     [Header("Diamond UI Settings")]
-    public GameObject gameplayDiamondPanel; // Unity Inspector me Diamond Bar drag karne ke liye
-    private Vector2 diamondBasePos;           // Animation ke liye initial position record karne ke liye
+    public GameObject gameplayDiamondPanel;
+    private Vector2 diamondBasePos;
     private Vector3 diamondBaseScale = Vector3.one;
 
     [Header("--- Ref Video Tool Variant UI ---")]
@@ -74,8 +73,8 @@ public class MaskEraser : MonoBehaviour
     private ToolVariant currentEquippedVariant;
 
     [Header("UI Delay Hide/Show Settings")]
-    public float holdToHideDelay = 2.0f;   // 2 second continuous touch
-    public float idleToShowDelay = 2.0f;   // 2 second continuous untouch
+    public float holdToHideDelay = 2.0f;
+    public float idleToShowDelay = 2.0f;
     private float touchTimer = 0f;
     private float idleTimer = 0f;
     private bool isUIHiddenByTimer = false;
@@ -84,7 +83,6 @@ public class MaskEraser : MonoBehaviour
     public Image previousToolUIImage;
     public Image currentToolUIImage;
     public Image upcomingToolUIImage;
-
 
     [Header("Background Reference")]
     public SpriteRenderer backgroundRenderer;
@@ -152,8 +150,6 @@ public class MaskEraser : MonoBehaviour
     float currentFill;
     bool gameCompleted = false;
     bool textureNeedsApply = false;
-
-    //private GameObject baseCleanObjRef;
 
     private GameObject baseCleanObjRef;
     public DynamicToolSorting toolSorter;
@@ -228,9 +224,7 @@ public class MaskEraser : MonoBehaviour
 
         if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
 
-        // FIX: Pehle tool ke variant panel ko smooth popup animation se show karne ke liye
         ToggleGameplayUI(false);
-
         StartCoroutine(AnimateFirstToolOnStartup());
     }
 
@@ -291,7 +285,7 @@ public class MaskEraser : MonoBehaviour
         if (objectData.cleanSprite != null)
         {
             baseCleanSR.sprite = objectData.cleanSprite;
-            baseCleanSR.sortingOrder = 0;
+            baseCleanSR.sortingOrder = 0; // BASE CLEAN OBJECT IS ALWAYS 0 (BACKGROUND)
             baseCleanSR.maskInteraction = SpriteMaskInteraction.None;
             baseCleanSR.material = new Material(Shader.Find("Sprites/Default"));
             baseCleanSR.enabled = true;
@@ -321,12 +315,15 @@ public class MaskEraser : MonoBehaviour
 
                 stepGameObjects.Add(stepObj);
 
+                // TOP-TO-BOTTOM AUTO-SORTING (Step 0 = Highest Order)
+                int autoSortingOrder = (totalSteps - i) * 10;
+
                 switch (step.stepType)
                 {
                     case CleaningStepType.PixelEraser:
                         SpriteRenderer sr = stepObj.AddComponent<SpriteRenderer>();
                         sr.sprite = step.dirtySprite;
-                        sr.sortingOrder = (totalSteps + 5) - i;
+                        sr.sortingOrder = autoSortingOrder;
                         layersList.Add(sr);
                         break;
 
@@ -338,9 +335,9 @@ public class MaskEraser : MonoBehaviour
                             instantiatedChunks.transform.localRotation = Quaternion.identity;
                             instantiatedChunks.transform.localScale = Vector3.one;
 
-                            MudChunk[] allChunks = instantiatedChunks.GetComponentsInChildren<MudChunk>(true);
+                            SetObjectSortingOrder(instantiatedChunks, autoSortingOrder);
 
-                            //  YAHAN AUTOMATIC SET HO RAHA HAI:
+                            MudChunk[] allChunks = instantiatedChunks.GetComponentsInChildren<MudChunk>(true);
                             totalScraperChunks = allChunks.Length;
                             remainingScraperChunks = totalScraperChunks;
                         }
@@ -354,6 +351,8 @@ public class MaskEraser : MonoBehaviour
                             instantiatedGlue.transform.localPosition = Vector3.zero;
                             instantiatedGlue.transform.localRotation = Quaternion.identity;
                             instantiatedGlue.transform.localScale = Vector3.one;
+
+                            SetObjectSortingOrder(instantiatedGlue, autoSortingOrder);
                         }
                         layersList.Add(null);
                         break;
@@ -381,67 +380,25 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // --- ACCURATE CONTINUOUS SORTING LOGIC FOR MUDCHUNKS ---
+        // --- TOP-TO-BOTTOM DYNAMIC TOOL & LAYER SORTING LOGIC ---
         if (toolSpriteRenderer != null)
         {
+            int totalSteps = (objectData != null && objectData.cleaningSteps != null) ? objectData.cleaningSteps.Count : 1;
+            int activeStepOrder = (totalSteps - currentLayer) * 10;
+
             GameObject currentStepObj = (stepGameObjects != null && currentLayer < stepGameObjects.Count) ? stepGameObjects[currentLayer] : null;
+            SpriteRenderer stepRenderer = (currentStepObj != null) ? currentStepObj.GetComponentInChildren<SpriteRenderer>() : null;
+            string targetLayer = (stepRenderer != null) ? stepRenderer.sortingLayerName : toolSpriteRenderer.sortingLayerName;
 
-            if (isScraperStep && currentStepObj != null)
+            // Tool hamesha active step layer ke UPAR (+50) rahega
+            ApplyToolSorting(targetLayer, activeStepOrder + 50);
+
+            if (currentStepObj != null)
             {
-                SpriteRenderer stepRenderer = currentStepObj.GetComponentInChildren<SpriteRenderer>();
-
-                if (stepRenderer != null)
-                {
-                    cachedChunkOrder = stepRenderer.sortingOrder;
-                    cachedChunkLayer = stepRenderer.sortingLayerName;
-                }
-
-                string targetLayer = !string.IsNullOrEmpty(cachedChunkLayer) ? cachedChunkLayer : toolSpriteRenderer.sortingLayerName;
-                int baseChunkOrder = (cachedChunkOrder != -1) ? cachedChunkOrder : 98;
-
-                int toolOrder = baseChunkOrder - 1; // 97
-
-                // 1. Tool Order set karein (Tool = 97)
-                ApplyToolSorting(targetLayer, toolOrder);
-
-                // 2. Scene ke tamaam active MudChunks ko scan karke falling pieces ko tool ke piche (96) force karein
-                MudChunk[] activeMudChunks = FindObjectsByType<MudChunk>(FindObjectsSortMode.None);
-                foreach (MudChunk chunk in activeMudChunks)
-                {
-                    if (chunk == null) continue;
-
-                    // Intact main step parent chunk ke bajaye detached/falling pieces ka order down karein
-                    if (!chunk.transform.IsChildOf(currentStepObj.transform))
-                    {
-                        SpriteRenderer[] chunkRenderers = chunk.GetComponentsInChildren<SpriteRenderer>(true);
-                        foreach (SpriteRenderer sr in chunkRenderers)
-                        {
-                            sr.sortingLayerName = targetLayer;
-                            sr.sortingOrder = toolOrder - 1; // 96 (Tool ke piche)
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // BAAKI TAMAM TOOLS (Brush, Srya, Sponge, etc.): Dirty layer ke SAMNE (+10)
-                cachedChunkOrder = -1;
-                cachedChunkLayer = "";
-
-                SpriteRenderer stepRenderer = (currentStepObj != null) ? currentStepObj.GetComponentInChildren<SpriteRenderer>() : null;
-
-                if (stepRenderer != null)
-                {
-                    ApplyToolSorting(stepRenderer.sortingLayerName, stepRenderer.sortingOrder + 10);
-                }
-                else
-                {
-                    ApplyToolSorting(toolSpriteRenderer.sortingLayerName, defaultToolOrder);
-                }
+                SetObjectSortingOrder(currentStepObj, activeStepOrder);
             }
         }
 
-        // 50% Chunk Removal Check:
         bool isHalfOrMoreRemoved = (totalScraperChunks > 0) && (remainingScraperChunks <= totalScraperChunks * 0.5f);
 
         if (isScraperStep && remainingScraperChunks > 0 && isHalfOrMoreRemoved && !gameCompleted && !isTransitioningTool)
@@ -497,7 +454,7 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // UI HIDE LOGIC (2-Second Delay)
+        // UI HIDE LOGIC
         if (!gameCompleted && !isTransitioningTool)
         {
             bool isTouching = Input.GetMouseButton(0) || Input.touchCount > 0;
@@ -723,6 +680,25 @@ public class MaskEraser : MonoBehaviour
             }
         }
     }
+
+    private void SetObjectSortingOrder(GameObject obj, int order)
+    {
+        if (obj == null) return;
+
+        UnityEngine.Rendering.SortingGroup group = obj.GetComponent<UnityEngine.Rendering.SortingGroup>();
+        if (group != null)
+        {
+            group.sortingOrder = order;
+            return;
+        }
+
+        SpriteRenderer[] renderers = obj.GetComponentsInChildren<SpriteRenderer>(true);
+        foreach (SpriteRenderer sr in renderers)
+        {
+            sr.sortingOrder = order;
+        }
+    }
+
     [Header("Slide UI Animations")]
     private Coroutine topUISlideCoroutine;
     private Vector2 pauseBasePos;
@@ -912,9 +888,18 @@ public class MaskEraser : MonoBehaviour
     void PrepareLayer()
     {
         if (currentLayer >= layersList.Count) return;
-        if (layersList[currentLayer] == null) return;
 
-        layersList[currentLayer].maskInteraction = SpriteMaskInteraction.None;  // Active layer ka mask reset karein
+        // Current step ke tamaam renderers ka mask interaction normal (None) karein
+        if (currentLayer < stepGameObjects.Count && stepGameObjects[currentLayer] != null)
+        {
+            SpriteRenderer[] currentRenderers = stepGameObjects[currentLayer].GetComponentsInChildren<SpriteRenderer>(true);
+            foreach (SpriteRenderer sr in currentRenderers)
+            {
+                sr.maskInteraction = SpriteMaskInteraction.None;
+            }
+        }
+
+        if (layersList[currentLayer] == null) return;
 
         Sprite originalSprite = layersList[currentLayer].sprite;
         Texture2D sheetTexture = originalSprite.texture;
@@ -947,10 +932,10 @@ public class MaskEraser : MonoBehaviour
             SpriteMeshType.FullRect
         );
 
-        // Dynamic Masking Call Karein
         ApplyLayerMasking(originalSprite);
     }
-    // Tool ke tamaam child renderers ya SortingGroup ko ek sath update karne ka method
+    
+
     private void ApplyToolSorting(string layerName, int order)
     {
         if (toolSpriteRenderer == null) return;
@@ -1169,29 +1154,30 @@ public class MaskEraser : MonoBehaviour
 
     void ApplyLayerMasking(Sprite originalSprite)
     {
-        if (currentLayer >= layersList.Count) return;
+        if (currentLayer >= stepGameObjects.Count || stepGameObjects[currentLayer] == null) return;
 
-        SpriteRenderer currentSR = layersList[currentLayer];
-        if (currentSR != null)
+        // Current Step par SpriteMask add/enable karein
+        GameObject currentStepObj = stepGameObjects[currentLayer];
+        SpriteMask mask = currentStepObj.GetComponent<SpriteMask>();
+        if (mask == null)
         {
-            SpriteMask mask = currentSR.gameObject.GetComponent<SpriteMask>();
-            if (mask == null)
-            {
-                mask = currentSR.gameObject.AddComponent<SpriteMask>();
-            }
-
-            mask.enabled = true;
-            mask.sprite = originalSprite;
+            mask = currentStepObj.AddComponent<SpriteMask>();
         }
 
+        mask.enabled = true;
+        mask.sprite = originalSprite;
+
+        // Agli Layer (Step) ke SARE child renderers par masking lagayein
         int nextIndex = currentLayer + 1;
-        if (nextIndex < layersList.Count && layersList[nextIndex] != null)
+        if (nextIndex < stepGameObjects.Count && stepGameObjects[nextIndex] != null)
         {
-            SpriteRenderer nextSR = layersList[nextIndex];
-            nextSR.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+            SpriteRenderer[] nextRenderers = stepGameObjects[nextIndex].GetComponentsInChildren<SpriteRenderer>(true);
+            foreach (SpriteRenderer sr in nextRenderers)
+            {
+                sr.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+            }
         }
     }
-
     public void ScraperChunkDestroyed()
     {
         remainingScraperChunks--;
@@ -1290,9 +1276,8 @@ public class MaskEraser : MonoBehaviour
 
         float time = 0;
         float durationOut = 0.6f;
-        float patchFadeDelay = 0.3f; // Reduced delay to smoothly fade out old cleaned layer
+        float patchFadeDelay = 0.3f;
 
-        // Purane Tool aur Cleaned Layer ka fade out/exit animation
         while (time < durationOut)
         {
             time += Time.deltaTime;
@@ -1312,14 +1297,12 @@ public class MaskEraser : MonoBehaviour
             yield return null;
         }
 
-        // 1. CLEANED LAYER KO HIDE KAREIN: Purani completed layer ko permanently disable kar dein
         if (stepGameObjects != null && currentLayer < stepGameObjects.Count && stepGameObjects[currentLayer] != null)
         {
             stepGameObjects[currentLayer].SetActive(false);
             if (currentLayerSR != null) currentLayerSR.color = originalColor;
         }
 
-        // Purana Mask Disable Karein
         if (currentLayer < layersList.Count && layersList[currentLayer] != null)
         {
             SpriteMask oldMask = layersList[currentLayer].GetComponent<SpriteMask>();
@@ -1331,7 +1314,6 @@ public class MaskEraser : MonoBehaviour
 
         currentLayer++;
 
-        // Check if level is finished
         if (currentLayer >= objectData.cleaningSteps.Count)
         {
             CompleteGame();
@@ -1339,29 +1321,24 @@ public class MaskEraser : MonoBehaviour
             yield break;
         }
 
-        // 2. LAYER REVEAL LOGIC: Pure array ko update karein
         if (stepGameObjects != null)
         {
             for (int i = 0; i < stepGameObjects.Count; i++)
             {
                 if (stepGameObjects[i] != null)
                 {
-                    // Purani tamaam layers (i < currentLayer) OFF rahengi.
-                    // Sirf current active layer aur uske bilkul neeche wali layer (currentLayer + 1) active hongi.
                     bool shouldBeActive = (i == currentLayer || i == currentLayer + 1);
                     stepGameObjects[i].SetActive(shouldBeActive);
                 }
             }
         }
 
-        // 3. BASE CLEAN OBJECT LOGIC: Sirf tab reveal hoga jab AAKHRI step par pohnch jayein
         if (baseCleanObjRef != null)
         {
             bool isLastStep = (currentLayer == objectData.cleaningSteps.Count - 1);
             baseCleanObjRef.SetActive(isLastStep);
         }
 
-        // Nayi Layer prepare hogi (Masking auto-set ho jayegi)
         PrepareLayer();
 
         ToolData nextTool = null;
@@ -1404,7 +1381,6 @@ public class MaskEraser : MonoBehaviour
         time = 0;
         float durationIn = 0.6f;
 
-        // Naye Tool ka Slide-In Animation
         while (time < durationIn)
         {
             time += Time.deltaTime;
@@ -1441,6 +1417,7 @@ public class MaskEraser : MonoBehaviour
             toolFollower.AnimateCapOff();
         }
     }
+
     void CompleteGame()
     {
         Debug.Log("CompleteGame() START HUA HAI!");
@@ -1513,6 +1490,7 @@ public class MaskEraser : MonoBehaviour
 
         if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
     }
+
     void SetImageAlpha(Image img, float alpha)
     {
         if (img == null) return;
@@ -1520,6 +1498,7 @@ public class MaskEraser : MonoBehaviour
         c.a = alpha;
         img.color = c;
     }
+
     private Coroutine slideCoroutine;
 
     private RectTransform GetTargetRect(Image img)
@@ -1536,7 +1515,6 @@ public class MaskEraser : MonoBehaviour
 
     void UpdateToolUI(bool animate = false)
     {
-        // Purani chalne wali slide coroutine ko stop karein taakay glitch na ho
         if (slideCoroutine != null)
         {
             StopCoroutine(slideCoroutine);
@@ -1546,7 +1524,6 @@ public class MaskEraser : MonoBehaviour
         RectTransform prevTarget = GetTargetRect(previousToolUIImage);
         RectTransform upTarget = GetTargetRect(upcomingToolUIImage);
 
-        // 1. Initial Positions Safe Save
         if (!positionsSaved && currTarget != null)
         {
             currPos = currTarget.anchoredPosition;
@@ -1584,7 +1561,6 @@ public class MaskEraser : MonoBehaviour
         Vector3 smallScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
         Vector3 largeScale = new Vector3(activeToolScale, activeToolScale, 1f);
 
-        // PRE-ANIMATION LOCK: Frame 0 par exact position & scale lock
         if (currTarget != null)
         {
             currTarget.anchoredPosition = currPos;
@@ -1606,28 +1582,24 @@ public class MaskEraser : MonoBehaviour
             prevTarget.gameObject.SetActive(true);
         }
 
-        // --- SLIDE & SCALE LOOP ---
         while (time < duration)
         {
             time += Time.deltaTime;
             float t = time / duration;
-            float smoothT = t * t * (3f - 2f * t); // Smooth interpolation
+            float smoothT = t * t * (3f - 2f * t);
 
-            // 1. Current Tool (Center -> Left) + (Bada -> Chota Scale Saath Mein)
             if (currTarget != null)
             {
                 currTarget.anchoredPosition = Vector2.Lerp(currPos, prevPos, smoothT);
                 currTarget.localScale = Vector3.Lerp(largeScale, smallScale, smoothT);
             }
 
-            // 2. Upcoming Tool (Right -> Center) + (Chota -> Bada Scale Saath Mein)
             if (upTarget != null && upTarget.gameObject.activeSelf)
             {
                 upTarget.anchoredPosition = Vector2.Lerp(upPos, currPos, smoothT);
                 upTarget.localScale = Vector3.Lerp(smallScale, largeScale, smoothT);
             }
 
-            // 3. Old Previous Tool (Left -> Offscreen Left Exit)
             if (prevTarget != null && prevTarget.gameObject.activeSelf)
             {
                 prevTarget.anchoredPosition = Vector2.Lerp(prevPos, offscreenLeft, smoothT);
@@ -1646,9 +1618,6 @@ public class MaskEraser : MonoBehaviour
         RectTransform currTarget = GetTargetRect(currentToolUIImage);
         RectTransform upTarget = GetTargetRect(upcomingToolUIImage);
 
-        // A) Sprites Update & Full Slot Card (BG + Icon) Hide/Show Check
-
-        // 1. PREVIOUS TOOL (Left Slot)
         bool hasPrevTool = (currentLayer > 0 && currentLayer - 1 < layerRequiredTools.Count);
         if (previousToolUIImage != null)
         {
@@ -1669,13 +1638,11 @@ public class MaskEraser : MonoBehaviour
             }
             else
             {
-                // First layer par POORA BG CARD SLOT HIDE hoga
                 previousToolUIImage.gameObject.SetActive(false);
                 if (prevTarget != null) prevTarget.gameObject.SetActive(false);
             }
         }
 
-        // 2. CURRENT TOOL (Center Slot)
         if (currentToolUIImage != null)
         {
             if (currentToolData != null && currentToolData.panelIcon != null)
@@ -1691,7 +1658,6 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // 3. UPCOMING TOOL (Right Slot)
         int nextLayerIndex = currentLayer + 1;
         bool hasUpTool = (nextLayerIndex < layerRequiredTools.Count);
         if (upcomingToolUIImage != null)
@@ -1718,7 +1684,6 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
-        // B) Positions & Inspector Scales Reset
         if (prevTarget != null)
         {
             prevTarget.anchoredPosition = prevPos;
@@ -1737,6 +1702,7 @@ public class MaskEraser : MonoBehaviour
             upTarget.localScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
         }
     }
+
     IEnumerator AnimateUIPopup(Image img, float delay)
     {
         if (img == null || !img.gameObject.activeSelf) yield break;
@@ -1928,7 +1894,6 @@ public class MaskEraser : MonoBehaviour
 
         if (tool.toolVariants.Count > 0)
         {
-            // FIX: Level replay ya tool initial setup par HAMESHA pehla (base) variant hi select hoga
             ToolVariant baseVariant = tool.toolVariants[0];
 
             PlayerPrefs.SetString(tool.name + "_Equipped", baseVariant.variantName);
@@ -1943,6 +1908,7 @@ public class MaskEraser : MonoBehaviour
             variantMainPanel.SetActive(true);
         }
     }
+
     private IEnumerator AnimateVariantPanelVideoStyle(bool show)
     {
         if (variantMainPanel == null) yield break;
@@ -2072,7 +2038,6 @@ public class MaskEraser : MonoBehaviour
             {
                 SetupToolVariantsPanel(currentToolData);
 
-                // Startup par Pehli Layer (Step 0) ka Camera Zoom apply karein
                 if (objectData != null && objectData.cleaningSteps != null && objectData.cleaningSteps.Count > 0)
                 {
                     CleaningStep firstStep = objectData.cleaningSteps[0];
@@ -2160,12 +2125,9 @@ public class MaskEraser : MonoBehaviour
         StopToolEffects();
 
         if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
-
-        if (progressBarMainPanel != null) progressBarMainPanel.SetActive(false);
         if (progressFill != null) progressFill.gameObject.SetActive(false);
         if (percentText != null) percentText.gameObject.SetActive(false);
 
-        //  CHECK: Agar AAKHRI Step Complete hua hai (Level Finish)
         if (currentLayer >= objectData.cleaningSteps.Count - 1)
         {
             CompleteGame();
@@ -2175,6 +2137,7 @@ public class MaskEraser : MonoBehaviour
             StartCoroutine(TransitionToNextLayerRoutine());
         }
     }
+
     private void SetRemainingChunksGlow(bool enable)
     {
         isChunksGlowing = enable;

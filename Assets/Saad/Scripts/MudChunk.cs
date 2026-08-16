@@ -124,7 +124,7 @@ public class MudChunk : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (isFalling) return;
-
+        if (!Input.GetMouseButton(0)) return;
         bool isScraper = collision.CompareTag("ScraperEdge") ||
                          collision.gameObject.name.ToLower().Contains("scraper");
 
@@ -154,54 +154,51 @@ public class MudChunk : MonoBehaviour
     {
         transform.SetParent(null);
 
-        SpriteRenderer toolSR = null;
+        // 1. Tool ka highest Sorting Order find karein
+        int maxToolOrder = 101;
+        string targetLayer = "Default";
 
-        ToolFollower toolFollower = Object.FindFirstObjectByType<ToolFollower>();
-        if (toolFollower != null)
+        SpriteRenderer[] toolRenderers = toolObject.GetComponentsInParent<SpriteRenderer>();
+        if (toolRenderers.Length == 0) toolRenderers = toolObject.GetComponentsInChildren<SpriteRenderer>();
+
+        if (toolRenderers.Length > 0)
         {
-            toolSR = toolFollower.GetComponentInChildren<SpriteRenderer>();
-        }
-
-        if (toolSR == null)
-        {
-            toolSR = toolObject.GetComponentInParent<SpriteRenderer>();
-            if (toolSR == null) toolSR = toolObject.GetComponentInChildren<SpriteRenderer>();
-        }
-
-        if (toolSR != null)
-        {
-            int targetOrder = toolSR.sortingOrder - 5;
-            string targetLayer = toolSR.sortingLayerName;
-
-            SpriteRenderer[] chunkSRs = GetComponentsInChildren<SpriteRenderer>(true);
-            foreach (var cSR in chunkSRs)
+            targetLayer = toolRenderers[0].sortingLayerName;
+            foreach (var sr in toolRenderers)
             {
-                if (cSR == null) continue;
-                cSR.sortingLayerName = targetLayer;
-                cSR.sortingOrder = targetOrder;
-            }
-
-            var sortingGroup = GetComponent<UnityEngine.Rendering.SortingGroup>();
-            if (sortingGroup != null)
-            {
-                sortingGroup.sortingLayerName = targetLayer;
-                sortingGroup.sortingOrder = targetOrder;
-            }
-
-            Vector3 pos = transform.position;
-            pos.z = toolSR.transform.position.z + 0.5f;
-            transform.position = pos;
-        }
-        else
-        {
-            SpriteRenderer[] chunkSRs = GetComponentsInChildren<SpriteRenderer>(true);
-            foreach (var cSR in chunkSRs)
-            {
-                if (cSR != null) cSR.sortingOrder = 50;
+                if (sr.sortingOrder > maxToolOrder)
+                {
+                    maxToolOrder = sr.sortingOrder;
+                }
             }
         }
+
+        // FIX: Tool ko NICHE bhejne ke liye Chunk ka order BADA (+10) rakhein
+        // Tool = 101 -> Chunk = 111 (Chunk UPER aayega, Tool NICHE chala jayega)
+        int targetOrder = maxToolOrder + 10;
+
+        // 2. Sorting Group Update
+        var sortingGroup = GetComponent<UnityEngine.Rendering.SortingGroup>();
+        if (sortingGroup != null)
+        {
+            sortingGroup.sortingLayerName = targetLayer;
+            sortingGroup.sortingOrder = targetOrder;
+        }
+
+        // 3. Tamam Child Renderers Update
+        SpriteRenderer[] chunkSRs = GetComponentsInChildren<SpriteRenderer>(true);
+        foreach (var cSR in chunkSRs)
+        {
+            if (cSR == null) continue;
+            cSR.sortingLayerName = targetLayer;
+            cSR.sortingOrder = targetOrder;
+        }
+
+        // 4. Z-axis: Minus (-) matlab Camera ke qareeb (UPER)
+        Vector3 pos = transform.position;
+        pos.z = toolObject.transform.position.z - 0.5f;
+        transform.position = pos;
     }
-
     private IEnumerator ChunkCompleteSequenceRoutine()
     {
         Quaternion initialRotation = transform.rotation;
