@@ -280,6 +280,7 @@ public class MaskEraser : MonoBehaviour
 
         if (objectData == null) return;
 
+        //  BASE CLEAN OBJECT SETUP
         GameObject cleanObj = new GameObject("Base_Clean_Object");
         cleanObj.transform.SetParent(levelParentAnchor, false);
         cleanObj.transform.localPosition = Vector3.zero;
@@ -291,7 +292,10 @@ public class MaskEraser : MonoBehaviour
         if (objectData.cleanSprite != null)
         {
             baseCleanSR.sprite = objectData.cleanSprite;
+
+            // FIX 1: CleaningObjectData se Base Sorting Order assign kar diya
             baseCleanSR.sortingOrder = 0;
+
             baseCleanSR.maskInteraction = SpriteMaskInteraction.None;
             baseCleanSR.material = new Material(Shader.Find("Sprites/Default"));
             baseCleanSR.enabled = true;
@@ -303,6 +307,8 @@ public class MaskEraser : MonoBehaviour
             cleanObj.SetActive(isOnlyOneStep);
         }
 
+        // DYNAMIC CLEANING STEPS SETUP
+        // DYNAMIC CLEANING STEPS SETUP
         if (objectData.cleaningSteps != null && objectData.cleaningSteps.Count > 0)
         {
             int totalSteps = objectData.cleaningSteps.Count;
@@ -321,12 +327,20 @@ public class MaskEraser : MonoBehaviour
 
                 stepGameObjects.Add(stepObj);
 
+                // AUTOMATIC SORTING CALCULATION (Index ke mutabiq order set hoga)
+                // Element 0 (Pehla Step) = 10
+                // Element 1 (Doosra Step) = 20
+                // Element 2 (Teesra Step) = 30
+                int autoSortingOrder = (totalSteps - i) * 10;
                 switch (step.stepType)
                 {
                     case CleaningStepType.PixelEraser:
                         SpriteRenderer sr = stepObj.AddComponent<SpriteRenderer>();
                         sr.sprite = step.dirtySprite;
-                        sr.sortingOrder = (totalSteps + 5) - i;
+
+                        // Auto Sorting Order Assign
+                        sr.sortingOrder = autoSortingOrder;
+
                         layersList.Add(sr);
                         break;
 
@@ -338,9 +352,11 @@ public class MaskEraser : MonoBehaviour
                             instantiatedChunks.transform.localRotation = Quaternion.identity;
                             instantiatedChunks.transform.localScale = Vector3.one;
 
+                            // Auto Sorting Order Assign
+                            SetObjectSortingOrder(instantiatedChunks, autoSortingOrder);
+
                             MudChunk[] allChunks = instantiatedChunks.GetComponentsInChildren<MudChunk>(true);
 
-                            //  YAHAN AUTOMATIC SET HO RAHA HAI:
                             totalScraperChunks = allChunks.Length;
                             remainingScraperChunks = totalScraperChunks;
                         }
@@ -354,6 +370,9 @@ public class MaskEraser : MonoBehaviour
                             instantiatedGlue.transform.localPosition = Vector3.zero;
                             instantiatedGlue.transform.localRotation = Quaternion.identity;
                             instantiatedGlue.transform.localScale = Vector3.one;
+
+                            // Auto Sorting Order Assign
+                            SetObjectSortingOrder(instantiatedGlue, autoSortingOrder);
                         }
                         layersList.Add(null);
                         break;
@@ -382,63 +401,16 @@ public class MaskEraser : MonoBehaviour
         }
 
         // --- ACCURATE CONTINUOUS SORTING LOGIC FOR MUDCHUNKS ---
+        // --- CLEAN & GUARANTEED TOOL / LAYER SORTING LOGIC ---
         if (toolSpriteRenderer != null)
         {
-            GameObject currentStepObj = (stepGameObjects != null && currentLayer < stepGameObjects.Count) ? stepGameObjects[currentLayer] : null;
+            int totalSteps = (objectData != null && objectData.cleaningSteps != null) ? objectData.cleaningSteps.Count : 1;
 
-            if (isScraperStep && currentStepObj != null)
-            {
-                SpriteRenderer stepRenderer = currentStepObj.GetComponentInChildren<SpriteRenderer>();
+            // Current Active Step Ka Order Calculate Karein
+            int currentStepOrder = (totalSteps - currentLayer) * 10;
 
-                if (stepRenderer != null)
-                {
-                    cachedChunkOrder = stepRenderer.sortingOrder;
-                    cachedChunkLayer = stepRenderer.sortingLayerName;
-                }
-
-                string targetLayer = !string.IsNullOrEmpty(cachedChunkLayer) ? cachedChunkLayer : toolSpriteRenderer.sortingLayerName;
-                int baseChunkOrder = (cachedChunkOrder != -1) ? cachedChunkOrder : 98;
-
-                int toolOrder = baseChunkOrder - 1; // 97
-
-                // 1. Tool Order set karein (Tool = 97)
-                ApplyToolSorting(targetLayer, toolOrder);
-
-                // 2. Scene ke tamaam active MudChunks ko scan karke falling pieces ko tool ke piche (96) force karein
-                MudChunk[] activeMudChunks = FindObjectsByType<MudChunk>(FindObjectsSortMode.None);
-                foreach (MudChunk chunk in activeMudChunks)
-                {
-                    if (chunk == null) continue;
-
-                    // Intact main step parent chunk ke bajaye detached/falling pieces ka order down karein
-                    if (!chunk.transform.IsChildOf(currentStepObj.transform))
-                    {
-                        SpriteRenderer[] chunkRenderers = chunk.GetComponentsInChildren<SpriteRenderer>(true);
-                        foreach (SpriteRenderer sr in chunkRenderers)
-                        {
-                            sr.sortingLayerName = targetLayer;
-                            sr.sortingOrder = toolOrder - 1; // 96 (Tool ke piche)
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // BAAKI TAMAM TOOLS (Brush, Srya, Sponge, etc.): Dirty layer ke SAMNE (+10)
-                cachedChunkOrder = -1;
-                cachedChunkLayer = "";
-
-                SpriteRenderer stepRenderer = (currentStepObj != null) ? currentStepObj.GetComponentInChildren<SpriteRenderer>() : null;
-
-                if (stepRenderer != null)
-                {
-                    ApplyToolSorting(stepRenderer.sortingLayerName, stepRenderer.sortingOrder + 10);
-                }
-                else
-                {
-                    ApplyToolSorting(toolSpriteRenderer.sortingLayerName, defaultToolOrder);
-                }
-            }
+            // Tool Hamesha Active Step Se Aage Rahega (+50)
+            ApplyToolSorting(toolSpriteRenderer.sortingLayerName, currentStepOrder + 50);
         }
 
         // 50% Chunk Removal Check:
@@ -703,7 +675,7 @@ public class MaskEraser : MonoBehaviour
         currentFill = Mathf.Lerp(currentFill, targetFill, Time.deltaTime * 15f);
         progressFill.fillAmount = currentFill;
 
-        if (objectData != null && objectData.scraperChunksPrefab != null && currentLayer > 0)
+        if (objectData != null && currentLayer > 0)
         {
             if (layersList != null && layersList.Count > 0 && layersList[0] != null)
             {
@@ -2187,6 +2159,23 @@ public class MaskEraser : MonoBehaviour
             {
                 chunk.SetGlow(enable);
             }
+        }
+    }
+    private void SetObjectSortingOrder(GameObject targetObject, int order)
+    {
+        if (targetObject == null) return;
+
+        UnityEngine.Rendering.SortingGroup sortingGroup = targetObject.GetComponent<UnityEngine.Rendering.SortingGroup>();
+        if (sortingGroup != null)
+        {
+            sortingGroup.sortingOrder = order;
+            return;
+        }
+
+        SpriteRenderer[] renderers = targetObject.GetComponentsInChildren<SpriteRenderer>(true);
+        foreach (SpriteRenderer sr in renderers)
+        {
+            if (sr != null) sr.sortingOrder = order;
         }
     }
 }
