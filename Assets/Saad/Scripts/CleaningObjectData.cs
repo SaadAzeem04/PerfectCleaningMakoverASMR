@@ -9,14 +9,19 @@ public class CleaningObjectData : ScriptableObject
     public Sprite cleanSprite;
 
     [Header("Background Settings")]
-    public Sprite levelBackgroundSprite;
+    public Sprite levelBackgroundSprite; // Level ka dynamic background sprite
 
     [Header("Dynamic Positioning Settings")]
     [Tooltip("Is object/level ke liye layers container ki Y/X position offset")]
-    public Vector3 levelPositionOffset = Vector3.zero;
+    public Vector3 levelPositionOffset = Vector3.zero; // Default (0,0,0)
+
+    public Sprite[] dirtyLayers;
+    // NAYA: Har layer ke samne uska tool assign karne ke liye array
+    public ToolData[] requiredTools;
+    public GameObject scraperChunksPrefab;
 
     [Header("Camera Settings")]
-    public float cameraMovementIntensity = 1.0f;
+    public float cameraMovementIntensity = 1.0f; // Default intensity
     public float customCameraZoomSize = 5.0f;
 
     [Tooltip("Level complete hone par camera ka zoom size kitna hona chahiye")]
@@ -28,7 +33,10 @@ public class CleaningObjectData : ScriptableObject
     public List<CleaningStep> cleaningSteps = new List<CleaningStep>();
 
     [Header("Layer Transform Overrides (Optional)")]
+    [Tooltip("Agar aap kisi specific layer ki position badalna chahte hain, to yahan vector offset dein. (Element 0 = Layer 1)")]
     public Vector3[] customLayerOffsets;
+
+    [Tooltip("Agar aap kisi specific layer ka size badalna chahte hain, to yahan scale dein. Default (1,1,1) rahega.")]
     public Vector3[] customLayerScales;
 
     [Header("UI Settings")]

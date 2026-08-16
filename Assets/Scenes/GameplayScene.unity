@@ -2015,7 +2015,7 @@ MonoBehaviour:
   coinCounterAnim: {fileID: 1227842182}
   diamondCounterAnim: {fileID: 327979900}
   chunkIdleThreshold: 1
-  toolSorter: {fileID: 702211541}
+  toolSorter: {fileID: 0}
   scraperTriggerEdge: {fileID: 1397027113}
 --- !u!114 &281523830
 MonoBehaviour:
@@ -3497,7 +3497,6 @@ GameObject:
   m_Component:
   - component: {fileID: 702211539}
   - component: {fileID: 702211540}
-  - component: {fileID: 702211541}
   m_Layer: 5
   m_Name: ToolImage
   m_TagString: Untagged
@@ -3576,19 +3575,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &702211541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 702211538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 467a8185b130a9342a1f071f2a5bb116, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultFrontOrder: 25
 --- !u!1 &749878665
 GameObject:
   m_ObjectHideFlags: 0
@@ -8551,7 +8537,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 39.8, y: -4.6}
+  m_AnchoredPosition: {x: 48.2, y: -4.6}
   m_SizeDelta: {x: 120, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1494490585
@@ -8603,8 +8589,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -10230,7 +10216,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 38.6, y: -4.6}
+  m_AnchoredPosition: {x: 42, y: -4.6}
   m_SizeDelta: {x: 120, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1908325720
