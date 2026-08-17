@@ -137,7 +137,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &6546320491383629210
 PolygonCollider2D:
@@ -382,7 +382,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &1748256821082926618
 PolygonCollider2D:
@@ -589,7 +589,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &3133294061441428925
 PolygonCollider2D:
@@ -822,7 +822,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &827738720433399152
 PolygonCollider2D:
@@ -1059,7 +1059,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &8386124151891233116
 PolygonCollider2D:
@@ -1315,7 +1315,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &2741208725798108574
 PolygonCollider2D:
@@ -1572,7 +1572,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &5026989373967275096
 PolygonCollider2D:
@@ -1820,7 +1820,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &8818636762673917661
 PolygonCollider2D:
@@ -2050,7 +2050,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &7018808521672559062
 PolygonCollider2D:
@@ -2305,7 +2305,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &398287458416165186
 PolygonCollider2D:
@@ -2528,7 +2528,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &2928219388777432517
 PolygonCollider2D:
@@ -2743,7 +2743,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &1887079193025155847
 PolygonCollider2D:
@@ -3047,7 +3047,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &9000495559553723022
 PolygonCollider2D:
@@ -3270,7 +3270,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &2874292808925483403
 PolygonCollider2D:
@@ -3503,7 +3503,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &8188073378801091034
 PolygonCollider2D:
@@ -3735,7 +3735,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &2410537218775398369
 PolygonCollider2D:
@@ -3956,7 +3956,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &8338484430154450625
 PolygonCollider2D:
@@ -4183,7 +4183,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.01
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &3167040560993172874
 PolygonCollider2D:

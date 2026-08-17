@@ -6,12 +6,13 @@ public class ToolVariantButton : MonoBehaviour
 {
     public Image iconImage;
     public TMP_Text priceText;
+    public GameObject coinIconObject; // Coin image/icon reference
     public Button selectButton;
     public GameObject equippedCheckmark;
 
     [Header("Background Settings")]
-    public GameObject defaultBGObject;   // Root Parent ya Dedicated Child Object
-    public GameObject selectedBGObject;  // Selected Overlay Child GameObject (Select_0)
+    public GameObject defaultBGObject;
+    public GameObject selectedBGObject;
 
     private ToolVariant currentVariant;
     private ToolData parentTool;
@@ -49,16 +50,14 @@ public class ToolVariantButton : MonoBehaviour
         bool isEquipped = (equippedName == currentVariant.variantName) ||
                           (string.IsNullOrEmpty(equippedName) && parentTool.toolVariants.IndexOf(currentVariant) == 0);
 
-        // SAFE DEFAULT BG HIDE LOGIC
         if (defaultBGObject != null)
         {
-            // Agar defaultBGObject Parent khud hai, to SetActive(false) nahi karenge (warna poora button gayab ho jayega!)
             if (defaultBGObject == this.gameObject)
             {
                 Image parentImage = defaultBGObject.GetComponent<Image>();
                 if (parentImage != null)
                 {
-                    parentImage.enabled = !isEquipped; // Sirf image skin render disable hogi, button active rahega
+                    parentImage.enabled = !isEquipped;
                 }
             }
             else
@@ -67,7 +66,6 @@ public class ToolVariantButton : MonoBehaviour
             }
         }
 
-        //  SELECTED OVERLAY SHOW LOGIC
         if (selectedBGObject != null)
         {
             selectedBGObject.SetActive(isEquipped);
@@ -78,20 +76,30 @@ public class ToolVariantButton : MonoBehaviour
             equippedCheckmark.SetActive(isEquipped);
         }
 
+        // ==================== PRICE & COIN ICON LOGIC ====================
         if (isEquipped)
         {
             priceText.text = "Equipped";
             selectButton.interactable = false;
+
+            // Equipped par Coin Image GAYAB ho jayegi
+            if (coinIconObject != null) coinIconObject.SetActive(false);
         }
         else if (isUnlocked)
         {
             priceText.text = "Free";
             selectButton.interactable = true;
+
+            // Free par Coin Image GAYAB ho jayegi
+            if (coinIconObject != null) coinIconObject.SetActive(false);
         }
         else
         {
             priceText.text = currentVariant.coinPrice.ToString();
             selectButton.interactable = true;
+
+            // Coins hone par Coin Image NAZAR aayegi
+            if (coinIconObject != null) coinIconObject.SetActive(true);
         }
     }
 
@@ -114,6 +122,11 @@ public class ToolVariantButton : MonoBehaviour
                     PlayerPrefs.SetInt(parentTool.name + "_" + currentVariant.variantName, 1);
                     PlayerPrefs.Save();
 
+                    if (AudioManager.Instance != null)
+                    {
+                        AudioManager.Instance.PlayBuySFX();
+                    }
+
                     EquipThisSkin();
                 }
                 else
@@ -130,6 +143,11 @@ public class ToolVariantButton : MonoBehaviour
                     PlayerPrefs.SetInt("TotalCoins", currentCoins);
                     PlayerPrefs.SetInt(parentTool.name + "_" + currentVariant.variantName, 1);
                     PlayerPrefs.Save();
+
+                    if (AudioManager.Instance != null)
+                    {
+                        AudioManager.Instance.PlayBuySFX();
+                    }
 
                     EquipThisSkin();
                 }

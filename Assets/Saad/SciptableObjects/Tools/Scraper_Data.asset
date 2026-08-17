@@ -15,7 +15,6 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: Scraper
-  cameraZoomSize: 6
   capSprite: {fileID: 0}
   capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 0
@@ -31,14 +30,19 @@ MonoBehaviour:
   scrubAmount: 10
   rotationSpeed: 10
   rotationAmount: 15
+  enableDragTilt: 0
+  maxTiltAngle: 15
+  tiltSpeed: 10
+  invertTiltDirection: 0
   useParticles: 1
   particlePrefab: {fileID: 1680514027832752688, guid: 482d0e86c7d17d446bf860eeb5f5741b, type: 3}
   particleOffset: {x: 0, y: 0, z: 0}
+  isPolishTool: 0
   useSecondParticles: 0
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
   eraseOffset: {x: 0, y: 0.5, z: 0}
   toolSound: {fileID: 8300000, guid: e6e0c534751489b4fa081b5f1615df84, type: 3}
   toolOffset: {x: 0, y: 0, z: 0}
-  panelIcon: {fileID: 21300000, guid: 7ab1e4418ffa407448099181d58d4906, type: 3}
+  panelIcon: {fileID: -7260706826572596083, guid: c85ed3568b5a28f43ba60b9860e6125a, type: 3}
   canRemove: 1

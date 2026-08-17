@@ -137,7 +137,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &5519803601701635795
 PolygonCollider2D:
@@ -377,7 +377,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &2074158463458994887
 PolygonCollider2D:
@@ -623,7 +623,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &925163047183847542
 PolygonCollider2D:
@@ -841,7 +841,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &3496757977353361682
 PolygonCollider2D:
@@ -1069,7 +1069,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &2534479540825867781
 PolygonCollider2D:
@@ -1296,7 +1296,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &1034975477530885045
 PolygonCollider2D:
@@ -1528,7 +1528,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &2419335696869867904
 PolygonCollider2D:
@@ -1767,7 +1767,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &8083139537445234804
 PolygonCollider2D:
@@ -2021,7 +2021,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &8078805289253967458
 PolygonCollider2D:
@@ -2254,7 +2254,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &4355115263113860436
 PolygonCollider2D:
@@ -2465,7 +2465,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &8555836063806330821
 PolygonCollider2D:
@@ -2697,7 +2697,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &5625091318558170854
 PolygonCollider2D:
@@ -2973,7 +2973,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &6901509833910102195
 PolygonCollider2D:
@@ -3185,7 +3185,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &5467660095290690038
 PolygonCollider2D:
@@ -3419,7 +3419,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0.2, g: 1, b: 0.3, a: 1}
-  lineWidth: 0.02
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &4078869102940644131
 PolygonCollider2D:

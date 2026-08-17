@@ -15,27 +15,34 @@ MonoBehaviour:
   hasVariants: 0
   toolVariants: []
   toolName: 'Towel '
-  cameraZoomSize: 6
+  capSprite: {fileID: 0}
+  capLocalPosition: {x: 0, y: 0, z: 0}
   toolType: 1
   toolSprite: {fileID: -1674507125856555730, guid: 195b8029fcef37140a9b6f5a1f68546f, type: 3}
   soundOnlyOnHit: 1
   cleaningSpeed: 1
   brushSize: 35
-  brushShape: {fileID: 0}
-  brushWidthScale: 1
-  brushHeightScale: 1
-  movementType: 3
+  brushShape: {fileID: 2800000, guid: 1b43d427494629748b6a15093a3f8f80, type: 3}
+  brushWidthScale: 2.5
+  brushHeightScale: 3
+  movementType: 0
   scrubSpeed: 15
   scrubAmount: 0.4
   rotationSpeed: 5
   rotationAmount: 15
-  useParticles: 0
-  particlePrefab: {fileID: 0}
-  particleOffset: {x: 0, y: 0, z: 0}
+  enableDragTilt: 1
+  maxTiltAngle: 15
+  tiltSpeed: 10
+  invertTiltDirection: 0
+  useParticles: 1
+  particlePrefab: {fileID: 8761929157680561608, guid: f1f1f69b245db3e45bbf43f89f66bbab, type: 3}
+  particleOffset: {x: 0, y: 1, z: 0}
+  isPolishTool: 0
   useSecondParticles: 0
   secondParticlePrefab: {fileID: 0}
   secondParticleOffset: {x: 0, y: 0, z: 0}
   eraseOffset: {x: 0, y: 0, z: 0}
-  toolSound: {fileID: 0}
+  toolSound: {fileID: 8300000, guid: 545649752d804564092f70c58472e47c, type: 3}
   toolOffset: {x: 0, y: 0, z: 0}
-  panelIcon: {fileID: -961448968163893087, guid: ad8e1748b3a6c4544a2631f109bd5b9e, type: 3}
+  panelIcon: {fileID: 4077148156931629351, guid: 657be173318a799449f8349ae1acf6a3, type: 3}
+  canRemove: 1

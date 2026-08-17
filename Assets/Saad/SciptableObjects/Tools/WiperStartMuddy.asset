@@ -38,8 +38,8 @@ MonoBehaviour:
   cleaningSpeed: 5
   brushSize: 70
   brushShape: {fileID: 2800000, guid: 7ab29361b5a635748be26076c62212ea, type: 3}
-  brushWidthScale: 2.2
-  brushHeightScale: 0.7
+  brushWidthScale: 2.6
+  brushHeightScale: 0.8
   movementType: 0
   scrubSpeed: -5
   scrubAmount: 0

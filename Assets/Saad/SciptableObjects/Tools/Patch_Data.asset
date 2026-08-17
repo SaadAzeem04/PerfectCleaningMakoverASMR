@@ -44,5 +44,5 @@ MonoBehaviour:
   eraseOffset: {x: 0, y: 0, z: 0}
   toolSound: {fileID: 0}
   toolOffset: {x: 0, y: 0, z: 0}
-  panelIcon: {fileID: -7280120397025921499, guid: 873bb6b4fffee9b4e8e653a60949762e, type: 3}
+  panelIcon: {fileID: -5681428181818119330, guid: 35c85a88d46b5104492f673c6c95aba9, type: 3}
   canRemove: 0

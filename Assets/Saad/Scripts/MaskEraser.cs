@@ -79,10 +79,16 @@ public class MaskEraser : MonoBehaviour
     private float idleTimer = 0f;
     private bool isUIHiddenByTimer = false;
 
+    [Header("UI Animation Settings")]
+    [Tooltip("UI slide hone me kitna time (seconds) lagega. Choti value = Fast, Badi value = Slow")]
+    public float uiSlideDuration = 0.35f;
+
     [Header("Tool UI Panel")]
     public Image previousToolUIImage;
     public Image currentToolUIImage;
     public Image upcomingToolUIImage;
+    public GameObject currentToolGlow; // Glow sprite reference
+
 
     [Header("Background Reference")]
     public SpriteRenderer backgroundRenderer;
@@ -1505,11 +1511,30 @@ public class MaskEraser : MonoBehaviour
     {
         if (img == null) return null;
 
-        RectTransform parentRT = img.transform.parent as RectTransform;
-        if (parentRT != null && parentRT.GetComponent<Canvas>() == null && parentRT.name.ToLower().Contains("slot"))
+        Transform curr = img.transform;
+
+        // Hierarchy me upar ja kar Main Root Parent Object ko dhundte hain 
+        // (SelectedTool, PreviousSelectedTool, ya UpcomingSelectedTool)
+        while (curr != null && curr.parent != null && curr.parent.GetComponent<Canvas>() == null)
         {
-            return parentRT;
+            if (curr.name.ToLower().Contains("selectedtool"))
+            {
+                return curr as RectTransform;
+            }
+            curr = curr.parent;
         }
+
+        // Fallback: Agar name match na ho to 2 level parent (SelectedTool level) uthayein
+        if (img.transform.parent != null && img.transform.parent.parent != null)
+        {
+            return img.transform.parent.parent as RectTransform;
+        }
+
+        if (img.transform.parent != null)
+        {
+            return img.transform.parent as RectTransform;
+        }
+
         return img.rectTransform;
     }
 
@@ -1544,7 +1569,7 @@ public class MaskEraser : MonoBehaviour
 
     IEnumerator SlideToolUI()
     {
-        float duration = 0.38f;
+        float duration = uiSlideDuration;
         float time = 0;
 
         RectTransform prevTarget = GetTargetRect(previousToolUIImage);
@@ -1560,6 +1585,14 @@ public class MaskEraser : MonoBehaviour
         Vector2 offscreenLeft = prevPos - (upPos - currPos);
         Vector3 smallScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
         Vector3 largeScale = new Vector3(activeToolScale, activeToolScale, 1f);
+
+        CanvasGroup prevCanvasGroup = null;
+        if (prevTarget != null)
+        {
+            prevCanvasGroup = prevTarget.GetComponent<CanvasGroup>();
+            if (prevCanvasGroup == null) prevCanvasGroup = prevTarget.gameObject.AddComponent<CanvasGroup>();
+            prevCanvasGroup.alpha = 1f;
+        }
 
         if (currTarget != null)
         {
@@ -1585,25 +1618,32 @@ public class MaskEraser : MonoBehaviour
         while (time < duration)
         {
             time += Time.deltaTime;
-            float t = time / duration;
+            float t = Mathf.Clamp01(time / duration);
             float smoothT = t * t * (3f - 2f * t);
 
+            // 1. Current Tool: Left Move Hoga AUR Scale Chhota Hoga
             if (currTarget != null)
             {
                 currTarget.anchoredPosition = Vector2.Lerp(currPos, prevPos, smoothT);
                 currTarget.localScale = Vector3.Lerp(largeScale, smallScale, smoothT);
             }
 
+            // 2. Upcoming Tool: Center Move Hoga AUR Scale Bada Hoga
             if (upTarget != null && upTarget.gameObject.activeSelf)
             {
                 upTarget.anchoredPosition = Vector2.Lerp(upPos, currPos, smoothT);
                 upTarget.localScale = Vector3.Lerp(smallScale, largeScale, smoothT);
             }
 
+            // 3. Old Previous Tool: Left Move Bhi Hoga AUR Fade Out (Alpha 1->0) Bhi Hoga
             if (prevTarget != null && prevTarget.gameObject.activeSelf)
             {
                 prevTarget.anchoredPosition = Vector2.Lerp(prevPos, offscreenLeft, smoothT);
                 prevTarget.localScale = smallScale;
+                if (prevCanvasGroup != null)
+                {
+                    prevCanvasGroup.alpha = Mathf.Lerp(1f, 0f, smoothT);
+                }
             }
 
             yield return null;
@@ -1650,11 +1690,17 @@ public class MaskEraser : MonoBehaviour
                 currentToolUIImage.sprite = currentToolData.panelIcon;
                 currentToolUIImage.gameObject.SetActive(true);
                 if (currTarget != null) currTarget.gameObject.SetActive(true);
+
+                // Glow ko active karein
+                if (currentToolGlow != null) currentToolGlow.SetActive(true);
             }
             else
             {
                 currentToolUIImage.gameObject.SetActive(false);
                 if (currTarget != null) currTarget.gameObject.SetActive(false);
+
+                // Tool na ho to Glow off karein
+                if (currentToolGlow != null) currentToolGlow.SetActive(false);
             }
         }
 
@@ -1684,25 +1730,31 @@ public class MaskEraser : MonoBehaviour
             }
         }
 
+        // Reset Positions, Scales, aur Alphas next turn ke liye
         if (prevTarget != null)
         {
             prevTarget.anchoredPosition = prevPos;
             prevTarget.localScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
+            CanvasGroup cg = prevTarget.GetComponent<CanvasGroup>();
+            if (cg != null) cg.alpha = 1f;
         }
 
         if (currTarget != null)
         {
             currTarget.anchoredPosition = currPos;
             currTarget.localScale = new Vector3(activeToolScale, activeToolScale, 1f);
+            CanvasGroup cg = currTarget.GetComponent<CanvasGroup>();
+            if (cg != null) cg.alpha = 1f;
         }
 
         if (upTarget != null)
         {
             upTarget.anchoredPosition = upPos;
             upTarget.localScale = new Vector3(inactiveToolScale, inactiveToolScale, 1f);
+            CanvasGroup cg = upTarget.GetComponent<CanvasGroup>();
+            if (cg != null) cg.alpha = 1f;
         }
     }
-
     IEnumerator AnimateUIPopup(Image img, float delay)
     {
         if (img == null || !img.gameObject.activeSelf) yield break;

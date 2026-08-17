@@ -1,6 +1,6 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Scene loading detection ke liye
-using System.Collections;          // Coroutine ke liye
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class AudioManager : MonoBehaviour
 {
@@ -15,13 +15,14 @@ public class AudioManager : MonoBehaviour
     public AudioClip homeScreenMusic;
     public AudioClip gameSceneMusic;
     public AudioClip layerClearSFX;
+    public AudioClip buySFX; // <--- Professional Buy / Coins Falling SFX Slot
 
     [Header("Smooth Transition Settings")]
-    [Range(0f, 1f)] public float targetMusicVolume = 0.8f; // BGM ki maximum volume
-    public float fadeDuration = 1.5f;                       // Slow increase/fade ka duration (seconds mein)
+    [Range(0f, 1f)] public float targetMusicVolume = 0.8f;
+    public float fadeDuration = 1.5f;
 
     [Header("Scene Identification")]
-    public string homeSceneName = "HomeScene"; // Inspector mein apne Home scene ka exact naam rakhein
+    public string homeSceneName = "HomeScene";
 
     public bool isSoundOn = true;
     public bool isMusicOn = true;
@@ -52,12 +53,10 @@ public class AudioManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    // Har Scene Load hone par check karega aur smoothly music change/increase karega
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (!isMusicOn) return;
 
-        // Check karein ke Home Scene hai ya Game Scene
         AudioClip clipToPlay = (scene.name == homeSceneName) ? homeScreenMusic : gameSceneMusic;
 
         if (clipToPlay != null)
@@ -66,12 +65,10 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // Smooth Fade-Out -> Music Switch -> Slowly Increase (Fade-In) Function
     public void PlayMusicWithFade(AudioClip newClip, float targetVolume, float duration)
     {
         if (musicSource == null || !isMusicOn) return;
 
-        // Agar same clip pehle se chal raha hai aur playing hai tou dobara restart na karein
         if (musicSource.clip == newClip && musicSource.isPlaying) return;
 
         if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
@@ -82,7 +79,6 @@ public class AudioManager : MonoBehaviour
     {
         float halfDuration = duration / 2f;
 
-        // 1. Agar pehle se koi music chal raha hai, tou pehle usay smoothly FADE OUT karein
         if (musicSource.isPlaying)
         {
             float startVol = musicSource.volume;
@@ -96,12 +92,10 @@ public class AudioManager : MonoBehaviour
             }
         }
 
-        // 2. Naya Clip set karein aur Volume 0 se start karein
         musicSource.clip = newClip;
         musicSource.volume = 0f;
         musicSource.Play();
 
-        // 3. Volume ko SLOWLY INCREASE (Fade-In) karein target volume tak
         float fadeInTimer = 0f;
         while (fadeInTimer < halfDuration)
         {
@@ -125,20 +119,23 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // 1. Direct Music Play (Backward Compatibility)
     public void PlayMusic(AudioClip clip)
     {
         PlayMusicWithFade(clip, targetMusicVolume, fadeDuration);
     }
 
-    // 2. Simple SFX Chalane Ka Function
     public void PlaySFX(AudioClip clip)
     {
         if (sfxSource == null || clip == null || !isSoundOn) return;
         sfxSource.PlayOneShot(clip);
     }
 
-    // 3. Looping SFX Chalane Ka Function
+    // SPECIAL BUY SFX FUNCTION
+    public void PlayBuySFX()
+    {
+        PlaySFX(buySFX);
+    }
+
     public void PlayLoopingSFX(AudioClip clip, bool shouldLoop)
     {
         if (toolSource == null || clip == null || !isSoundOn) return;
@@ -156,7 +153,6 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // 4. Tool Ki Sound Rokne Ka Function
     public void StopToolSFX()
     {
         if (toolSource != null && toolSource.isPlaying)
@@ -165,7 +161,6 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // Sound ON/OFF
     public void ToggleSound(bool isOn)
     {
         isSoundOn = isOn;
@@ -176,7 +171,6 @@ public class AudioManager : MonoBehaviour
         if (!isSoundOn && sfxSource != null) sfxSource.Stop();
     }
 
-    // Music ON/OFF
     public void ToggleMusic(bool isOn)
     {
         isMusicOn = isOn;

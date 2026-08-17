@@ -137,7 +137,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.08
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &6225834620360720301
 PolygonCollider2D:
@@ -387,7 +387,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.08
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &5782425989700300198
 PolygonCollider2D:
@@ -629,7 +629,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.08
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &3815656746156588604
 PolygonCollider2D:
@@ -878,7 +878,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.08
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &4106562378696170647
 PolygonCollider2D:
@@ -1106,7 +1106,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.08
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &6838157670973114692
 PolygonCollider2D:
@@ -1346,7 +1346,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.08
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &6526359353335956322
 PolygonCollider2D:
@@ -1633,7 +1633,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.08
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &6715536778347378970
 PolygonCollider2D:
@@ -1893,7 +1893,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.08
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &5507288121587309499
 PolygonCollider2D:
@@ -2112,7 +2112,7 @@ MonoBehaviour:
   rotateSpeed: 1
   fadeDuration: 0.5
   greenGlowColor: {r: 0, g: 1, b: 0, a: 1}
-  lineWidth: 0.08
+  lineWidth: 0.04
   glowPulseSpeed: 4
 --- !u!60 &8707634367395450747
 PolygonCollider2D:
