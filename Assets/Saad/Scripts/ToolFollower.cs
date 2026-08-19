@@ -305,6 +305,8 @@ public class ToolFollower : MonoBehaviour
                     capSpriteRenderer.transform.localPosition = data.capLocalPosition;
                     capSpriteRenderer.transform.localRotation = Quaternion.identity;
 
+
+                    capSpriteRenderer.sortingOrder = 200;
                     Color c = capSpriteRenderer.color;
                     c.a = 1f;
                     capSpriteRenderer.color = c;
@@ -341,6 +343,8 @@ public class ToolFollower : MonoBehaviour
         }
 
         capSpriteRenderer.transform.localRotation = Quaternion.identity;
+
+        capSpriteRenderer.sortingOrder = 200;
 
         Color c = capSpriteRenderer.color;
         c.a = 1f;
