@@ -38,7 +38,7 @@ MonoBehaviour:
   cleaningSpeed: 5
   brushSize: 70
   brushShape: {fileID: 2800000, guid: 7ab29361b5a635748be26076c62212ea, type: 3}
-  brushWidthScale: 2.6
+  brushWidthScale: 3
   brushHeightScale: 0.8
   movementType: 0
   scrubSpeed: -5
@@ -46,6 +46,7 @@ MonoBehaviour:
   rotationSpeed: 10
   rotationAmount: 15
   enableDragTilt: 0
+  enableParticleTilt: 1
   maxTiltAngle: 15
   tiltSpeed: 10
   invertTiltDirection: 0

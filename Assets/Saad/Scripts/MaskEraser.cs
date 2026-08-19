@@ -1883,6 +1883,7 @@ public class MaskEraser : MonoBehaviour
             isToolPosSaved = true;
         }
 
+        // --- Movement Logic ---
         if (currentToolData.movementType == ToolMovementType.Scrubbing)
         {
             float shake = Mathf.Sin(Time.time * currentToolData.scrubSpeed) * currentToolData.scrubAmount;
@@ -1893,7 +1894,8 @@ public class MaskEraser : MonoBehaviour
         {
             float vibration = Random.Range(-0.05f, 0.05f);
             toolObj.localPosition = originalToolLocalPos + new Vector3(vibration, vibration, 0);
-            toolObj.localRotation = originalToolRotation;
+            float tiltAngle = Mathf.Sin(Time.time * 10f) * 15f;
+            toolObj.localRotation = originalToolRotation * Quaternion.Euler(0, 0, tiltAngle);
         }
         else if (currentToolData.movementType == ToolMovementType.Rotation)
         {
@@ -1901,8 +1903,22 @@ public class MaskEraser : MonoBehaviour
             toolObj.localRotation = originalToolRotation * Quaternion.Euler(0, 0, angle);
             toolObj.localPosition = originalToolLocalPos;
         }
-    }
 
+        // --- Dynamic Particle Tilt Logic ---
+        if (effectAnchor != null)
+        {
+            if (currentToolData.enableParticleTilt)
+            {
+                // Spray Tools: Particles Tool ki rotation ko follow karenge
+                effectAnchor.rotation = toolObj.rotation;
+            }
+            else
+            {
+                // Brush / Scrubbing Tools: Particle Anchor straight (0,0,0) rahega
+                effectAnchor.rotation = Quaternion.identity;
+            }
+        }
+    }
     void ResetToolPosition()
     {
         if (toolFollower == null || !isToolPosSaved) return;

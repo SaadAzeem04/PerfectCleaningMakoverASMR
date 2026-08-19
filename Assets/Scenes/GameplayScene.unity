@@ -2004,7 +2004,7 @@ MonoBehaviour:
   upcomingIcons: []
   levelCompleteDelay: 2.5
   brushHardness: 0.01
-  eraserIntensityMultiplier: 0.519
+  eraserIntensityMultiplier: 0.28
   cleaningThreshold: 70
   cameraTransitionIntensity: 2
   cameraMoveIntensity: 0
@@ -3888,7 +3888,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 200
+  m_SortingOrder: 100
   m_Sprite: {fileID: 68299640160208602, guid: 7400d6e46f8f3d543b3ed82fb18f955f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -6229,7 +6229,7 @@ MonoBehaviour:
   glueWidth: 0.05
   glueTrail: {fileID: 0}
   sortingLayerName: Default
-  sortingOrder: 90
+  sortingOrder: 50
   patchTarget: {fileID: 0}
   triggerDistance: 0.5
   pourAngle: 120

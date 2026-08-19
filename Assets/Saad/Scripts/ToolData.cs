@@ -72,6 +72,9 @@ public class ToolData : ScriptableObject
     [Header("Drag Tilt / Rotation Settings")]
     [Tooltip("Kya drag karte waqt tool left/right drag karne par tilt/rotate hoga?")]
     public bool enableDragTilt = false;
+    [Header("Particle Settings")]
+    public bool enableParticleTilt = true;
+
     [Tooltip("Maximum kitna tilt/rotate hoga degrees mein (Normal = 15)")]
     public float maxTiltAngle = 15f;
     [Tooltip("Tilt hone aur wapas seedha hone ki speed (Normal = 10)")]

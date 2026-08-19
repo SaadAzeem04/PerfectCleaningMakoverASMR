@@ -46,17 +46,18 @@ MonoBehaviour:
   rotationSpeed: 10
   rotationAmount: 15
   enableDragTilt: 0
+  enableParticleTilt: 1
   maxTiltAngle: 15
   tiltSpeed: 10
   invertTiltDirection: 0
   useParticles: 1
-  particlePrefab: {fileID: 8123549400438394861, guid: 16e9366f5442a454cb8107b8544809d8, type: 3}
-  particleOffset: {x: 0, y: 1, z: 0}
+  particlePrefab: {fileID: 5044194250319082652, guid: 2306ca3359644f84ca7ad87c29a566e0, type: 3}
+  particleOffset: {x: 0, y: 0.65, z: 0}
   isPolishTool: 0
   useSecondParticles: 1
   secondParticlePrefab: {fileID: 5068137153825672969, guid: be6792749d04e8f4e9bcbae5cb83efb9, type: 3}
-  secondParticleOffset: {x: 0, y: 1.8, z: 0}
-  eraseOffset: {x: 0, y: 1.8, z: 0}
+  secondParticleOffset: {x: 0, y: 2.2, z: 0}
+  eraseOffset: {x: 0, y: 2.2, z: 0}
   toolSound: {fileID: 8300000, guid: e993c567098bfc04a94bc58d009efab3, type: 3}
   toolOffset: {x: 0, y: -1, z: 0}
   panelIcon: {fileID: 6029614253765861276, guid: a356237ace63a6d458a1b76162bebc28, type: 3}
